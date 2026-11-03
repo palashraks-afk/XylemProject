@@ -13,7 +13,7 @@
   const EMPTY = { type: "FeatureCollection", features: [] };
   const V = (window.Xylem3D = {});
   let map = null, D = null, box = null, ready = false, infra = null, popup = null, hud = {};
-  const opt = { base: "sat", infra: true, buildings: true, unfunded: true, exag: 1.8 };
+  const opt = { base: "sat", areas: true, infra: true, buildings: true, unfunded: true, exag: 1.8 };
 
   const circle = (lon, lat, r, n = 14) => { const dl = r / 111320, dx = r / (111320 * Math.cos(lat * Math.PI / 180)), c = [];
     for (let k = 0; k <= n; k++) { const a = (k / n) * 2 * Math.PI; c.push([lon + Math.cos(a) * dx, lat + Math.sin(a) * dl]); } return c; };
@@ -27,7 +27,7 @@
     st.sources.sat = { type: "raster", tiles: [SAT], tileSize: 256, maxzoom: 18, attribution: "Imagery &copy; Esri" };
     st.sources.infra = { type: "geojson", data: EMPTY }; st.sources.sites3d = { type: "geojson", data: EMPTY };
     st.sources.sys = { type: "geojson", data: EMPTY }; st.sources.towers = { type: "geojson", data: EMPTY }; st.sources.routes = { type: "geojson", data: EMPTY };
-    st.sources.sel = { type: "geojson", data: EMPTY }; st.sources.counties = { type: "geojson", data: EMPTY };
+    st.sources.sel = { type: "geojson", data: EMPTY }; st.sources.areas = { type: "geojson", data: EMPTY }; st.sources.counties = { type: "geojson", data: EMPTY };
     st.terrain = { source: "dem", exaggeration: opt.exag };
     st.sky = { "sky-color": "#6aa6dd", "horizon-color": "#dbe9f5", "fog-color": "#dbe6ef", "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.7, "fog-ground-blend": 0.45,
       "atmosphere-blend": ["interpolate", ["linear"], ["zoom"], 0, 1, 10, 1, 13, 0] };
@@ -42,7 +42,10 @@
     const firstSym = st.layers.findIndex((l) => l.type === "symbol" && !/^waterway|^water_name/.test(l.id));
     const add = (...ls) => st.layers.splice(firstSym, 0, ...ls);
     const w = (a, b, c) => ["interpolate", ["linear"], ["zoom"], 5, a, 9, b, 14, c];
+    const stColor = ["match", ["get", "st"], 0, FUND, 1, FAIL, RISK];
     add(
+      { id: "areas", type: "fill", source: "areas", paint: { "fill-color": stColor, "fill-opacity": ["match", ["get", "st"], 0, 0.62, 1, 0.62, 0.5] } },
+      { id: "areas-line", type: "line", source: "areas", paint: { "line-color": stColor, "line-width": ["interpolate", ["linear"], ["zoom"], 5, 1.8, 9, 2.4, 13, 3], "line-opacity": 1 } },
       { id: "counties", type: "line", source: "counties", paint: { "line-color": "#ffffff", "line-opacity": 0.28, "line-width": 0.7 } },
       { id: "infra-casing", type: "line", source: "infra", filter: ["in", ["get", "k"], ["literal", ["canal", "aqueduct", "pipeline"]]], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#0b2a4a", "line-opacity": 0.55, "line-width": w(2.6, 4.6, 12) } },
       { id: "infra-water", type: "line", source: "infra", filter: ["in", ["get", "k"], ["literal", ["canal", "aqueduct"]]], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#3fb8ff", "line-width": w(1.4, 2.6, 8) } },
@@ -68,12 +71,16 @@
   // ---------- data ----------
   function refreshSystems() {
     if (!ready || !D) return;
-    const mode = D.colorMode(), feats = [], towers = [];
+    const mode = D.colorMode(), feats = [], towers = [], areas = [];
+    const stOf = (i) => { const s = D.systems[i]; return mode === "plan" && D.inPlan[i] ? 0 : s.failing ? 1 : 2; };
+    if (D.polys) D.polys.features.forEach((ft) => { const i = D.idx.get(ft.properties.id); if (i === undefined || (!opt.unfunded && !D.inPlan[i])) return;
+      areas.push({ type: "Feature", properties: { st: stOf(i) }, geometry: ft.geometry }); });
+    map.getSource("areas").setData({ type: "FeatureCollection", features: areas });
     D.systems.forEach((s, i) => {
       if (s.lat == null || !s.lon) return;
-      const funded = !!D.inPlan[i], st = mode === "plan" ? (funded ? 0 : s.failing ? 1 : 2) : s.failing ? 1 : 2, k = Math.min(9, 2.4 + Math.sqrt(s.pop) / 55);
+      const funded = !!D.inPlan[i], st = stOf(i), k = Math.min(9, 2.4 + Math.sqrt(s.pop) / 55);
       if (!opt.unfunded && !funded) return;
-      feats.push({ type: "Feature", properties: { i, st: funded && mode === "plan" ? 0 : st, k: funded ? k * 1.3 : k * 0.65 }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } });
+      feats.push({ type: "Feature", properties: { i, st, k: funded ? k * 1.3 : k * 0.65 }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } });
       const r = Math.min(34, 11 + Math.sqrt(s.pop) / 22) * (funded ? 1.5 : 1), c = funded ? "#1fbf93" : s.failing ? "#d94444" : "#e0a03a", h = r * 1.9;
       towers.push(poly(circle(s.lon, s.lat, r * 0.3, 8), { c: "#c9d1d9", b: 0, h }), poly(circle(s.lon, s.lat, r, 16), { c, b: h, h: h + r * 1.05 }));
     });
@@ -103,6 +110,7 @@
     vis("sat", sat); vis("water", !sat); vis("building", false);
     map.setPaintProperty("hill", "hillshade-exaggeration", sat ? ["interpolate", ["linear"], ["zoom"], 6, 0.3, 12, 0.08] : ["interpolate", ["linear"], ["zoom"], 6, 0.6, 13, 0.3]);
     map.getStyle().layers.forEach((l) => { if (/^(road_|bridge_|tunnel_)/.test(l.id) && l.type === "line") map.setPaintProperty(l.id, "line-opacity", sat ? 0.55 : 1); });
+    vis("areas", opt.areas); vis("areas-line", opt.areas);
     ["infra-casing", "infra-water", "infra-pipe", "infra-tunnel", "infra-label", "sites3d", "sites-dot"].forEach((id) => vis(id, opt.infra));
     vis("building-3d", opt.buildings);
     map.setTerrain({ source: "dem", exaggeration: opt.exag });
@@ -155,13 +163,14 @@
     hud.chip = el(`<div class="chip3d"></div>`);
     const panel = el(`<div class="hud3d">
       <select data-jump aria-label="Jump to"><option value="">Jump to a city…</option>${Object.keys(CITIES).map((c) => `<option>${c}</option>`).join("")}</select>
+      <label class="chk"><input type="checkbox" data-k="areas" checked> Service-area shading</label>
       <label class="chk"><input type="checkbox" data-k="infra" checked> Canals, plants, towers</label>
       <label class="chk"><input type="checkbox" data-k="buildings" checked> Buildings</label>
       <label class="chk"><input type="checkbox" data-k="unfunded" checked> Systems not funded</label>
       <label class="rng">Relief <input type="range" data-k="exag" min="1" max="3" step="0.1" value="${opt.exag}"></label>
       <button class="ghost" data-act="home">Whole state</button></div>`);
     const legend = el(`<div class="leg3d"><div><span class="sw" style="background:${FUND}"></span>Selected for funding</div><div><span class="sw" style="background:${FAIL}"></span>Failing, not selected</div>
-      <div><span class="sw" style="background:${RISK}"></span>At-risk, not selected</div><div><span class="sw bar" style="background:#3fb8ff"></span>Canal or aqueduct</div>
+      <div><span class="sw" style="background:${RISK}"></span>At-risk, not selected</div><div class="mute">Each service area is shaded in its colour.</div><div><span class="sw bar" style="background:#3fb8ff"></span>Canal or aqueduct</div>
       <div><span class="sw bar" style="background:#ffd38a"></span>Tunnel</div><div><span class="sw sq" style="background:#7fc3ff"></span>Treatment plant</div>
       <div><span class="sw bar" style="background:${ROUTE}"></span>Consolidation pipeline</div></div>`);
     box.append(hud.chip, panel, legend);
