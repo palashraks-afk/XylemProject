@@ -11,7 +11,8 @@ pip install -r requirements.txt
 python pipeline/fetch_data.py        # download raw data (or use the committed data/raw)
 python pipeline/build.py             # join, cost model, optimizer, stress test, validation (about 20 s)
 python pipeline/fetch_boundaries.py  # service-area polygons
-python -m pytest tests -q            # 24 tests, including Python/JS optimizer parity
+python pipeline/routing.py           # consolidation routes (downloads receiver boundaries once, about 30 s)
+python -m pytest tests -q            # 30 tests, including Python/JS optimizer parity
 cd app && python -m http.server 8765 # open http://localhost:8765
 ```
 
@@ -21,6 +22,7 @@ Scenarios are shareable: the controls are stored in the URL (for example `#b=100
 
 - **Optimizer.** For a budget, picks the Failing and At-Risk systems that maximize benefit = people served × status weight × (1 + equity weight × equity index). An exact 0/1 knapsack (dynamic programming), run in your browser. Controls: budget, equity weight, how much At-Risk counts relative to Failing, and a share of budget reserved for small systems.
 - **Cost model.** The state publishes no per-system remediation cost as data. We apply its published average cost per service connection by system size (2024 Cost Assessment, Table 7) to each system, then scale to the state's $5.386B total.
+- **Infrastructure routing.** For each small Failing or At-Risk system, finds the larger healthy system the state's model would connect it to (within 3 miles), draws the route and costs it with the state's own unit costs ($220/ft pipe, service lines, connection fees, CEQA, contingency). Switch it on to let the optimizer use the route cost where it is cheaper. Straight-line distance × 1.3 stands in for the street route, and there is no regional cost adjustment. 491 of 951 eligible systems have a viable route; the state's own 2024 model found consolidation viable for about 44% of Failing and 43% of At-Risk systems, close to our 46% and 46% (different year and list, so agreement is encouraging, not proof). Routing changes the plan modestly: at $2B with a 30% small-system reserve it funds 8 more systems.
 - **Uncertainty.** 200 stress-test scenarios vary costs and weights and re-run the optimizer. Each system shows how often it is still funded.
 - **Who is left out.** A tab lists the Failing systems the plan does not fund, because pure cost-effectiveness skips small, expensive systems.
 - **Map** with the State Water Board's service-area boundaries (1,061 of 1,062 target systems), colored by plan, status or stability.

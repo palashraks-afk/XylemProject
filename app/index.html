@@ -41,6 +41,12 @@
       <span class="hint">Share of the budget held for systems with 500 connections or fewer, which pure cost-effectiveness tends to skip.</span>
     </label>
     <div class="ctl">
+      <span class="ctl-h">Infrastructure routing</span>
+      <label class="chk"><input type="checkbox" id="cons"> Use consolidation route cost where cheaper</label>
+      <label class="chk"><input type="checkbox" id="routes" checked> Draw routes for funded systems</label>
+      <span class="hint">Connects a small system to a larger healthy neighbour within 3 miles, costed with the state's own unit costs ($220/ft pipe, service lines, fees). Routes are straight-line stand-ins for street routes.</span>
+    </div>
+    <div class="ctl">
       <span class="ctl-h">Map colour</span>
       <div class="seg" role="group" aria-label="Map colour">
         <button data-color="plan" class="on">Plan</button>

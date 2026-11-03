@@ -13,9 +13,13 @@
     fetch("data/boundaries.geojson").then((r) => r.json()).catch(() => null),
   ]);
   const cov = await fetch("data/boundary_coverage.json").then((r) => r.json()).catch(() => null);
+  const routesData = await fetch("data/routes.json").then((r) => r.json()).catch(() => null);
+  const routeLines = await fetch("data/routes.geojson").then((r) => r.json()).catch(() => null);
+  const RT = routesData ? routesData.routes : {};
 
   const N = systems.length;
-  const costs = systems.map((s) => s.cost);
+  const baseCost = systems.map((s) => s.cost);
+  const costs = baseCost.slice();   // effective cost; rewritten in run() when consolidation routes are switched on
   const pops = systems.map((s) => s.pop);
   const conns = systems.map((s) => s.conn);
   const failing = systems.map((s) => (s.failing ? 1 : 0));
@@ -27,25 +31,37 @@
   const med = (() => { const v = eqRaw.filter((x) => x !== null).sort((a, b) => a - b); const m = v.length >> 1; return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2; })();
   const eq = eqRaw.map((x) => (x === null ? med : x));
 
-  const DEF = { b: 500, l: summary.defaults.lambda_eq, a: summary.defaults.at_risk_weight, r: summary.defaults.small_reserve };
+  const DEF = { b: 500, l: summary.defaults.lambda_eq, a: summary.defaults.at_risk_weight, r: summary.defaults.small_reserve, c: 0 };
   const BMIN = 25, BMAX = Math.round(totalCost / 1e6 / 5) * 5;
   const posToBudget = (t) => Math.round(BMIN * Math.pow(BMAX / BMIN, t / 100) / 5) * 5;
   const budgetToPos = (b) => Math.round((Math.log(b / BMIN) / Math.log(BMAX / BMIN)) * 100);
 
-  const st = Object.assign({}, DEF, { color: "plan", poly: true, tab: "plan" });
+  const st = Object.assign({}, DEF, { color: "plan", poly: true, tab: "plan", routes: true });
   (function readHash() {
     const p = new URLSearchParams(location.hash.slice(1));
     if (p.has("b")) st.b = Math.min(BMAX, Math.max(BMIN, +p.get("b")));
     if (p.has("l")) st.l = +p.get("l");
     if (p.has("a")) st.a = +p.get("a");
     if (p.has("r")) st.r = +p.get("r");
+    if (p.has("c")) st.c = +p.get("c") ? 1 : 0;
   })();
 
   $("#snap").textContent = `SAFER snapshot ${String(summary.snapshot).slice(0, 10)} · ${fmtN(summary.all_systems)} systems · ${fmtN(N)} Failing or At-Risk · ${fmtN(totalPeople)} people`;
 
   // ---------- optimizer run ----------
   let plan = null;
+  // consolidation route cost replaces the average-based cost where the route is viable and cheaper
+  const viaRoute = new Uint8Array(N);
+  function applyCosts() {
+    for (let i = 0; i < N; i++) {
+      const r = RT[systems[i].id];
+      viaRoute[i] = st.c && r && r.viable && r.cost < baseCost[i] ? 1 : 0;
+      costs[i] = viaRoute[i] ? r.cost : baseCost[i];
+      systems[i].cost = costs[i]; systems[i].lo = Math.round(costs[i] * 0.5); systems[i].hi = Math.round(costs[i] * 2);
+    }
+  }
   function run() {
+    applyCosts();
     const ben = pops.map((p, i) => p * (failing[i] ? 1 : st.a) * (1 + st.l * eq[i]));
     const chosen = XylemOpt.optimize(costs, ben, conns, st.b * 1e6, st.r);
     const base = XylemOpt.statusFirst(costs, pops, failing, st.b * 1e6);
@@ -63,7 +79,7 @@
     // stability at nearest precomputed budget
     const bs = summary.budgets_musd;
     let k = 0, bd = 1e9; bs.forEach((b, j) => { const d = Math.abs(Math.log(b / st.b)); if (d < bd) { bd = d; k = j; } });
-    plan.stabK = k; plan.stabOK = bd < Math.log(1.6); plan.stabBudget = bs[k];
+    plan.stabK = k; plan.stabOK = bd < Math.log(1.6) && !st.c; plan.stabBudget = bs[k];   // stress tests ran on average-based costs
     const strong = plan.stabOK ? chosen.filter((i) => systems[i].p[k] >= 0.5).length / Math.max(1, chosen.length) : null;
     plan.robust = strong;
   }
@@ -90,6 +106,14 @@
   }
   const opacityFor = (i) => (st.color === "plan" && !plan.inPlan[i] ? 0.35 : 0.85);
 
+  function routeLine(i) {
+    const r = RT[systems[i].id];
+    if (!r) return `<div class="mute">Consolidation: not eligible under the state's size rules</div>`;
+    if (!r.receiver) return `<div class="mute">Consolidation: ${esc(r.reason)}</div>`;
+    return `<div class="r"><span>Consolidate into</span><b>${esc(r.receiver_name)}</b></div>
+      <div class="r"><span>Route</span><b>${r.kind === "intersect" ? "adjacent" : r.route_mi + " mi"} · ${fmtM(r.cost)} ($${fmtN(r.per_conn)}/conn)</b></div>
+      <div class="mute">${r.viable ? "Meets" : "Fails"} the state's funding viability test${viaRoute[i] ? " · cost used in this plan" : ""}</div>`;
+  }
   function popup(i) {
     const s = systems[i];
     const stab = plan.stabOK ? `${pct(s.p[plan.stabK])} of stress tests at ~$${plan.stabBudget}M` : "n/a at this budget";
@@ -101,6 +125,7 @@
       <div class="r"><span>In plan</span><b>${plan.inPlan[i] ? "Yes" : "No"}</b></div>
       <div class="r"><span>Funded in</span><b>${stab}</b></div>
       <div class="r"><span>Funding since 2017</span><b>${s.funded17 ? "Yes" : "No"}</b></div>
+      ${routeLine(i)}
       ${s.analytes ? `<div class="mute">Issue: ${esc(s.analytes)}</div>` : ""}`;
   }
 
@@ -117,7 +142,20 @@
     }).eachLayer((l) => polyGroup.addLayer(l));
   }
 
+  const routeGroup = L.layerGroup().addTo(map);
+  function drawRoutes() {
+    routeGroup.clearLayers();
+    if (!routeLines || !st.routes) return;
+    routeLines.features.forEach((f) => {
+      const i = idx.get(f.properties.id);
+      if (i === undefined || !plan.inPlan[i] || !viaRoute[i]) return;
+      const c = f.geometry.coordinates;
+      L.polyline([[c[0][1], c[0][0]], [c[1][1], c[1][0]]], { color: css("--good"), weight: 3, dashArray: "5 4", opacity: 0.95 })
+        .bindPopup(() => popup(i)).addTo(routeGroup);
+    });
+  }
   function restyle() {
+    drawRoutes();
     dots.forEach((m, i) => { if (m) m.setStyle({ fillColor: colorFor(i), fillOpacity: opacityFor(i) }); });
     polyLayers.forEach((l, i) => l.setStyle({ color: colorFor(i), fillColor: colorFor(i), fillOpacity: plan.inPlan[i] ? 0.45 : 0.15, weight: plan.inPlan[i] ? 1.6 : 0.8 }));
     const leg = {
@@ -138,7 +176,7 @@
       `<div class="kpi"><div class="l">Spent of budget</div><div class="v">${fmtM(plan.spent)}</div><div class="s">budget ${fmtM(st.b * 1e6)} · $${fmtN(plan.spent / Math.max(1, plan.people))}/person</div></div>`,
       `<div class="kpi"><div class="l">In disadvantaged areas</div><div class="v">${pct(plan.dac / Math.max(1, plan.people))}</div><div class="s">of people reached (DAC or SDAC)</div></div>`,
       `<div class="kpi"><div class="l">Failing, left unfunded</div><div class="v">${fmtN(plan.leftFailing.length)}</div><div class="s">${fmtN(plan.leftPeople)} people</div></div>`,
-      `<div class="kpi"><div class="l">Plan robustness</div><div class="v">${plan.robust === null ? "n/a" : pct(plan.robust)}</div><div class="s">${plan.robust === null ? "stress tests cover $100M–$2B" : `funded systems that win in ≥50% of ${summary.n_scenarios} stress tests`}</div></div>`,
+      `<div class="kpi"><div class="l">Plan robustness</div><div class="v">${plan.robust === null ? "n/a" : pct(plan.robust)}</div><div class="s">${plan.robust === null ? (st.c ? "stress tests use average costs, so n/a with routes on" : "stress tests cover $100M–$2B") : `funded systems that win in ≥50% of ${summary.n_scenarios} stress tests`}</div></div>`,
     ];
     $("#kpis").innerHTML = k.join("");
   }
@@ -167,7 +205,8 @@
       { k: "name", h: "System" }, { k: "county", h: "County" }, { k: "failing", h: "Status", f: tagS },
       { k: "pop", h: "People", num: 1, f: (r) => fmtN(r.pop) }, { k: "cost", h: "Cost", num: 1, f: (r) => fmtM(r.cost) },
       { k: "cpp", h: "$/person", num: 1, f: (r) => "$" + fmtN(r.cpp) }, { k: "stab", h: "Stability", num: 1, f: stabCell }, { k: "dac", h: "Economic status" },
-    ], rows, "pop", true));
+      { k: "how", h: "Solution", f: (r) => esc(r.how) },
+    ], rows.map((r) => ({ ...r, how: viaRoute[idx.get(r.id)] ? `Consolidate into ${RT[r.id].receiver_name} (${RT[r.id].kind === "intersect" ? "adjacent" : RT[r.id].route_mi + " mi"})` : "Modelled average" })), "pop", true));
     return el;
   }
   function tabLeft() {
@@ -210,6 +249,11 @@
       <h3>Where the costs come from</h3>
       <p>The State Water Board publishes no per-system remediation cost as data. It publishes average long-term cost per service connection by system size and status (2024 Cost Assessment, Table 7) and total cost by county (Table 9). We apply Table 7 to each system's connection count, then scale so the statewide total equals the state's $${fmtN(c.official_total_musd)}M. Costs are <b>modelled</b>, not quotes. The shown range is the state's own 0.5×–2× convention.</p>
       <div class="note ${c.spearman_county > 0.8 ? "good" : ""}"><b>Calibration test against the state's county totals (58 counties).</b> Rank correlation ${c.spearman_county}, Pearson ${c.pearson_county}. The county-level typical error is large: median absolute error ${c.median_abs_pct_error_county_ge10M}% for counties with ≥$10M, log-ratio spread ${c.log_ratio_sd_county}. The raw model came out ${(c.raw_total_musd / c.official_total_musd).toFixed(2)}× the state total (${fmtN(c.raw_total_musd)}M vs ${fmtN(c.official_total_musd)}M) before scaling. This is why every system carries a stability score instead of a single claimed answer.</div>
+      ${routesData ? (() => { const rs = routesData.summary, f = rs.by_status.Failing, a = rs.by_status["At-Risk"]; return `
+      <h3>Infrastructure routing (consolidation)</h3>
+      <p>Following the state's physical-consolidation method, a Failing system with 1,000 or fewer connections (At-Risk: 500 or fewer) is connected to the largest healthy community system within 3 miles that has more than 500 connections. Pipeline is costed at $220 per foot plus $6,200 per connection for service lines, $5,437 per connection in fees, 15% administration, CEQA ($25k adjacent, $100k route), 20% contingency, 10% planning, 15% engineering and 3.1% inflation. A route is viable if it passes the state's funding test ($96,000 per connection, or $7.2M total for systems of 75 connections or fewer).</p>
+      <div class="note good"><b>Check against the state.</b> We find ${f.viable} of ${f.total} Failing systems (${pct(f.viable / (f.total))}) and ${a.viable} of ${a.total} At-Risk systems (${pct(a.viable / (a.total))}) have a viable consolidation. The state's own 2024 model selected consolidation for 44% of Failing and 43% of At-Risk systems. The lists differ (2026 vs 2024), so agreement is encouraging, not proof.</div>
+      <div class="note"><b>Departures from the state's method.</b> Straight-line distance times ${rs.assumptions.circuity} stands in for the street route (not validated); no regional (RSMeans) cost adjustment, so high-cost regions are understated; receiver boundaries are simplified. Stress tests were run on average-based costs, so stability is not shown when routes are on.</div>`; })() : ""}
       <h3>Stress test</h3>
       <p>${summary.n_scenarios} scenarios. In each, costs are multiplied by a county-level error drawn from the observed county errors above and a per-system lognormal error (σ ${summary.sigma_system}), and the equity weight (0–2) and At-Risk weight (0.25–0.75) are redrawn. The optimizer is re-run at $100M, $250M, $500M, $1B and $2B. Stability is the share of scenarios in which a system is funded.</p>
       <h3>Optimizer versus a status-first process</h3>
@@ -274,7 +318,7 @@
     $("#lamLabel").textContent = st.l.toFixed(1); $("#arwLabel").textContent = pct(st.a); $("#resLabel").textContent = pct(st.r);
   }
   function writeHash() {
-    const p = new URLSearchParams({ b: st.b, l: st.l, a: st.a, r: st.r });
+    const p = new URLSearchParams({ b: st.b, l: st.l, a: st.a, r: st.r, c: st.c });
     history.replaceState(null, "", "#" + p.toString());
   }
   let timer = null;
@@ -291,8 +335,11 @@
   document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => {
     st.tab = b.dataset.tab; document.querySelectorAll("[data-tab]").forEach((x) => x.classList.toggle("on", x === b)); drawTab(); }));
   $("#poly").addEventListener("change", (e) => { st.poly = e.target.checked; if (st.poly) polyGroup.addTo(map); else map.removeLayer(polyGroup); });
+  $("#cons").checked = !!st.c;
+  $("#cons").addEventListener("change", (e) => { st.c = e.target.checked ? 1 : 0; update(); });
+  $("#routes").addEventListener("change", (e) => { st.routes = e.target.checked; drawRoutes(); });
   $("#reset").addEventListener("click", () => {
-    Object.assign(st, DEF); $("#budget").value = budgetToPos(st.b); $("#lam").value = st.l; $("#arw").value = st.a; $("#res").value = st.r; update(); });
+    Object.assign(st, DEF); $("#cons").checked = false; $("#budget").value = budgetToPos(st.b); $("#lam").value = st.l; $("#arw").value = st.a; $("#res").value = st.r; update(); });
   $("#copy").addEventListener("click", async () => {
     writeHash(); try { await navigator.clipboard.writeText(location.href); $("#copyMsg").textContent = "Link copied. It reproduces this scenario."; }
     catch (e) { $("#copyMsg").textContent = "Copy the address bar to share this scenario."; }
@@ -321,5 +368,5 @@
 
   polyGroup.addTo(map);
   syncLabels(); run(); kpis(); restyle(); drawTab();
-  window.__xylem = { st, get plan() { return plan; }, systems, summary };
+  window.__xylem = { st, map, routeGroup, viaRoute, get plan() { return plan; }, systems, summary };
 })();
