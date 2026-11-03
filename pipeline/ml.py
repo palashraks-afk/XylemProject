@@ -10,6 +10,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+import violation_model as vm
 from scipy.stats import rankdata
 from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.impute import SimpleImputer
@@ -106,6 +108,8 @@ def panel(y0, y1):
         x = add_spatial(x, s0)
     x["status0"] = s0.map(STATUS_ORD)
     x["dac"] = dac0.map({"SDAC": 2, "DAC": 1, "Non-DAC": 0})
+    if STAGE1:
+        x["p_hbv"] = stage1(y0).reindex(x.index)      # chance of a new health-based violation in the next 12 months (stage 1, trained on earlier cycles only)
     x["s1"] = s1
     x = x[x.status0.notna() & (x.status0 < 3) & x.s1.isin(list(STATUS_ORD))]
     x["y"] = (x.s1 == "Failing").astype(int)
@@ -113,6 +117,14 @@ def panel(y0, y1):
 
 
 SPATIAL = "--no-spatial" not in sys.argv
+STAGE1 = "--no-stage1" not in sys.argv
+_STAGE1 = {}
+
+
+def stage1(year):
+    if year not in _STAGE1:
+        _STAGE1[year] = vm.predict_for_cycle(year)[0]
+    return _STAGE1[year]
 
 
 def Xy(x):
@@ -206,6 +218,18 @@ def main():
     res["spatial_ablation"] = {"gb_auc_without_spatial": r0["models"]["gradient_boosting"]["auc"],
                                "gb_auc_with_spatial": res["models"]["gradient_boosting"]["auc"],
                                "note": "Failing-neighbour counts within 10 and 25 km added essentially nothing."}
+    # what the extra public data bought: the same backtest without the stage-1 violation forecast
+    global STAGE1
+    STAGE1 = False
+    r_base, _, _ = evaluate(panel(2024, 2025), panel(2025, 2026))
+    STAGE1 = True
+    res["without_stage1"] = {k: r_base["models"][k] for k in ("logistic", "gradient_boosting", "random_forest", "ensemble")}
+    res["stage1_failing_onset_auc"] = round(float(roc_auc_score(te.y.values, te["p_hbv"].fillna(0).values)), 3)
+    res["stage1_model"] = vm.evaluate()
+    res["source_value"] = vm.source_value()
+    src = ROOT / "data" / "extra_sources.json"
+    if src.exists():
+        res["sources"] = [{k: s.get(k) for k in ("name", "desc", "owner", "ok")} for s in json.loads(src.read_text())["sources"]]
     print(json.dumps(res, indent=1))
     # empirical rates: how often does each status become Failing next year (test transition)
     res["observed_failing_rate_by_status"] = {k: round(float(te[te.status0 == v].y.mean()), 4)
@@ -223,6 +247,8 @@ def main():
         f26 = add_spatial(f26, s26)
     f26["status0"] = s26.reindex(f26.index).map(STATUS_ORD)
     f26["dac"] = dac26.reindex(f26.index).map({"SDAC": 2, "DAC": 1, "Non-DAC": 0})
+    if STAGE1:
+        f26["p_hbv"] = stage1(2026).reindex(f26.index)
     cur = f26[f26.status0.notna() & (f26.status0 < 3)]
     # each model's probabilities are rescaled to the observed onset rate, then averaged, so values read as probabilities
     rate = float(yb.mean())
@@ -235,7 +261,8 @@ def main():
     res["final_model_note"] = (f"Final model trained on {len(yb)} system-years ({int(yb.sum())} failing onsets), average of logistic, gradient "
                                f"boosting and random forest, each rescaled so the mean forecast equals the observed onset rate ({rate:.3f}).")
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "forecast.json").write_text(json.dumps({"metrics": res, "p_fail": forecast}, separators=(",", ":")))
+    p_viol = stage1(2026) if STAGE1 else pd.Series(dtype=float)
+    (OUT / "forecast.json").write_text(json.dumps({"metrics": res, "p_fail": forecast, "p_violation": {k: round(float(v), 4) for k, v in p_viol.items() if k in forecast}}, separators=(",", ":")))
     print("scored", len(forecast), "systems; mean p", round(float(np.mean(list(forecast.values()))), 4))
 
 

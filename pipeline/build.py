@@ -10,6 +10,7 @@ from scipy.stats import spearmanr, pearsonr, rankdata
 sys.path.insert(0, str(Path(__file__).parent))
 from costmodel import system_cost, TABLES  # noqa: E402
 from optimizer import optimize, greedy_by_population  # noqa: E402
+import extra_features as ef  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data" / "raw"
@@ -40,11 +41,20 @@ def load():
 
 
 def equity_components(d):
+    """Six equity signals, each 0 to 1. The first four come from the state's own assessment; the last two come from public tract-level data
+    joined by location: CDC social vulnerability (Census income, housing, language, age, disability) and CalEnviroScreen's drinking-water indicator."""
     ces_p = d.CALENVIRO_SCREEN_SCORE.rank(pct=True)
     pov_p = d.poverty.rank(pct=True)
     dac = d.SERVICE_AREA_ECONOMIC_STATUS.map({"SDAC": 1.0, "DAC": 0.67, "Non-DAC": 0.0})
     aff = (d.aff_thresholds / 3).clip(0, 1)
-    return pd.DataFrame({"dac": dac, "ces": ces_p, "aff": aff, "pov": pov_p})
+    comp = pd.DataFrame({"dac": dac, "ces": ces_p, "aff": aff, "pov": pov_p})
+    try:
+        sv, ce = ef.tract_features(pd.Index(d.WATER_SYSTEM_NUMBER))
+        comp["svi"] = sv["svi_rpl_themes"].to_numpy()
+        comp["ces_dw"] = (ce["ces_drinkp"] / 100).to_numpy()
+    except Exception as e:                                                            # noqa: BLE001  extra data not downloaded: fall back to four
+        print("extra equity signals unavailable:", e)
+    return comp
 
 
 def benefit(pop, failing, eq, lam, ar_w):
@@ -99,6 +109,7 @@ def main():
 
     fc = json.loads((OUT / "forecast.json").read_text())
     at_risk_rate = fc["metrics"]["observed_failing_rate_by_status"]["At-Risk"]
+    pv = fc.get("p_violation", {})                                                    # chance of a new health-based violation in 12 months (stage 1)
     pf = s.WATER_SYSTEM_NUMBER.map(fc["p_fail"]).fillna(at_risk_rate).to_numpy()   # annual chance of becoming Failing
     ar_weight = lambda h: 1 - (1 - pf) ** h                                          # chance of failing within h years  # noqa: E731
     eq = s.equity.fillna(s.equity.median()).to_numpy()
@@ -172,11 +183,12 @@ def main():
             "lat": rr(row.LATITUDE_MEASURE, 4), "lon": rr(row.LONGITUDE_MEASURE, 4),
             "pop": int(row.POPULATION), "conn": int(row.conn), "failing": bool(row.failing),
             "dac": row.SERVICE_AREA_ECONOMIC_STATUS if isinstance(row.SERVICE_AREA_ECONOMIC_STATUS, str) else "Missing",
-            "eq": [rr(row.eq_dac, 2), rr(row.eq_ces, 2), rr(row.eq_aff, 2), rr(row.eq_pov, 2)],
+            "eq": [rr(row.eq_dac, 2), rr(row.eq_ces, 2), rr(row.eq_aff, 2), rr(row.eq_pov, 2)] + ([rr(row.eq_svi, 2), rr(row.eq_ces_dw, 2)] if "eq_svi" in s.columns else []),
             "cost": int(row.cost), "lo": int(row.cost_lo), "hi": int(row.cost_hi),
             "p": [round(float(fund_prob[B][i]), 2) for B in BUDGETS_M],
             "funded17": bool(funded[i]),
             "pf": None if row.failing else round(float(pf[i]), 4),
+            "pv": pv.get(row.WATER_SYSTEM_NUMBER),
             "analytes": (row.PRIMARY_ANALYTES if isinstance(row.PRIMARY_ANALYTES, str) else "")[:80],
             "bill": rr(row.bill6hcf, 0),
         })

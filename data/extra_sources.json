@@ -1,0 +1,214 @@
+{
+ "fetched": "2026-11-03",
+ "sources": [
+  {
+   "name": "sdwis_violation",
+   "desc": "Dated drinking-water violations (health-based, monitoring, reporting) for every California system",
+   "owner": "US EPA SDWIS (Envirofacts)",
+   "url": "https://data.epa.gov/efservice/VIOLATION/PWSID/BEGINNING/CA",
+   "file": "sdwis_violation.csv",
+   "ok": true,
+   "rows": 51731,
+   "expected_rows": 51731
+  },
+  {
+   "name": "sdwis_enforcement_action",
+   "desc": "Dated enforcement actions against California systems",
+   "owner": "US EPA SDWIS (Envirofacts)",
+   "url": "https://data.epa.gov/efservice/ENFORCEMENT_ACTION/PWSID/BEGINNING/CA",
+   "file": "sdwis_enforcement_action.csv",
+   "ok": true,
+   "rows": 21761,
+   "expected_rows": 21750
+  },
+  {
+   "name": "sdwis_water_system",
+   "desc": "System attributes: groundwater vs surface source, owner type, wholesaler, type",
+   "owner": "US EPA SDWIS (Envirofacts)",
+   "url": "https://data.epa.gov/efservice/WATER_SYSTEM/PWSID/BEGINNING/CA",
+   "file": "sdwis_water_system.csv",
+   "ok": true,
+   "rows": 18626,
+   "expected_rows": 18626
+  },
+  {
+   "name": "sdwis_lcr_sample_result",
+   "desc": "Lead and copper sample results",
+   "owner": "US EPA SDWIS (Envirofacts)",
+   "url": "https://data.epa.gov/efservice/LCR_SAMPLE_RESULT/PWSID/BEGINNING/CA",
+   "file": "sdwis_lcr_sample_result.csv",
+   "ok": true,
+   "rows": 19755,
+   "expected_rows": 19755
+  },
+  {
+   "name": "sdwis_service_area",
+   "desc": "Service area types (residential, school, mobile home, etc.)",
+   "owner": "US EPA SDWIS (Envirofacts)",
+   "url": "https://data.epa.gov/efservice/SERVICE_AREA/PWSID/BEGINNING/CA",
+   "file": "sdwis_service_area.csv",
+   "ok": true,
+   "rows": 12562,
+   "expected_rows": 12562
+  },
+  {
+   "name": "sdwis_geographic_area",
+   "desc": "Counties and cities served",
+   "owner": "US EPA SDWIS (Envirofacts)",
+   "url": "https://data.epa.gov/efservice/GEOGRAPHIC_AREA/PWSID/BEGINNING/CA",
+   "file": "sdwis_geographic_area.csv",
+   "ok": true,
+   "rows": 16074,
+   "expected_rows": 16074
+  },
+  {
+   "name": "ddw_facilities",
+   "desc": "State Drinking Water Watch facility list: wells, intakes, treatment plants, storage per system",
+   "owner": "CA State Water Board DDW",
+   "url": "https://publish.data.ca.gov/dataset/d6d3beac-6735-4127-9324-4e70f61698d9/resource/5af27515-f0da-4cc9-92c5-0cd8eeee6843/download/drinking-water-watch-public-water-system-facilities2.csv",
+   "file": "ddw_facilities.csv",
+   "ok": true,
+   "bytes": 2794173
+  },
+  {
+   "name": "pws_rates",
+   "desc": "Water rates reported by systems (2014-15 annual report)",
+   "owner": "CA State Water Board",
+   "url": "https://publish.data.ca.gov/dataset/c71eec54-d8bf-4650-ba42-9092a2a3cf10/resource/469dae87-52cc-4c82-831c-9fe520a0f6c0/download/drinking-water-pws-water-rates-2014-15.csv",
+   "file": "pws_rates.csv",
+   "ok": true,
+   "bytes": 3532817
+  },
+  {
+   "name": "school_lead",
+   "desc": "Lead sampling results at California schools, by water system",
+   "owner": "CA State Water Board",
+   "url": "https://publish.data.ca.gov/dataset/837e39e9-03e9-4b09-adc0-10d3368b7ec7/resource/5ebb2d68-1186-4937-acaf-8564c9a01ed6/download/monthly_posting_final.csv",
+   "file": "school_lead.csv",
+   "ok": true,
+   "bytes": 11702816
+  },
+  {
+   "name": "water_loss_audits",
+   "desc": "Real water loss audits (urban suppliers)",
+   "owner": "CA DWR / State Water Board",
+   "url": "https://publish.data.ca.gov/dataset/d3d441c4-2c9e-4bd6-8e85-77214e728959/resource/5ba2426e-744a-46e7-8632-961dbeec0112/download/audit_data_wl.csv",
+   "file": "water_loss_audits.csv",
+   "ok": true,
+   "bytes": 277635
+  },
+  {
+   "name": "small_system_shortage",
+   "desc": "DWR water shortage vulnerability scores for small water systems",
+   "owner": "CA DWR",
+   "url": "https://gis.data.cnra.ca.gov/api/download/v1/items/7090c3f1620f42a2b91d4c3ae7eb173f/csv?layers=0",
+   "file": "small_system_shortage.csv",
+   "ok": true,
+   "bytes": 3680120
+  },
+  {
+   "name": "small_supplier_risk",
+   "desc": "Drought and water shortage risk scores, small suppliers",
+   "owner": "CA DWR",
+   "url": "https://data.cnra.ca.gov/dataset/fb6e8009-141c-4f92-8962-6f5cdfa5d794/resource/bcf7cd12-15ae-4beb-b537-4a98a195d354/download/compall_sws0100120.xlsx",
+   "file": "small_supplier_risk.xlsx",
+   "ok": true,
+   "bytes": 1233083
+  },
+  {
+   "name": "dry_wells",
+   "desc": "Household dry-well and water shortage reports (location, date, well depth, repair cost)",
+   "owner": "CA DWR",
+   "url": "https://data.cnra.ca.gov/dataset/2cf184d1-2d34-46cc-8bb0-1dec86b6caf6/resource/e1fd9f48-a613-4567-8042-3d2e064d77c8/download/householdwatersupplyshortagereportingsystemdata.csv",
+   "file": "dry_wells.csv",
+   "ok": true,
+   "bytes": 1558150
+  },
+  {
+   "name": "sgma_priority",
+   "desc": "SGMA 2019 groundwater basin prioritization scores",
+   "owner": "CA DWR",
+   "url": "https://data.cnra.ca.gov/dataset/13ebd2d3-4e62-4fee-9342-d7c3ef3e0079/resource/7bfe794b-b64e-46ee-9d7f-2ca9593cfee2/download/sgma_2019_basin_prioritization_dashboard_data.csv",
+   "file": "sgma_priority.csv",
+   "ok": true,
+   "bytes": 422401
+  },
+  {
+   "name": "sgma_public_wells",
+   "desc": "Public supply wells per groundwater basin (SGMA component 3)",
+   "owner": "CA DWR",
+   "url": "https://data.cnra.ca.gov/dataset/13ebd2d3-4e62-4fee-9342-d7c3ef3e0079/resource/cf77c5f6-7b30-4d5f-862c-12bcd94df423/download/component_3_public_supply_wells.csv",
+   "file": "sgma_public_wells.csv",
+   "ok": true,
+   "bytes": 1421412
+  },
+  {
+   "name": "b118_basins",
+   "desc": "DWR Bulletin 118 groundwater basin polygons",
+   "owner": "CA DWR",
+   "url": "https://gis.water.ca.gov/arcgis/rest/services/Geoscientific/i08_B118_CA_GroundwaterBasins/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson",
+   "file": "b118_basins.geojson",
+   "ok": true
+  },
+  {
+   "name": "svi_2022",
+   "desc": "CDC/ATSDR Social Vulnerability Index 2022, California tracts (Census ACS: poverty, income, housing, language, age)",
+   "owner": "CDC/ATSDR",
+   "url": "https://svi.cdc.gov/Documents/Data/2022/csv/states/California.csv",
+   "file": "svi_2022.csv",
+   "ok": true,
+   "bytes": 6742070
+  },
+  {
+   "name": "census_gazetteer",
+   "desc": "Census 2023 tract gazetteer (centroids, land area)",
+   "owner": "US Census Bureau",
+   "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2023_Gazetteer/2023_Gaz_tracts_national.zip",
+   "file": "census_gazetteer.zip",
+   "ok": true,
+   "bytes": 2420572
+  },
+  {
+   "name": "calenviroscreen4",
+   "desc": "CalEnviroScreen 4.0 tract scores: pollution burden, groundwater threats, drinking water contaminants",
+   "owner": "CA OEHHA",
+   "url": "https://gis.data.ca.gov/api/download/v1/items/b6e0a01c423b489f8d98af641445da28/csv?layers=0",
+   "file": "calenviroscreen4.csv",
+   "ok": true,
+   "bytes": 5942889
+  },
+  {
+   "name": "noaa_pcpncy",
+   "desc": "County monthly precipitation",
+   "owner": "NOAA NCEI nClimDiv",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-pcpncy-v1.0.0-20261006",
+   "file": "noaa_pcpncy.txt",
+   "ok": true
+  },
+  {
+   "name": "noaa_pdsicy",
+   "desc": "County monthly Palmer Drought Severity Index",
+   "owner": "NOAA NCEI nClimDiv",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-pdsicy-v1.0.0-20261006",
+   "file": "noaa_pdsicy.txt",
+   "ok": true
+  },
+  {
+   "name": "noaa_tmpccy",
+   "desc": "County monthly mean temperature",
+   "owner": "NOAA NCEI nClimDiv",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-tmpccy-v1.0.0-20261006",
+   "file": "noaa_tmpccy.txt",
+   "ok": true
+  },
+  {
+   "name": "nifc_fires",
+   "desc": "Wildfire perimeters (ignition point, date, acres), California",
+   "owner": "NIFC / CAL FIRE (WFIGS)",
+   "url": "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters/FeatureServer/0/query",
+   "file": "nifc_fires.json",
+   "ok": true,
+   "rows": 2651
+  }
+ ]
+}
