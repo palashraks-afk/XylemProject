@@ -1,3 +1,7 @@
 __pycache__/
 .pytest_cache/
 *.pyc
+data/raw/2026risk.xlsx
+data/raw/2025risk.xlsx
+data/raw/2024risk.xlsx
+data/raw/us_counties.json

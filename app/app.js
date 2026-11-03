@@ -16,6 +16,10 @@
   const routesData = await fetch("data/routes.json").then((r) => r.json()).catch(() => null);
   const routeLines = await fetch("data/routes.geojson").then((r) => r.json()).catch(() => null);
   const RT = routesData ? routesData.routes : {};
+  const gis = await fetch("data/gis.json").then((r) => r.json()).catch(() => null);
+  const forecast = await fetch("data/forecast.json").then((r) => r.json()).catch(() => null);
+  const countyGeo = await fetch("data/counties.geojson").then((r) => r.json()).catch(() => null);
+  const AT_RISK_RATE = forecast ? forecast.metrics.observed_failing_rate_by_status["At-Risk"] : 0.086;
 
   const N = systems.length;
   const baseCost = systems.map((s) => s.cost);
@@ -31,12 +35,12 @@
   const med = (() => { const v = eqRaw.filter((x) => x !== null).sort((a, b) => a - b); const m = v.length >> 1; return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2; })();
   const eq = eqRaw.map((x) => (x === null ? med : x));
 
-  const DEF = { b: 500, l: summary.defaults.lambda_eq, a: summary.defaults.at_risk_weight, r: summary.defaults.small_reserve, c: 0 };
+  const DEF = { b: 500, l: summary.defaults.lambda_eq, h: summary.defaults.horizon_years, v: "fc", a: summary.defaults.at_risk_weight, r: summary.defaults.small_reserve, c: 0 };
   const BMIN = 25, BMAX = Math.round(totalCost / 1e6 / 5) * 5;
   const posToBudget = (t) => Math.round(BMIN * Math.pow(BMAX / BMIN, t / 100) / 5) * 5;
   const budgetToPos = (b) => Math.round((Math.log(b / BMIN) / Math.log(BMAX / BMIN)) * 100);
 
-  const st = Object.assign({}, DEF, { color: "plan", poly: true, tab: "plan", routes: true });
+  const st = Object.assign({}, DEF, { color: "plan", poly: true, tab: "plan", routes: true, shade: "none", hot: false, hubs: false });
   (function readHash() {
     const p = new URLSearchParams(location.hash.slice(1));
     if (p.has("b")) st.b = Math.min(BMAX, Math.max(BMIN, +p.get("b")));
@@ -44,6 +48,8 @@
     if (p.has("a")) st.a = +p.get("a");
     if (p.has("r")) st.r = +p.get("r");
     if (p.has("c")) st.c = +p.get("c") ? 1 : 0;
+    if (p.has("h")) st.h = Math.min(10, Math.max(1, +p.get("h")));
+    if (p.has("v")) st.v = p.get("v") === "fixed" ? "fixed" : "fc";
   })();
 
   $("#snap").textContent = `SAFER snapshot ${String(summary.snapshot).slice(0, 10)} · ${fmtN(summary.all_systems)} systems · ${fmtN(N)} Failing or At-Risk · ${fmtN(totalPeople)} people`;
@@ -62,7 +68,9 @@
   }
   function run() {
     applyCosts();
-    const ben = pops.map((p, i) => p * (failing[i] ? 1 : st.a) * (1 + st.l * eq[i]));
+    // At-Risk value: chance of becoming Failing within the horizon (from the forecast model), or a fixed share of Failing
+    const wRisk = (i) => failing[i] ? 1 : st.v === "fc" ? 1 - Math.pow(1 - (systems[i].pf == null ? AT_RISK_RATE : systems[i].pf), st.h) : st.a;
+    const ben = pops.map((p, i) => p * wRisk(i) * (1 + st.l * eq[i]));
     const chosen = XylemOpt.optimize(costs, ben, conns, st.b * 1e6, st.r);
     const base = XylemOpt.statusFirst(costs, pops, failing, st.b * 1e6);
     const inPlan = new Uint8Array(N); chosen.forEach((i) => (inPlan[i] = 1));
@@ -79,7 +87,7 @@
     // stability at nearest precomputed budget
     const bs = summary.budgets_musd;
     let k = 0, bd = 1e9; bs.forEach((b, j) => { const d = Math.abs(Math.log(b / st.b)); if (d < bd) { bd = d; k = j; } });
-    plan.stabK = k; plan.stabOK = bd < Math.log(1.6) && !st.c; plan.stabBudget = bs[k];   // stress tests ran on average-based costs
+    plan.stabK = k; plan.stabOK = bd < Math.log(1.6) && !st.c && st.v === "fc" && st.l <= 2; plan.stabBudget = bs[k];   // stress tests ran on average-based costs
     const strong = plan.stabOK ? chosen.filter((i) => systems[i].p[k] >= 0.5).length / Math.max(1, chosen.length) : null;
     plan.robust = strong;
   }
@@ -125,6 +133,8 @@
       <div class="r"><span>In plan</span><b>${plan.inPlan[i] ? "Yes" : "No"}</b></div>
       <div class="r"><span>Funded in</span><b>${stab}</b></div>
       <div class="r"><span>Funding since 2017</span><b>${s.funded17 ? "Yes" : "No"}</b></div>
+      ${s.pf != null ? `<div class="r"><span>Forecast: Failing within ${st.h} yr</span><b>${pct(1 - Math.pow(1 - s.pf, st.h))}</b></div>` : ""}
+      ${gis && gis.z[s.id] !== undefined ? `<div class="r"><span>Hotspot score (25 km)</span><b>${gis.z[s.id].toFixed(1)}</b></div>` : ""}
       ${routeLine(i)}
       ${s.analytes ? `<div class="mute">Issue: ${esc(s.analytes)}</div>` : ""}`;
   }
@@ -142,6 +152,39 @@
     }).eachLayer((l) => polyGroup.addLayer(l));
   }
 
+  // county shading (under everything), hotspot rings, consolidation hubs
+  map.createPane("counties"); map.getPane("counties").style.zIndex = 350;
+  const countyGroup = L.layerGroup().addTo(map), hotGroup = L.layerGroup(), hubGroup = L.layerGroup();
+  const countyAgg = () => {
+    const m = new Map();
+    systems.forEach((x, i) => { const c = m.get(x.county.toUpperCase()) || { people: 0, funded: 0 }; c.people += x.pop; if (plan.inPlan[i]) c.funded += x.pop; m.set(x.county.toUpperCase(), c); });
+    return m;
+  };
+  let countyLayer = null;
+  if (countyGeo) {
+    countyLayer = L.geoJSON(countyGeo, { pane: "counties", renderer: L.svg({ pane: "counties" }), style: () => ({ weight: 0.6, color: "#889", fillOpacity: 0 }) });
+    countyGroup.addLayer(countyLayer);
+  }
+  function drawCounties() {
+    if (!countyLayer) return;
+    const agg = countyAgg(); const maxP = Math.max(...[...agg.values()].map((c) => c.people));
+    countyLayer.eachLayer((l) => {
+      const c = agg.get(l.feature.properties.name.toUpperCase());
+      let v = 0, tip = l.feature.properties.name;
+      if (c && st.shade === "risk") { v = Math.sqrt(c.people / maxP); tip += `: ${fmtN(c.people)} people at risk`; }
+      else if (c && st.shade === "reached") { v = c.funded / c.people; tip += `: ${pct(v)} of at-risk people reached`; }
+      l.setStyle({ fillColor: st.shade === "reached" ? "#1f8a5b" : "#c2362f", fillOpacity: st.shade === "none" ? 0 : 0.12 + 0.5 * v });
+      l.unbindTooltip(); if (st.shade !== "none") l.bindTooltip(tip, { sticky: true });
+    });
+  }
+  if (gis) {
+    systems.forEach((s, i) => { const z = gis.z[s.id]; if (z > 1.96 && s.lat != null && s.lon !== 0)
+      L.circleMarker([s.lat, s.lon], { radius: 16, weight: 2, color: z > 2.58 ? "#e0561b" : "#e8a31a", fillOpacity: 0, interactive: false }).addTo(hotGroup); });
+    gis.hubs.forEach((h) => { if (h.lat == null) return;
+      L.circleMarker([h.lat, h.lon], { radius: 9, weight: 2, color: "#fff", fillColor: "#7a4bd1", fillOpacity: 0.95 })
+        .bindPopup(`<h4>${esc(h.name)}</h4><div>Could absorb <b>${h.n}</b> Failing or At-Risk neighbours (${fmtN(h.people)} people) within the state's 3-mile rule, about ${fmtM(h.cost)}.</div><div class="mute">Receiver capacity is not modelled.</div>`)
+        .addTo(hubGroup); });
+  }
   const routeGroup = L.layerGroup().addTo(map);
   function drawRoutes() {
     routeGroup.clearLayers();
@@ -155,7 +198,7 @@
     });
   }
   function restyle() {
-    drawRoutes();
+    drawRoutes(); drawCounties();
     dots.forEach((m, i) => { if (m) m.setStyle({ fillColor: colorFor(i), fillOpacity: opacityFor(i) }); });
     polyLayers.forEach((l, i) => l.setStyle({ color: colorFor(i), fillColor: colorFor(i), fillOpacity: plan.inPlan[i] ? 0.45 : 0.15, weight: plan.inPlan[i] ? 1.6 : 0.8 }));
     const leg = {
@@ -254,8 +297,19 @@
       <p>Following the state's physical-consolidation method, a Failing system with 1,000 or fewer connections (At-Risk: 500 or fewer) is connected to the largest healthy community system within 3 miles that has more than 500 connections. Pipeline is costed at $220 per foot plus $6,200 per connection for service lines, $5,437 per connection in fees, 15% administration, CEQA ($25k adjacent, $100k route), 20% contingency, 10% planning, 15% engineering and 3.1% inflation. A route is viable if it passes the state's funding test ($96,000 per connection, or $7.2M total for systems of 75 connections or fewer).</p>
       <div class="note good"><b>Check against the state.</b> We find ${f.viable} of ${f.total} Failing systems (${pct(f.viable / (f.total))}) and ${a.viable} of ${a.total} At-Risk systems (${pct(a.viable / (a.total))}) have a viable consolidation. The state's own 2024 model selected consolidation for 44% of Failing and 43% of At-Risk systems. The lists differ (2026 vs 2024), so agreement is encouraging, not proof.</div>
       <div class="note"><b>Departures from the state's method.</b> Straight-line distance times ${rs.assumptions.circuity} stands in for the street route (not validated); no regional (RSMeans) cost adjustment, so high-cost regions are understated; receiver boundaries are simplified. Stress tests were run on average-based costs, so stability is not shown when routes are on.</div>`; })() : ""}
+      ${forecast ? (() => { const m = forecast.metrics, g = m.models, sa = m.spatial_ablation, o = m.observed_failing_rate_by_status; const row = (n, k) => `<tr><td>${n}</td><td class="num">${g[k].auc}</td><td class="num">${g[k].auc_ci95[0]}–${g[k].auc_ci95[1]}</td><td class="num">${pct(g[k].recall_top10pct)}</td></tr>`; return `
+      <h3>Failure forecast (machine learning)</h3>
+      <p>Which systems that are not Failing now become Failing by the next annual snapshot? A gradient-boosting and a logistic model use each system's risk indicators (water quality, accessibility, affordability, capacity), size and economic status. <b>Strictly temporal test:</b> trained on 2024 to 2025 (${fmtN(m.train_n)} system-years, ${m.train_positives} failing onsets), tested on 2025 to 2026 (${fmtN(m.test_n)}, ${m.test_positives} onsets, base rate ${pct(m.test_base_rate, 1)}).</p>
+      <div class="scroll"><table><thead><tr><th>Predictor</th><th class="num">AUC</th><th class="num">95% interval</th><th class="num">Onsets caught in top 10%</th></tr></thead><tbody>
+        ${row("SAFER status alone (baseline)", "status_only")}${row("Total risk score (baseline)", "total_risk_score")}${row("Past presence on Failing list (baseline)", "past_failing_flag")}${row("Logistic model", "logistic")}${row("Gradient boosting", "gradient_boosting")}</tbody></table></div>
+      <div class="note"><b>Read this honestly.</b> The model beats the baselines (AUC ${g.gradient_boosting.auc} vs ${g.status_only.auc}) but the gain is modest and the intervals overlap. Most failing onsets are not predicted; the top 10% of systems catch ${pct(g.gradient_boosting.recall_top10pct)} of them. We also tried adding Failing-neighbour counts within 10 and 25 km: AUC went from ${sa.gb_auc_without_spatial} to ${sa.gb_auc_with_spatial}, essentially nothing.</div>
+      <p><b>Calibration on the held-out year.</b> Observed onset rate rises from ${pct(m.calibration_gb[0].observed_rate, 1)} in the lowest-risk fifth of systems to ${pct(m.calibration_gb[4].observed_rate, 1)} in the highest, so the ranking works. Absolute levels drift: the model predicts about ${pct(m.calibration_gb[4].mean_predicted, 1)} for the top fifth, because the onset rate rose from ${pct(m.train_positives / m.train_n, 1)} in the training transition to ${pct(m.test_base_rate, 1)} in the test year. The forecasts in the app are rescaled to the pooled rate, so treat them as approximate.</p>
+      <p><b>How it is used.</b> It replaces an arbitrary discount for At-Risk systems. Measured next-year rate of becoming Failing: ${pct(o["At-Risk"], 1)} for At-Risk, ${pct(o["Potentially At-Risk"], 1)} for Potentially At-Risk, ${pct(o["Not At-Risk"], 1)} for Not At-Risk. An At-Risk system is valued at its forecast chance of failing within your chosen horizon. Switch to "fixed share" to use a manual discount instead.</p>`; })() : ""}
+      ${gis ? (() => { const t = gis.stats; return `
+      <h3>Spatial analysis (GIS)</h3>
+      <p><b>Clustering.</b> Failing systems are spatially clustered: Moran's I = ${t.morans_i_failing} (random would be about 0), permutation p = ${t.morans_p_permutation_999}, ${t.radius_km} km neighbourhoods, ${fmtN(t.n_systems)} systems. The clustering is statistically clear but weak. <b>Hotspots.</b> Getis-Ord Gi* on people served by Failing or At-Risk systems flags ${t.hotspots_p05} systems at p&lt;0.05 and ${t.hotspots_p01} at p&lt;0.01 (rings on the map; not corrected for multiple testing). <b>Hubs.</b> ${t.hubs_with_3plus} healthy systems could each absorb three or more at-risk neighbours; see the Hubs tab.</p>`; })() : ""}
       <h3>Stress test</h3>
-      <p>${summary.n_scenarios} scenarios. In each, costs are multiplied by a county-level error drawn from the observed county errors above and a per-system lognormal error (σ ${summary.sigma_system}), and the equity weight (0–2) and At-Risk weight (0.25–0.75) are redrawn. The optimizer is re-run at $100M, $250M, $500M, $1B and $2B. Stability is the share of scenarios in which a system is funded.</p>
+      <p>${summary.n_scenarios} scenarios. In each, costs are multiplied by a county-level error drawn from the observed county errors above and a per-system lognormal error (σ ${summary.sigma_system}), and the equity weight (0–2) and the forecast horizon (1–10 years) are redrawn. The optimizer is re-run at $100M, $250M, $500M, $1B and $2B. Stability is the share of scenarios in which a system is funded.</p>
       <h3>Optimizer versus a status-first process</h3>
       <div class="scroll"><table><thead><tr><th>Budget</th><th class="num">Optimizer people</th><th class="num">Status-first people</th><th class="num">Ratio</th><th class="num">Optimizer systems</th><th class="num">Status-first systems</th></tr></thead><tbody>
       ${cmp.map((r) => `<tr><td>$${fmtN(r.budget_musd)}M</td><td class="num">${fmtN(r.optimizer.people)}</td><td class="num">${fmtN(r.status_first_baseline.people)}</td><td class="num">${(r.optimizer.people / r.status_first_baseline.people).toFixed(2)}×</td><td class="num">${r.optimizer.systems}</td><td class="num">${r.status_first_baseline.systems}</td></tr>`).join("")}</tbody></table></div>
@@ -275,7 +329,7 @@
         <li><b>${fmtN(s.missing_economic_status_systems)} systems have a missing economic status</b> (${s.missing_economic_status_in_target} of the Failing or At-Risk). Their equity index is built from the remaining components, not imputed.</li>
         <li><b>The state's cost estimates are from 2024.</b> The State Water Board's <a href="https://waterboards.ca.gov/drinking_water/certlic/drinkingwater/documents/needs/2026/2026-needs-factsheet.pdf">2026 factsheet</a> says the Cost Assessment was not updated in 2025 or 2026. Costs here use the 2024 averages on the 2026 system list.</li>
         <li><b>Service-area polygons:</b> ${cov ? `${cov.with_polygon} of ${cov.targets}` : "most"} Failing or At-Risk systems have a boundary in the state layer, simplified for the web. Boundaries are the state's, not independently verified.</li>
-        <li><b>At-Risk is a score, not a confirmed contaminant.</b> That is why it is discounted by default.</li>
+        <li><b>At-Risk is a score, not a confirmed contaminant.</b> By default each At-Risk system is valued at its forecast chance of failing within the horizon. That forecast is modest (AUC about 0.68), so its per-system values are rough.</li>
         <li><b>Count reconciliation:</b> this file lists ${fmtN(sc.Failing.systems)} Failing systems serving ${fmtN(sc.Failing.people)} people. The state's 2024 Needs Assessment summary reports 385 Failing systems. Different year and list; we have not reconciled every difference.</li>
         <li><b>Not modelled:</b> a system's readiness to build, willingness to consolidate, ongoing O&amp;M, and the state's separate analysis for state small systems and domestic wells.</li>
       </ul>
@@ -308,17 +362,29 @@
     return el;
   }
 
-  const TABS = { plan: tabPlan, spot: tabSpot, left: tabLeft, county: tabCounty, method: tabMethod, gaps: tabGaps };
+  function tabHubs() {
+    const el = document.createElement("div"); el.className = "prose";
+    if (!gis) { el.innerHTML = "<p class='mute'>No hub data.</p>"; return el; }
+    el.innerHTML = `<p class="story">${gis.stats.hubs_with_3plus} healthy systems could each absorb three or more Failing or At-Risk neighbours under the state's 3-mile rule. One pipeline project per hub is the cheapest way to fix several systems at once. The state's method does not check whether the receiver has capacity.</p>`;
+    el.appendChild(table([
+      { k: "name", h: "Receiving system" }, { k: "n", h: "Systems joined", num: 1 }, { k: "people", h: "People", num: 1, f: (r) => fmtN(r.people) },
+      { k: "cost", h: "Modelled cost", num: 1, f: (r) => fmtM(r.cost) }, { k: "cpp", h: "$/person", num: 1, f: (r) => "$" + fmtN(r.cost / r.people) },
+    ], gis.hubs, "people", true));
+    return el;
+  }
+  const TABS = { plan: tabPlan, spot: tabSpot, hubs: tabHubs, left: tabLeft, county: tabCounty, method: tabMethod, gaps: tabGaps };
   function drawTab() { const b = $("#tabbody"); b.innerHTML = ""; b.appendChild(TABS[st.tab]()); }
 
   // ---------- wiring ----------
   function syncLabels() {
     $("#budgetLabel").textContent = fmtM(st.b * 1e6);
     $("#budgetHint").textContent = `Range $${BMIN}M to ${fmtM(totalCost)} (everything)`;
-    $("#lamLabel").textContent = st.l.toFixed(1); $("#arwLabel").textContent = pct(st.a); $("#resLabel").textContent = pct(st.r);
+    $("#lamLabel").textContent = st.l.toFixed(1); $("#horLabel").textContent = st.h + " yr"; $("#arwLabel").textContent = pct(st.a);
+    $("#horWrap").hidden = st.v !== "fc"; $("#arwWrap").hidden = st.v === "fc";
+    document.querySelectorAll("[data-val]").forEach((x) => x.classList.toggle("on", x.dataset.val === st.v)); $("#resLabel").textContent = pct(st.r);
   }
   function writeHash() {
-    const p = new URLSearchParams({ b: st.b, l: st.l, a: st.a, r: st.r, c: st.c });
+    const p = new URLSearchParams({ b: st.b, l: st.l, h: st.h, v: st.v, a: st.a, r: st.r, c: st.c });
     history.replaceState(null, "", "#" + p.toString());
   }
   let timer = null;
@@ -335,11 +401,29 @@
   document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => {
     st.tab = b.dataset.tab; document.querySelectorAll("[data-tab]").forEach((x) => x.classList.toggle("on", x === b)); drawTab(); }));
   $("#poly").addEventListener("change", (e) => { st.poly = e.target.checked; if (st.poly) polyGroup.addTo(map); else map.removeLayer(polyGroup); });
+  $("#hor").value = st.h;
+  $("#hor").addEventListener("input", (e) => { st.h = +e.target.value; update(); });
+  document.querySelectorAll("[data-val]").forEach((b) => b.addEventListener("click", () => { st.v = b.dataset.val; update(); }));
+  document.querySelectorAll("[data-preset]").forEach((b) => b.addEventListener("click", () => {
+    st.b = Math.min(BMAX, +b.dataset.preset || BMAX); $("#budget").value = budgetToPos(st.b); update(); }));
+  $("#shade").addEventListener("change", (e) => { st.shade = e.target.value; drawCounties(); });
+  $("#hot").addEventListener("change", (e) => { st.hot = e.target.checked; if (st.hot) hotGroup.addTo(map); else map.removeLayer(hotGroup); });
+  $("#hub").addEventListener("change", (e) => { st.hubs = e.target.checked; if (st.hubs) hubGroup.addTo(map); else map.removeLayer(hubGroup); });
+  $("#export").addEventListener("click", () => {
+    const q = (x) => `"${String(x == null ? "" : x).replace(/"/g, '""')}"`;
+    const head = ["water_system_id", "name", "county", "status", "people", "connections", "cost_usd", "cost_per_person", "solution", "forecast_failing_within_horizon", "stability_pct", "economic_status", "hotspot_z"];
+    const rows = plan.chosen.map((i) => { const s = systems[i];
+      return [s.id, s.name, s.county, s.failing ? "Failing" : "At-Risk", s.pop, s.conn, Math.round(s.cost), Math.round(s.cost / s.pop),
+        viaRoute[i] ? `Consolidate into ${RT[s.id].receiver_name}` : "Modelled average",
+        s.pf == null ? "" : (1 - Math.pow(1 - s.pf, st.h)).toFixed(3), plan.stabOK ? Math.round(s.p[plan.stabK] * 100) : "", s.dac, gis && gis.z[s.id] !== undefined ? gis.z[s.id] : ""].map(q).join(","); });
+    const blob = new Blob([`# Xylem placement plan: budget ${fmtM(st.b * 1e6)}, equity ${st.l}, ${st.v === "fc" ? "forecast horizon " + st.h + " yr" : "fixed At-Risk share " + pct(st.a)}, small-system reserve ${pct(st.r)}\n`, head.join(",") + "\n" + rows.join("\n")], { type: "text/csv" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "xylem-placement-plan.csv"; a.click(); URL.revokeObjectURL(a.href);
+  });
   $("#cons").checked = !!st.c;
   $("#cons").addEventListener("change", (e) => { st.c = e.target.checked ? 1 : 0; update(); });
   $("#routes").addEventListener("change", (e) => { st.routes = e.target.checked; drawRoutes(); });
   $("#reset").addEventListener("click", () => {
-    Object.assign(st, DEF); $("#cons").checked = false; $("#budget").value = budgetToPos(st.b); $("#lam").value = st.l; $("#arw").value = st.a; $("#res").value = st.r; update(); });
+    Object.assign(st, DEF); $("#hor").value = st.h; $("#cons").checked = false; $("#budget").value = budgetToPos(st.b); $("#lam").value = st.l; $("#arw").value = st.a; $("#res").value = st.r; update(); });
   $("#copy").addEventListener("click", async () => {
     writeHash(); try { await navigator.clipboard.writeText(location.href); $("#copyMsg").textContent = "Link copied. It reproduces this scenario."; }
     catch (e) { $("#copyMsg").textContent = "Copy the address bar to share this scenario."; }

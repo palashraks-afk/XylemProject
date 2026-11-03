@@ -19,7 +19,7 @@ OUT.mkdir(parents=True, exist_ok=True)
 BUDGETS_M = [100, 250, 500, 1000, 2000]
 N_SCEN = 200
 SIGMA_SYS = float(np.log(2) / 1.645)  # state's own 0.5x-2x range convention read as a 90% interval
-DEFAULTS = {"lambda_eq": 1.0, "at_risk_weight": 0.5, "small_reserve": 0.0}
+DEFAULTS = {"lambda_eq": 1.0, "horizon_years": 5, "small_reserve": 0.0, "at_risk_weight": 0.5}  # at_risk_weight is the fixed-share alternative
 rng = np.random.default_rng(20261102)
 
 
@@ -97,6 +97,10 @@ def main():
     s["cost_hi"] = (s.cost * 2.0).round(0)
     county_logratio = (lr - lr.mean()).to_numpy()
 
+    fc = json.loads((OUT / "forecast.json").read_text())
+    at_risk_rate = fc["metrics"]["observed_failing_rate_by_status"]["At-Risk"]
+    pf = s.WATER_SYSTEM_NUMBER.map(fc["p_fail"]).fillna(at_risk_rate).to_numpy()   # annual chance of becoming Failing
+    ar_weight = lambda h: 1 - (1 - pf) ** h                                          # chance of failing within h years  # noqa: E731
     eq = s.equity.fillna(s.equity.median()).to_numpy()
     pops = s.POPULATION.to_numpy(float)
     failing = s.failing.to_numpy()
@@ -116,7 +120,7 @@ def main():
     comparison = []
     for B in BUDGETS_M:
         budget = B * 1e6
-        opt = run(costs, DEFAULTS["lambda_eq"], DEFAULTS["at_risk_weight"], budget)
+        opt = run(costs, DEFAULTS["lambda_eq"], ar_weight(DEFAULTS["horizon_years"]), budget)
         base = greedy_by_population(list(costs), list(pops), list(failing), budget)
         comparison.append({"budget_musd": B, "optimizer": summarize(opt), "status_first_baseline": summarize(base)})
 
@@ -130,7 +134,7 @@ def main():
         sm = np.exp(rng.normal(0, SIGMA_SYS, size=len(s)))
         mult = np.clip(cm * sm, 0.2, 5.0)
         lam = rng.uniform(0, 2)
-        arw = rng.uniform(0.25, 0.75)
+        arw = ar_weight(rng.uniform(1, 10))
         for B in BUDGETS_M:
             hits[B][run(costs * mult, lam, arw, B * 1e6)] += 1
         if k % 50 == 0:
@@ -139,7 +143,7 @@ def main():
 
     # ---- validation against funding already received since 2017 ----
     funded = (s.FUNDING_RECEIVED_SINCE_2017.fillna(0) > 0).to_numpy()
-    b0 = benefit(pops, failing, eq, DEFAULTS["lambda_eq"], DEFAULTS["at_risk_weight"])
+    b0 = benefit(pops, failing, eq, DEFAULTS["lambda_eq"], ar_weight(DEFAULTS["horizon_years"]))
     validation = {
         "n_systems": int(len(s)),
         "n_funded_since_2017": int(funded.sum()),
@@ -172,6 +176,7 @@ def main():
             "cost": int(row.cost), "lo": int(row.cost_lo), "hi": int(row.cost_hi),
             "p": [round(float(fund_prob[B][i]), 2) for B in BUDGETS_M],
             "funded17": bool(funded[i]),
+            "pf": None if row.failing else round(float(pf[i]), 4),
             "analytes": (row.PRIMARY_ANALYTES if isinstance(row.PRIMARY_ANALYTES, str) else "")[:80],
             "bill": rr(row.bill6hcf, 0),
         })

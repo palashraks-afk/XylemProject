@@ -8,3 +8,5 @@
 | Water system service-area boundaries | [State Water Board REST layer](https://gispublic.waterboards.ca.gov/portalserver/rest/services/Drinking_Water/California_Drinking_Water_System_Area_Boundaries/MapServer) | Map polygons, simplified |
 
 The state does not publish per-system remediation costs as data. See `README.md` for how costs are modelled.
+
+Prior-year files (2024, 2025 risk and affordability workbooks, same page) feed the failure forecast. `consol.pdf` is the state's physical-consolidation methodology, the source of the routing unit costs. County outlines: [plotly/datasets](https://github.com/plotly/datasets) (US Census cartographic boundaries). The three large risk workbooks are not committed; `pipeline/fetch_data.py` downloads them.

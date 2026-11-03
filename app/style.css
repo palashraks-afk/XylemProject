@@ -44,6 +44,18 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
 .kpi .s { font-size: 12px; color: var(--mute); }
 .kpi.hero .v { color: var(--accent); }
 .up { color: var(--good); font-weight: 600; }
+.grp { border-top: 1px solid var(--line); padding: 10px 0 4px; margin-bottom: 4px; }
+.grp > summary { cursor: pointer; font-weight: 600; font-size: 14px; list-style: none; display: flex; justify-content: space-between; }
+.grp > summary::after { content: "+"; color: var(--mute); }
+.grp[open] > summary::after { content: "−"; }
+.grp > summary::-webkit-details-marker { display: none; }
+.grp[open] > summary { margin-bottom: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chips button { padding: 4px 10px; border: 1px solid var(--line); border-radius: 99px; background: transparent; color: var(--ink); font: inherit; font-size: 12.5px; cursor: pointer; }
+.chips button:hover { border-color: var(--accent); color: var(--accent); }
+.sub { display: block; margin-top: 12px; }
+.sub[hidden] { display: none; }
+.chk select { margin-left: auto; padding: 3px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font: inherit; font-size: 12.5px; }
 .finder { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
 .finder input, .finder select { padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); font: inherit; font-size: 14px; }
 .finder input { flex: 1 1 260px; min-width: 0; }

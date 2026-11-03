@@ -7,7 +7,14 @@ RAW = Path(__file__).resolve().parents[1] / "data" / "raw"
 NEEDS = "https://www.waterboards.ca.gov/drinking_water/certlic/drinkingwater/documents/needs"
 FILES = {
     "2026affordability.xlsx": f"{NEEDS}/2026/2026affordability.xlsx",
+    "2025affordability.xlsx": f"{NEEDS}/2025/2025affordability.xlsx",
+    "2024affordability.xlsx": f"{NEEDS}/2024affordability.xlsx",
+    "2026risk.xlsx": f"{NEEDS}/2026/2026risk.xlsx",      # about 40 MB; used by the forecast
+    "2025risk.xlsx": f"{NEEDS}/2025/2025risk.xlsx",
+    "2024risk.xlsx": f"{NEEDS}/2024/2024risk.xlsx",
     "2024costassessment.pdf": f"{NEEDS}/2024/2024costassessment.pdf",
+    "consol.pdf": f"{NEEDS}/2024/2024costassessment-physical-consolidation.pdf",
+    "us_counties.json": "https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json",
 }
 
 
