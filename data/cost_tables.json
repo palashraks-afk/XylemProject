@@ -1,0 +1,24 @@
+{
+  "_source": "California State Water Resources Control Board, 2024 Cost Assessment (June 2024), Tables 7 and 9. Transcribed by hand from the PDF (data/raw/2024costassessment.pdf). The state does not publish per-system remediation costs as data.",
+  "per_connection_usd": {
+    "bins": [[0,100],[101,500],[501,1000],[1001,3300],[3301,30000],[30001,null]],
+    "failing":  [139954, 31800, 15000, 5810, 2641, 1409],
+    "at_risk":  [252513, 24760, 7409, 5382, 3161, null],
+    "_note": "At-Risk has no value for >30,000 connections (state lists N/A). We assume the Failing value (1409) and flag it as an assumption."
+  },
+  "county_totals_musd": {
+    "Alameda":[0.00,13.87],"Alpine":[1.62,1.52],"Amador":[16.44,23.43],"Butte":[22.33,22.06],"Calaveras":[6.63,5.40],
+    "Colusa":[34.92,6.59],"Contra Costa":[15.73,10.10],"Del Norte":[2.87,6.74],"El Dorado":[1.70,11.78],"Fresno":[256.74,157.48],
+    "Glenn":[0.00,16.42],"Humboldt":[0.71,16.80],"Imperial":[24.07,67.24],"Inyo":[23.96,16.93],"Kern":[405.13,263.67],
+    "Kings":[70.11,51.23],"Lake":[27.41,74.69],"Lassen":[0,0],"Los Angeles":[54.20,165.11],"Madera":[96.34,68.74],
+    "Marin":[0.04,2.01],"Mariposa":[4.50,11.73],"Mendocino":[17.15,25.62],"Merced":[139.65,73.10],"Modoc":[0,0],
+    "Mono":[8.40,6.67],"Monterey":[81.88,99.40],"Napa":[25.38,37.23],"Nevada":[1.39,25.73],"Orange":[0.00,3.32],
+    "Placer":[0.00,19.23],"Plumas":[11.84,5.00],"Riverside":[50.11,104.68],"Sacramento":[22.11,192.59],"San Benito":[16.99,27.21],
+    "San Bernardino":[122.30,233.34],"San Diego":[72.38,33.18],"San Francisco":[0,0],"San Joaquin":[129.29,142.56],
+    "San Luis Obispo":[91.75,31.78],"San Mateo":[7.14,11.31],"Santa Barbara":[8.52,102.33],"Santa Clara":[18.57,40.71],
+    "Santa Cruz":[20.80,43.35],"Shasta":[1.53,47.81],"Sierra":[0.00,9.09],"Siskiyou":[2.43,21.21],"Solano":[12.97,7.31],
+    "Sonoma":[54.03,98.18],"Stanislaus":[146.46,42.08],"Sutter":[10.13,18.35],"Tehama":[0.00,57.61],"Trinity":[6.09,6.89],
+    "Tulare":[255.14,151.01],"Tuolumne":[41.65,22.78],"Ventura":[26.64,58.38],"Yolo":[12.63,59.03],"Yuba":[12.14,11.58]
+  },
+  "state_total_musd": {"failing": 2493, "at_risk": 2883, "total": 5386, "systems": 998}
+}

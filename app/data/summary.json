@@ -1,0 +1,605 @@
+{
+ "snapshot": "2026-11-02",
+ "all_systems": 3186,
+ "status_counts": {
+  "At-Risk": {
+   "systems": 636,
+   "people": 1502668
+  },
+  "Failing": {
+   "systems": 426,
+   "people": 428532
+  },
+  "Not Assessed": {
+   "systems": 179,
+   "people": 25014764
+  },
+  "Not At-Risk": {
+   "systems": 1472,
+   "people": 11123669
+  },
+  "Potentially At-Risk": {
+   "systems": 473,
+   "people": 1851605
+  }
+ },
+ "failing_at_risk_people": 1931200,
+ "dac_share_people": 0.679,
+ "missing_economic_status_systems": 1028,
+ "missing_economic_status_in_target": 421,
+ "budgets_musd": [
+  100,
+  250,
+  500,
+  1000,
+  2000
+ ],
+ "defaults": {
+  "lambda_eq": 1.0,
+  "at_risk_weight": 0.5,
+  "small_reserve": 0.0
+ },
+ "n_scenarios": 200,
+ "sigma_system": 0.421,
+ "calibration": {
+  "raw_total_musd": 7901.4,
+  "official_total_musd": 5386,
+  "scale_factor": 0.6816,
+  "counties_compared": 58,
+  "spearman_county": 0.882,
+  "pearson_county": 0.921,
+  "log_ratio_sd_county": 0.862,
+  "median_abs_pct_error_county_ge10M": 40.9,
+  "note": "Raw model overshoots the state total because our 2026 list has more systems than the state's 2024 list and Table 7 averages are not size-weighted; we scale to the state total and report the county-level fit."
+ },
+ "comparison": [
+  {
+   "budget_musd": 100,
+   "optimizer": {
+    "systems": 17,
+    "people": 221298,
+    "spent_musd": 98.1,
+    "dac_people": 216104,
+    "small_systems": 7
+   },
+   "status_first_baseline": {
+    "systems": 13,
+    "people": 168274,
+    "spent_musd": 100.0,
+    "dac_people": 155181,
+    "small_systems": 3
+   }
+  },
+  {
+   "budget_musd": 250,
+   "optimizer": {
+    "systems": 39,
+    "people": 506981,
+    "spent_musd": 245.5,
+    "dac_people": 485814,
+    "small_systems": 18
+   },
+   "status_first_baseline": {
+    "systems": 32,
+    "people": 292238,
+    "spent_musd": 249.9,
+    "dac_people": 232154,
+    "small_systems": 5
+   }
+  },
+  {
+   "budget_musd": 500,
+   "optimizer": {
+    "systems": 54,
+    "people": 966559,
+    "spent_musd": 493.1,
+    "dac_people": 945562,
+    "small_systems": 17
+   },
+   "status_first_baseline": {
+    "systems": 68,
+    "people": 358300,
+    "spent_musd": 499.9,
+    "dac_people": 271413,
+    "small_systems": 23
+   }
+  },
+  {
+   "budget_musd": 1000,
+   "optimizer": {
+    "systems": 126,
+    "people": 1549044,
+    "spent_musd": 983.5,
+    "dac_people": 1138374,
+    "small_systems": 44
+   },
+   "status_first_baseline": {
+    "systems": 185,
+    "people": 406664,
+    "spent_musd": 999.9,
+    "dac_people": 300808,
+    "small_systems": 140
+   }
+  },
+  {
+   "budget_musd": 2000,
+   "optimizer": {
+    "systems": 392,
+    "people": 1836838,
+    "spent_musd": 1951.9,
+    "dac_people": 1268885,
+    "small_systems": 264
+   },
+   "status_first_baseline": {
+    "systems": 438,
+    "people": 944874,
+    "spent_musd": 2000.0,
+    "dac_people": 677518,
+    "small_systems": 384
+   }
+  }
+ ],
+ "validation": {
+  "n_systems": 1062,
+  "n_funded_since_2017": 176,
+  "auc_need_benefit_vs_funded": 0.686,
+  "auc_efficiency_vs_funded": 0.653,
+  "auc_population_vs_funded": 0.646,
+  "auc_failing_flag_vs_funded": 0.627,
+  "funded_share_failing": 0.254,
+  "funded_share_at_risk": 0.107,
+  "interpretation": "AUC 0.5 = no relationship. Funding since 2017 reflects need, readiness and politics, not cost-effectiveness; this asks whether our ranking points at systems the state also chose to fund. A sanity check, not proof."
+ },
+ "county": [
+  {
+   "county": "Alameda",
+   "systems": 1,
+   "failing": 0,
+   "people": 50,
+   "cost_musd": 0.2,
+   "official_musd": 13.87
+  },
+  {
+   "county": "Amador",
+   "systems": 5,
+   "failing": 3,
+   "people": 1782,
+   "cost_musd": 15.8,
+   "official_musd": 39.870000000000005
+  },
+  {
+   "county": "Butte",
+   "systems": 15,
+   "failing": 6,
+   "people": 2106,
+   "cost_musd": 38.1,
+   "official_musd": 44.39
+  },
+  {
+   "county": "Calaveras",
+   "systems": 3,
+   "failing": 0,
+   "people": 840,
+   "cost_musd": 16.4,
+   "official_musd": 12.030000000000001
+  },
+  {
+   "county": "Colusa",
+   "systems": 3,
+   "failing": 2,
+   "people": 7347,
+   "cost_musd": 21.4,
+   "official_musd": 41.510000000000005
+  },
+  {
+   "county": "Contra Costa",
+   "systems": 10,
+   "failing": 5,
+   "people": 2428,
+   "cost_musd": 38.7,
+   "official_musd": 25.83
+  },
+  {
+   "county": "Del Norte",
+   "systems": 8,
+   "failing": 5,
+   "people": 1007,
+   "cost_musd": 47.4,
+   "official_musd": 9.61
+  },
+  {
+   "county": "El Dorado",
+   "systems": 6,
+   "failing": 0,
+   "people": 445,
+   "cost_musd": 23.9,
+   "official_musd": 13.479999999999999
+  },
+  {
+   "county": "Fresno",
+   "systems": 69,
+   "failing": 30,
+   "people": 144848,
+   "cost_musd": 294.1,
+   "official_musd": 414.22
+  },
+  {
+   "county": "Glenn",
+   "systems": 3,
+   "failing": 0,
+   "people": 431,
+   "cost_musd": 33.4,
+   "official_musd": 16.42
+  },
+  {
+   "county": "Humboldt",
+   "systems": 13,
+   "failing": 8,
+   "people": 5957,
+   "cost_musd": 60.6,
+   "official_musd": 17.51
+  },
+  {
+   "county": "Imperial",
+   "systems": 17,
+   "failing": 7,
+   "people": 88333,
+   "cost_musd": 89.7,
+   "official_musd": 91.31
+  },
+  {
+   "county": "Inyo",
+   "systems": 9,
+   "failing": 3,
+   "people": 661,
+   "cost_musd": 48.8,
+   "official_musd": 40.89
+  },
+  {
+   "county": "Kern",
+   "systems": 102,
+   "failing": 47,
+   "people": 236474,
+   "cost_musd": 510.6,
+   "official_musd": 668.8
+  },
+  {
+   "county": "Kings",
+   "systems": 10,
+   "failing": 3,
+   "people": 73725,
+   "cost_musd": 61.7,
+   "official_musd": 121.34
+  },
+  {
+   "county": "Lake",
+   "systems": 13,
+   "failing": 3,
+   "people": 6714,
+   "cost_musd": 78.9,
+   "official_musd": 102.1
+  },
+  {
+   "county": "Lassen",
+   "systems": 8,
+   "failing": 3,
+   "people": 2178,
+   "cost_musd": 34.4,
+   "official_musd": 0.0
+  },
+  {
+   "county": "Los Angeles",
+   "systems": 55,
+   "failing": 14,
+   "people": 266296,
+   "cost_musd": 369.1,
+   "official_musd": 219.31
+  },
+  {
+   "county": "Madera",
+   "systems": 47,
+   "failing": 28,
+   "people": 23368,
+   "cost_musd": 223.6,
+   "official_musd": 165.07999999999998
+  },
+  {
+   "county": "Marin",
+   "systems": 2,
+   "failing": 0,
+   "people": 1973,
+   "cost_musd": 5.4,
+   "official_musd": 2.05
+  },
+  {
+   "county": "Mariposa",
+   "systems": 4,
+   "failing": 1,
+   "people": 3281,
+   "cost_musd": 13.9,
+   "official_musd": 16.23
+  },
+  {
+   "county": "Mendocino",
+   "systems": 12,
+   "failing": 7,
+   "people": 9568,
+   "cost_musd": 52.6,
+   "official_musd": 42.769999999999996
+  },
+  {
+   "county": "Merced",
+   "systems": 23,
+   "failing": 10,
+   "people": 90999,
+   "cost_musd": 116.1,
+   "official_musd": 212.75
+  },
+  {
+   "county": "Modoc",
+   "systems": 1,
+   "failing": 0,
+   "people": 629,
+   "cost_musd": 2.0,
+   "official_musd": 0.0
+  },
+  {
+   "county": "Mono",
+   "systems": 7,
+   "failing": 2,
+   "people": 1493,
+   "cost_musd": 32.0,
+   "official_musd": 15.07
+  },
+  {
+   "county": "Monterey",
+   "systems": 61,
+   "failing": 19,
+   "people": 21115,
+   "cost_musd": 260.7,
+   "official_musd": 181.28
+  },
+  {
+   "county": "Napa",
+   "systems": 11,
+   "failing": 4,
+   "people": 25835,
+   "cost_musd": 64.4,
+   "official_musd": 62.61
+  },
+  {
+   "county": "Nevada",
+   "systems": 6,
+   "failing": 1,
+   "people": 10068,
+   "cost_musd": 26.3,
+   "official_musd": 27.12
+  },
+  {
+   "county": "Orange",
+   "systems": 3,
+   "failing": 0,
+   "people": 382,
+   "cost_musd": 20.5,
+   "official_musd": 3.32
+  },
+  {
+   "county": "Placer",
+   "systems": 2,
+   "failing": 0,
+   "people": 400,
+   "cost_musd": 7.5,
+   "official_musd": 19.23
+  },
+  {
+   "county": "Plumas",
+   "systems": 3,
+   "failing": 3,
+   "people": 889,
+   "cost_musd": 12.7,
+   "official_musd": 16.84
+  },
+  {
+   "county": "Riverside",
+   "systems": 29,
+   "failing": 11,
+   "people": 82880,
+   "cost_musd": 194.3,
+   "official_musd": 154.79000000000002
+  },
+  {
+   "county": "Sacramento",
+   "systems": 23,
+   "failing": 4,
+   "people": 6734,
+   "cost_musd": 102.6,
+   "official_musd": 214.7
+  },
+  {
+   "county": "San Benito",
+   "systems": 9,
+   "failing": 4,
+   "people": 808,
+   "cost_musd": 25.8,
+   "official_musd": 44.2
+  },
+  {
+   "county": "San Bernardino",
+   "systems": 49,
+   "failing": 26,
+   "people": 346444,
+   "cost_musd": 376.1,
+   "official_musd": 355.64
+  },
+  {
+   "county": "San Diego",
+   "systems": 34,
+   "failing": 20,
+   "people": 10961,
+   "cost_musd": 148.0,
+   "official_musd": 105.56
+  },
+  {
+   "county": "San Joaquin",
+   "systems": 47,
+   "failing": 8,
+   "people": 11169,
+   "cost_musd": 319.0,
+   "official_musd": 271.85
+  },
+  {
+   "county": "San Luis Obispo",
+   "systems": 22,
+   "failing": 9,
+   "people": 29764,
+   "cost_musd": 99.9,
+   "official_musd": 123.53
+  },
+  {
+   "county": "San Mateo",
+   "systems": 9,
+   "failing": 3,
+   "people": 3598,
+   "cost_musd": 49.1,
+   "official_musd": 18.45
+  },
+  {
+   "county": "Santa Barbara",
+   "systems": 13,
+   "failing": 5,
+   "people": 2669,
+   "cost_musd": 58.1,
+   "official_musd": 110.85
+  },
+  {
+   "county": "Santa Clara",
+   "systems": 12,
+   "failing": 6,
+   "people": 1362,
+   "cost_musd": 34.2,
+   "official_musd": 59.28
+  },
+  {
+   "county": "Santa Cruz",
+   "systems": 21,
+   "failing": 4,
+   "people": 4965,
+   "cost_musd": 57.1,
+   "official_musd": 64.15
+  },
+  {
+   "county": "Shasta",
+   "systems": 13,
+   "failing": 3,
+   "people": 6233,
+   "cost_musd": 72.2,
+   "official_musd": 49.34
+  },
+  {
+   "county": "Sierra",
+   "systems": 2,
+   "failing": 0,
+   "people": 926,
+   "cost_musd": 5.6,
+   "official_musd": 9.09
+  },
+  {
+   "county": "Siskiyou",
+   "systems": 15,
+   "failing": 6,
+   "people": 3901,
+   "cost_musd": 63.7,
+   "official_musd": 23.64
+  },
+  {
+   "county": "Solano",
+   "systems": 2,
+   "failing": 0,
+   "people": 89,
+   "cost_musd": 2.5,
+   "official_musd": 20.28
+  },
+  {
+   "county": "Sonoma",
+   "systems": 52,
+   "failing": 33,
+   "people": 18788,
+   "cost_musd": 204.8,
+   "official_musd": 152.21
+  },
+  {
+   "county": "Stanislaus",
+   "systems": 31,
+   "failing": 14,
+   "people": 74781,
+   "cost_musd": 155.0,
+   "official_musd": 188.54000000000002
+  },
+  {
+   "county": "Sutter",
+   "systems": 7,
+   "failing": 3,
+   "people": 10624,
+   "cost_musd": 28.9,
+   "official_musd": 28.480000000000004
+  },
+  {
+   "county": "Tehama",
+   "systems": 17,
+   "failing": 2,
+   "people": 2581,
+   "cost_musd": 80.0,
+   "official_musd": 57.61
+  },
+  {
+   "county": "Trinity",
+   "systems": 6,
+   "failing": 4,
+   "people": 5002,
+   "cost_musd": 24.5,
+   "official_musd": 12.98
+  },
+  {
+   "county": "Tulare",
+   "systems": 63,
+   "failing": 27,
+   "people": 118557,
+   "cost_musd": 322.5,
+   "official_musd": 406.15
+  },
+  {
+   "county": "Tuolumne",
+   "systems": 16,
+   "failing": 5,
+   "people": 4115,
+   "cost_musd": 105.5,
+   "official_musd": 64.43
+  },
+  {
+   "county": "Ventura",
+   "systems": 21,
+   "failing": 9,
+   "people": 87326,
+   "cost_musd": 139.2,
+   "official_musd": 85.02000000000001
+  },
+  {
+   "county": "Yolo",
+   "systems": 6,
+   "failing": 3,
+   "people": 57580,
+   "cost_musd": 43.5,
+   "official_musd": 71.66
+  },
+  {
+   "county": "Yuba",
+   "systems": 11,
+   "failing": 3,
+   "people": 7721,
+   "cost_musd": 52.8,
+   "official_musd": 23.72
+  }
+ ],
+ "total_modelled_cost_musd": 5386.0,
+ "cost_assumption_note": "At-Risk has no value for >30,000 connections (state lists N/A). We assume the Failing value (1409) and flag it as an assumption."
+}

@@ -1,69 +1,68 @@
 # Xylem
 
-A web-based GIS app that helps direct clean drinking water and sanitation funding to where it does the most good for the most people, per dollar spent, using public California SAFER program data.
+**Give it a budget and an equity rule. It returns the set of California drinking water systems that reaches the most people, and shows how stable that answer is.**
 
-## Goal
+Xylem is a web app built on the State Water Board's own SAFER, Affordability and Cost Assessment data. It turns "which water systems are failing" into "where does the next dollar reach the most people", with the trade-offs left visible.
 
-Maximize equitable access to clean water per unit of budget spent. Xylem combines the State Water Board's SAFER (Safe and Affordable Funding for Equity and Resilience) risk assessment data with California's drinking water cost assessment data in an interactive map, so planners, funders and communities can see which water systems are failing, who they serve, and where an investment reaches the most people.
+## Run it
 
-## The problem
+```bash
+pip install -r requirements.txt
+python pipeline/fetch_data.py        # download raw data (or use the committed data/raw)
+python pipeline/build.py             # join, cost model, optimizer, stress test, validation (about 20 s)
+python pipeline/fetch_boundaries.py  # service-area polygons
+python -m pytest tests -q            # 24 tests, including Python/JS optimizer parity
+cd app && python -m http.server 8765 # open http://localhost:8765
+```
 
-Roughly 40 million Californians are served by about 3,200 public water systems tracked by the State Water Board. The SAFER program labels each system Failing, At-Risk, Potentially At-Risk or Not At-Risk, but the data lives in flat files and dashboards that are hard to rank, filter and compare. Funding decisions need three questions answered together:
+Scenarios are shareable: the controls are stored in the URL (for example `#b=1000&l=2&a=0.5&r=0.3`).
 
-1. How many people are affected, and where?
-2. Are those people in disadvantaged communities (DAC / SDAC)?
-3. What would it cost to fix, and how many people does each dollar reach?
+## What it does
 
-## Approach
+- **Optimizer.** For a budget, picks the Failing and At-Risk systems that maximize benefit = people served × status weight × (1 + equity weight × equity index). An exact 0/1 knapsack (dynamic programming), run in your browser. Controls: budget, equity weight, how much At-Risk counts relative to Failing, and a share of budget reserved for small systems.
+- **Cost model.** The state publishes no per-system remediation cost as data. We apply its published average cost per service connection by system size (2024 Cost Assessment, Table 7) to each system, then scale to the state's $5.386B total.
+- **Uncertainty.** 200 stress-test scenarios vary costs and weights and re-run the optimizer. Each system shows how often it is still funded.
+- **Who is left out.** A tab lists the Failing systems the plan does not fund, because pure cost-effectiveness skips small, expensive systems.
+- **Map** with the State Water Board's service-area boundaries (1,061 of 1,062 target systems), colored by plan, status or stability.
 
-- **Population affected:** rank systems and counties by people served by Failing and At-Risk systems.
-- **Equity lens:** weight by disadvantaged-community status, median household income, CalEnviroScreen score and affordability risk, so small, poor systems are not drowned out by large utilities.
-- **Cost-effectiveness:** join the cost assessment so investments can be compared by people served per dollar.
-- **GIS first:** every result is tied to a system location and, later, its service-area boundary, so it can be mapped and filtered.
+## Results (2026-11-02 SAFER snapshot, 1,062 Failing or At-Risk systems, 1.93M people)
 
-## Data
+| Budget | Optimizer reaches | Status-first reaches | Ratio |
+|---|---|---|---|
+| $100M | 221,298 | 168,274 | 1.32× |
+| $250M | 506,981 | 292,238 | 1.73× |
+| $500M | 966,559 | 358,300 | 2.70× |
+| $1B | 1,549,044 | 406,664 | 3.81× |
+| $2B | 1,836,838 | 944,874 | 1.94× |
 
-| Dataset | Source | Status |
-|---|---|---|
-| SAFER Risk Assessment flat file (system status, population, DAC/SDAC, risk scores, violations) | California State Water Board, via [data.ca.gov](https://data.ca.gov/dataset/safer-failing-and-at-risk-drinking-water-systems) | In use |
-| Drinking water cost assessment | California State Water Board Needs Assessment | Planned |
-| Water system service area boundaries | State Water Board / GIS layer | Planned |
+Status-first means Failing before At-Risk, largest system first. It is a simple stand-in, not the state's real process, which also weighs readiness, willingness and technical-assistance needs. These are modelled results on modelled costs.
 
-See [DataSets.md](DataSets.md) for links.
+## How well is it tested?
 
-## What exists so far
+| Check | Result |
+|---|---|
+| Cost model vs the state's 58 county totals | Rank correlation 0.88, Pearson 0.92 |
+| Same check, magnitude | Median absolute error about 41% for counties over $10M. The raw model came out 1.47× the state total before scaling. |
+| Ranking vs funding awarded since 2017 (AUC, 0.5 = no relationship) | 0.69 need-and-equity score, 0.65 efficiency, 0.65 population alone, 0.63 Failing flag alone |
+| Optimizer vs brute force, budget never exceeded, JS port vs Python | Pass (24 tests) |
 
-An interactive explorer built on the SAFER Risk Assessment file (3,186 systems, snapshot dated 2026-10-31):
+The AUC values are modest. Past funding reflects need, readiness and politics, not cost-effectiveness, so this shows the ranking is not pointing the wrong way. It does not show the optimizer is right. The county-level cost error is large, which is why every system carries a stability score instead of a single claimed answer.
 
-- Sortable, filterable table of every system by SAFER status, county, DAC/SDAC and free-text search
-- A map of systems sized by population served and colored by status
-- A county rollup of people served by Failing and At-Risk systems
-- Ranked spreadsheets of all systems and counties
+## Honest limits
 
-**[Open the explorer](https://claude.ai/artifact/V58ovMEdDeXzRrUXTiTyuF)**
+- **Costs are modelled, not quotes, and use 2024 averages.** The State Water Board says it did not update the Cost Assessment in 2025 or 2026.
+- **179 systems have no SAFER status** and serve about 25M people (mostly the largest utilities). They are outside this analysis, so big-city need is understated.
+- **1,028 systems have a missing economic status.** Their equity index uses the remaining components.
+- **At-Risk is a score, not a confirmed contaminant**, so it is discounted by default.
+- **At $1B and $2B the optimizer's share of people in disadvantaged areas is slightly below the status-first baseline** (73% vs 74%, 69% vs 72%). It reaches far more people overall, but it is not uniformly better on that measure.
+- Not modelled: readiness, willingness to consolidate, ongoing operations cost, state small systems and domestic wells.
 
-### Early findings from the 2026-10-31 file
-
-- About 1.93M people are served by Failing (about 428K) or At-Risk (about 1.50M) systems, and about 68% of them are in DAC or SDAC areas.
-- By people affected, the largest counties are San Bernardino, Los Angeles, Kern, Fresno and Tulare. By share of population, Kings, Imperial, Merced and Tulare are highest.
-- The Central Valley dominates the Failing list, mostly from 1,2,3-trichloropropane, nitrate, arsenic and disinfection byproducts.
-
-## Data caveats
-
-- 179 systems have no SAFER status ("Not Assessed"). They are mostly the largest utilities (LADWP, East Bay MUD, San Diego, San Jose Water, SFPUC) and serve about 25M people, so big-city counts and shares are understated.
-- "At-Risk" comes from a risk score (affordability, accessibility, capacity, source vulnerability), not a confirmed contaminant. "Failing" is a current violation-based listing.
-- About 1,030 systems have a missing or indeterminate economic status, so the DAC/SDAC share is an undercount.
-- Population is as reported by each system and county is where the system is registered.
-
-## Roadmap
-
-1. Join the cost assessment data and add a people-served-per-dollar metric
-2. Combined need score (people affected, DAC/SDAC, affordability burden)
-3. Service-area boundary layer on a real basemap
-4. Click-to-filter between the map, tables and county view
-5. Scheduled refresh when the State Water Board publishes a new file
+See [NOVELTY.md](NOVELTY.md) for prior work and what is different here.
 
 ## Repository
 
-- `README.md`: this overview
-- `DataSets.md`: dataset links
+- `app/`: static web app (`index.html`, `app.js`, `optimizer.js`) and its data
+- `pipeline/`: data fetch, cost model, optimizer reference implementation, build, boundaries
+- `tests/`: pytest suite and the Node parity script
+- `data/raw/`: source files; `data/cost_tables.json`: the state's Tables 7 and 9, transcribed by hand and checked against its totals
+- `DataSets.md`: data sources
