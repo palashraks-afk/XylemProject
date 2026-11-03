@@ -14,6 +14,7 @@ python pipeline/build.py             # join, cost model, optimizer, stress test,
 python pipeline/fetch_boundaries.py  # service-area polygons
 python pipeline/routing.py           # consolidation routes (about 30 s first run)
 python pipeline/gis.py               # county layer, Moran's I, Gi* hotspots, hubs (about 30 s)
+python pipeline/fetch_infrastructure.py   # real canals, aqueducts, plants and towers from OpenStreetMap, for the 3D map
 python -m pytest tests -q            # tests, including Python/JS optimizer parity
 cd app && python -m http.server 8765 # open http://localhost:8765
 ```
@@ -22,6 +23,7 @@ Scenarios are shareable: the controls are stored in the URL, and a plan can be d
 
 ## What it does
 
+- **3D map (default).** Real terrain (SRTM), satellite imagery, and every California city's buildings, with the plan placed on it as extruded water towers, plus real canals, aqueducts, tunnels, treatment plants and water towers from OpenStreetMap. The 2D map is one click away. The infrastructure is context only; it does not enter the optimizer or the costs.
 - **Placement optimizer.** For a budget, picks the Failing and At-Risk systems that maximize benefit = people served × status value × (1 + equity weight × equity index). An exact 0/1 knapsack, run in the browser. Controls: budget (with presets), equity weight, a reserve for small systems.
 - **Forecast (machine learning).** At-Risk systems are valued at their forecast chance of becoming Failing within a look-ahead you choose, instead of an arbitrary discount. Strict temporal backtest below.
 - **Cost model.** The state publishes no per-system remediation cost as data. We apply its published average cost per service connection by system size (2024 Cost Assessment, Table 7) and scale to its $5.386B total.
@@ -35,21 +37,21 @@ Scenarios are shareable: the controls are stored in the URL, and a plan can be d
 | Budget | Optimizer reaches | Status-first reaches | Ratio |
 |---|---|---|---|
 | $100M | 171,738 | 168,274 | 1.02× |
-| $250M | 309,928 | 292,238 | 1.06× |
-| $500M | 763,047 | 358,300 | 2.13× |
-| $1000M | 1,313,200 | 406,664 | 3.23× |
-| $2000M | 1,805,051 | 944,874 | 1.91× |
+| $250M | 305,955 | 292,238 | 1.05× |
+| $500M | 564,222 | 358,300 | 1.57× |
+| $1000M | 1,158,711 | 406,664 | 2.85× |
+| $2000M | 1,803,857 | 944,874 | 1.91× |
 
-Status-first means Failing before At-Risk, largest system first. It is a simple stand-in, not the state's real process, which also weighs readiness, willingness and technical-assistance needs. At small budgets the optimizer is barely better than that baseline; the advantage appears from about $500M. All results are modelled, on modelled costs.
+The optimizer's lead depends on how At-Risk systems are valued: the forecast gives each a chance of failing, so a smoother forecast narrows it. Status-first means Failing before At-Risk, largest system first. It is a simple stand-in, not the state's real process, which also weighs readiness, willingness and technical-assistance needs. At small budgets the optimizer is barely better than that baseline; the advantage appears from about $500M. All results are modelled, on modelled costs.
 
 ## How well is it tested?
 
 | Check | Result |
 |---|---|
-| Failure forecast, trained 2024→2025, tested 2025→2026 (120 onsets in 2,616 systems) | AUC 0.685 (95% interval 0.638 to 0.728) vs 0.618 for SAFER status alone and 0.606 for the total risk score |
-| Same test, ranking | Observed onset rate rises from 0.6% in the lowest-risk fifth to 9.2% in the highest |
+| Failure forecast, trained 2024→2025, tested 2025→2026 (120 onsets in 2,616 systems) | AUC 0.700 (95% interval 0.657 to 0.744) for an ensemble of logistic regression, gradient boosting and random forest, vs 0.618 for SAFER status alone and 0.606 for the total risk score. The three models alone score 0.668, 0.680 and 0.702, all inside each other's intervals, so the ensemble was chosen for robustness, not for its test score |
+| Same test, ranking | Observed onset rate rises from 1.5% in the lowest-risk fifth to 9.8% in the highest (ensemble ranking) |
 | Same test, levels | Predicted probabilities run low because the onset rate rose from 2.6% to 4.6% between years; forecasts are rescaled and approximate |
-| Spatial features (Failing neighbours within 10 and 25 km) added to the forecast | No gain (AUC 0.683 to 0.685) |
+| Spatial features (Failing neighbours within 10 and 25 km) added to the forecast | No gain (gradient boosting AUC 0.687 without, 0.680 with) |
 | Cost model vs the state's 58 county totals | Rank correlation 0.88, Pearson 0.92; median absolute error about 41%; raw model 1.47× the state total before scaling |
 | Routing vs the state's own consolidation share | Viable for 46% of Failing and 46% of At-Risk systems vs the state's 44% and 43% (different year and list) |
 | Ranking vs funding awarded since 2017 (AUC) | 0.72 for the need-and-equity score |

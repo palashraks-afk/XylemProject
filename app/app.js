@@ -35,7 +35,7 @@
   const med = (() => { const v = eqRaw.filter((x) => x !== null).sort((a, b) => a - b); const m = v.length >> 1; return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2; })();
   const eq = eqRaw.map((x) => (x === null ? med : x));
 
-  const DEF = { b: 500, l: summary.defaults.lambda_eq, h: summary.defaults.horizon_years, v: "fc", a: summary.defaults.at_risk_weight, r: summary.defaults.small_reserve, c: 0 };
+  const DEF = { b: 500, l: summary.defaults.lambda_eq, h: summary.defaults.horizon_years, v: "fc", a: summary.defaults.at_risk_weight, r: summary.defaults.small_reserve, c: 0, m: 1 };
   const BMIN = 25, BMAX = Math.round(totalCost / 1e6 / 5) * 5;
   const posToBudget = (t) => Math.round(BMIN * Math.pow(BMAX / BMIN, t / 100) / 5) * 5;
   const budgetToPos = (b) => Math.round((Math.log(b / BMIN) / Math.log(BMAX / BMIN)) * 100);
@@ -48,6 +48,7 @@
     if (p.has("a")) st.a = +p.get("a");
     if (p.has("r")) st.r = +p.get("r");
     if (p.has("c")) st.c = +p.get("c") ? 1 : 0;
+    if (p.has("m")) st.m = Math.min(2, Math.max(0.5, +p.get("m")));
     if (p.has("h")) st.h = Math.min(10, Math.max(1, +p.get("h")));
     if (p.has("v")) st.v = p.get("v") === "fixed" ? "fixed" : "fc";
   })();
@@ -62,7 +63,7 @@
     for (let i = 0; i < N; i++) {
       const r = RT[systems[i].id];
       viaRoute[i] = st.c && r && r.viable && r.cost < baseCost[i] ? 1 : 0;
-      costs[i] = viaRoute[i] ? r.cost : baseCost[i];
+      costs[i] = (viaRoute[i] ? r.cost : baseCost[i]) * st.m;
       systems[i].cost = costs[i]; systems[i].lo = Math.round(costs[i] * 0.5); systems[i].hi = Math.round(costs[i] * 2);
     }
   }
@@ -208,6 +209,56 @@
     }[st.color];
     $("#legend").innerHTML = leg.map(([c, t]) => `<div><span class="dot" style="background:${c}"></span>${t}</div>`).join("")
       + (st.color === "stab" && !plan.stabOK ? `<div class="mute">Stress tests cover $100M–$2B</div>` : "") + `<div class="mute">Dot size = people served</div>`;
+    if (on3d && window.Xylem3D) Xylem3D.setData(data3d());
+  }
+
+  // ---------- 3D map (default) and 2D map ----------
+  let on3d = true;
+  const data3d = () => ({ systems, inPlan: plan.inPlan, viaRoute, RT, routeLines, counties: countyGeo, idx, popup, esc, fmtN, colorMode: () => st.color, colorCss: colorFor, onSelect: (i) => showDetail(i),
+    summary: () => ({ budget: fmtM(st.b * 1e6), systems: fmtN(plan.chosen.length), people: fmtN(plan.people) }) });
+  function setView(v) {
+    on3d = v === "3d";
+    document.querySelectorAll("[data-view]").forEach((b) => b.classList.toggle("on", b.dataset.view === v));
+    $("#map").hidden = on3d; $("#map3d").hidden = !on3d; $("#legend").hidden = on3d;
+    if (on3d) { Xylem3D.setData(data3d()); Xylem3D.show(); } else map.invalidateSize();
+  }
+  document.querySelectorAll("[data-view]").forEach((b) => b.addEventListener("click", () => setView(b.dataset.view)));
+
+  // ---------- cost scenarios: how often is each system selected when its cost estimate is wrong? ----------
+  let scen = null;
+  function rng(seed) { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  async function runScenarios() {
+    const btn = $("#runScen"), out = $("#scenOut"), K = 40, rand = rng(11), hits = new Uint16Array(N);
+    btn.disabled = true; run();
+    const wRisk = (i) => failing[i] ? 1 : st.v === "fc" ? 1 - Math.pow(1 - (systems[i].pf == null ? AT_RISK_RATE : systems[i].pf), st.h) : st.a;
+    const ben = pops.map((p, i) => p * wRisk(i) * (1 + st.l * eq[i]));
+    for (let k = 0; k < K; k++) {
+      const gauss = () => Math.sqrt(-2 * Math.log(1 - rand())) * Math.cos(2 * Math.PI * rand());
+      const c = costs.map((v) => v * Math.exp(0.35 * gauss()));          // 0.5x to 2x range is about two standard deviations
+      XylemOpt.optimize(c, ben, conns, st.b * 1e6, st.r).forEach((i) => hits[i]++);
+      out.textContent = `Running… ${k + 1} of ${K}`; await new Promise((r) => setTimeout(r, 0));
+    }
+    scen = { hits, K, key: [st.b, st.l, st.h, st.v, st.a, st.r, st.c, st.m].join() };
+    const solid = plan.chosen.filter((i) => hits[i] >= K * 0.8).length;
+    out.textContent = `${solid} of ${plan.chosen.length} funded systems were chosen in at least 80% of ${K} scenarios. Open a system to see its count.`;
+    btn.disabled = false; if (sel3 >= 0) showDetail(sel3);
+  }
+  $("#runScen").addEventListener("click", runScenarios);
+
+  // ---------- selected-system card ----------
+  let sel3 = -1;
+  function showDetail(i) {
+    sel3 = i; const d = $("#detail"); if (i < 0) { d.hidden = true; return; }
+    const s = systems[i], fresh = scen && scen.key === [st.b, st.l, st.h, st.v, st.a, st.r, st.c, st.m].join();
+    d.hidden = false;
+    d.innerHTML = `<button class="x" aria-label="Close" id="detailX">×</button><span class="eyebrow">${esc(s.id)} · ${esc(s.county)} County</span><h3>${esc(s.name)}</h3>
+      <div class="mute">${s.failing ? "Failing" : "At-Risk"} · ${fmtN(s.pop)} people served · ${fmtN(s.conn)} connections · ${esc(s.dac)}</div>
+      <div class="grid"><div><span class="l">In this plan</span><b>${plan.inPlan[i] ? "Selected" : "Not selected"}</b></div>
+      <div><span class="l">Estimated cost</span><b>${fmtM(s.cost)}</b></div><div><span class="l">Illustrative cost range</span><b>${fmtM(s.lo)}–${fmtM(s.hi)}</b></div>
+      <div><span class="l">Weighted priority score</span><b>${fmtN(plan.ben[i])}</b></div>
+      <div><span class="l">Selected when costs vary</span><b>${fresh ? `${scen.hits[i]} of ${scen.K} scenarios` : plan.stabOK ? pct(s.p[plan.stabK]) + " of stress tests" : "run the scenarios"}</b></div></div>
+      <div style="margin-top:10px">${routeLine(i)}</div>${s.analytes ? `<div class="mute">Issue: ${esc(s.analytes)}</div>` : ""}`;
+    $("#detailX").onclick = () => showDetail(-1);
   }
 
   // ---------- KPIs ----------
@@ -299,11 +350,11 @@
       <div class="note"><b>Departures from the state's method.</b> Straight-line distance times ${rs.assumptions.circuity} stands in for the street route (not validated); no regional (RSMeans) cost adjustment, so high-cost regions are understated; receiver boundaries are simplified. Stress tests were run on average-based costs, so stability is not shown when routes are on.</div>`; })() : ""}
       ${forecast ? (() => { const m = forecast.metrics, g = m.models, sa = m.spatial_ablation, o = m.observed_failing_rate_by_status; const row = (n, k) => `<tr><td>${n}</td><td class="num">${g[k].auc}</td><td class="num">${g[k].auc_ci95[0]}–${g[k].auc_ci95[1]}</td><td class="num">${pct(g[k].recall_top10pct)}</td></tr>`; return `
       <h3>Failure forecast (machine learning)</h3>
-      <p>Which systems that are not Failing now become Failing by the next annual snapshot? A gradient-boosting and a logistic model use each system's risk indicators (water quality, accessibility, affordability, capacity), size and economic status. <b>Strictly temporal test:</b> trained on 2024 to 2025 (${fmtN(m.train_n)} system-years, ${m.train_positives} failing onsets), tested on 2025 to 2026 (${fmtN(m.test_n)}, ${m.test_positives} onsets, base rate ${pct(m.test_base_rate, 1)}).</p>
+      <p>Which systems that are not Failing now become Failing by the next annual snapshot? An ensemble of logistic regression, gradient boosting and random forest uses each system's risk indicators (water quality, accessibility, affordability, capacity), size and economic status. <b>Strictly temporal test:</b> trained on 2024 to 2025 (${fmtN(m.train_n)} system-years, ${m.train_positives} failing onsets), tested on 2025 to 2026 (${fmtN(m.test_n)}, ${m.test_positives} onsets, base rate ${pct(m.test_base_rate, 1)}).</p>
       <div class="scroll"><table><thead><tr><th>Predictor</th><th class="num">AUC</th><th class="num">95% interval</th><th class="num">Onsets caught in top 10%</th></tr></thead><tbody>
-        ${row("SAFER status alone (baseline)", "status_only")}${row("Total risk score (baseline)", "total_risk_score")}${row("Past presence on Failing list (baseline)", "past_failing_flag")}${row("Logistic model", "logistic")}${row("Gradient boosting", "gradient_boosting")}</tbody></table></div>
-      <div class="note"><b>Read this honestly.</b> The model beats the baselines (AUC ${g.gradient_boosting.auc} vs ${g.status_only.auc}) but the gain is modest and the intervals overlap. Most failing onsets are not predicted; the top 10% of systems catch ${pct(g.gradient_boosting.recall_top10pct)} of them. We also tried adding Failing-neighbour counts within 10 and 25 km: AUC went from ${sa.gb_auc_without_spatial} to ${sa.gb_auc_with_spatial}, essentially nothing.</div>
-      <p><b>Calibration on the held-out year.</b> Observed onset rate rises from ${pct(m.calibration_gb[0].observed_rate, 1)} in the lowest-risk fifth of systems to ${pct(m.calibration_gb[4].observed_rate, 1)} in the highest, so the ranking works. Absolute levels drift: the model predicts about ${pct(m.calibration_gb[4].mean_predicted, 1)} for the top fifth, because the onset rate rose from ${pct(m.train_positives / m.train_n, 1)} in the training transition to ${pct(m.test_base_rate, 1)} in the test year. The forecasts in the app are rescaled to the pooled rate, so treat them as approximate.</p>
+        ${row("SAFER status alone (baseline)", "status_only")}${row("Total risk score (baseline)", "total_risk_score")}${row("Past presence on Failing list (baseline)", "past_failing_flag")}${row("Logistic model", "logistic")}${row("Gradient boosting", "gradient_boosting")}${row("Random forest", "random_forest")}${row("Ensemble (used in the app)", "ensemble")}</tbody></table></div>
+      <div class="note"><b>Read this honestly.</b> The ensemble beats the baselines (AUC ${g.ensemble.auc} vs ${g.status_only.auc}) but the gain is modest and the intervals overlap. The three models alone sit inside each other intervals, so the ensemble is chosen for robustness. Most failing onsets are not predicted; the top 10% of systems catch ${pct(g.ensemble.recall_top10pct)} of them. We also tried adding Failing-neighbour counts within 10 and 25 km: AUC went from ${sa.gb_auc_without_spatial} to ${sa.gb_auc_with_spatial}, essentially nothing.</div>
+      <p><b>Calibration on the held-out year.</b> Observed onset rate rises from ${pct(m.calibration_ensemble[0].observed_rate, 1)} in the lowest-risk fifth of systems to ${pct(m.calibration_ensemble[4].observed_rate, 1)} in the highest, so the ranking works. Absolute levels drift: the model predicts about ${pct(m.calibration_gb[4].mean_predicted, 1)} for the top fifth, because the onset rate rose from ${pct(m.train_positives / m.train_n, 1)} in the training transition to ${pct(m.test_base_rate, 1)} in the test year. The forecasts in the app are rescaled to the pooled rate, so treat them as approximate.</p>
       <p><b>How it is used.</b> It replaces an arbitrary discount for At-Risk systems. Measured next-year rate of becoming Failing: ${pct(o["At-Risk"], 1)} for At-Risk, ${pct(o["Potentially At-Risk"], 1)} for Potentially At-Risk, ${pct(o["Not At-Risk"], 1)} for Not At-Risk. An At-Risk system is valued at its forecast chance of failing within your chosen horizon. Switch to "fixed share" to use a manual discount instead.</p>`; })() : ""}
       ${gis ? (() => { const t = gis.stats; return `
       <h3>Spatial analysis (GIS)</h3>
@@ -381,21 +432,25 @@
     $("#budgetHint").textContent = `Range $${BMIN}M to ${fmtM(totalCost)} (everything)`;
     $("#lamLabel").textContent = st.l.toFixed(1); $("#horLabel").textContent = st.h + " yr"; $("#arwLabel").textContent = pct(st.a);
     $("#horWrap").hidden = st.v !== "fc"; $("#arwWrap").hidden = st.v === "fc";
-    document.querySelectorAll("[data-val]").forEach((x) => x.classList.toggle("on", x.dataset.val === st.v)); $("#resLabel").textContent = pct(st.r);
+    document.querySelectorAll("[data-val]").forEach((x) => x.classList.toggle("on", x.dataset.val === st.v)); $("#resLabel").textContent = (st.r ? "+" : "") + pct(st.r); $("#mulLabel").textContent = st.m.toFixed(2) + "×";
   }
   function writeHash() {
-    const p = new URLSearchParams({ b: st.b, l: st.l, h: st.h, v: st.v, a: st.a, r: st.r, c: st.c });
+    const p = new URLSearchParams({ b: st.b, l: st.l, h: st.h, v: st.v, a: st.a, r: st.r, c: st.c, m: st.m });
     history.replaceState(null, "", "#" + p.toString());
   }
   let timer = null;
   function update() { syncLabels(); clearTimeout(timer); timer = setTimeout(() => { run(); kpis(); restyle(); drawTab(); writeHash(); }, 60); }
 
   $("#budget").value = budgetToPos(st.b);
-  $("#lam").value = st.l; $("#arw").value = st.a; $("#res").value = st.r;
+  $("#lam").value = st.l; $("#arw").value = st.a; $("#res").value = st.r; $("#mul").value = st.m;
   $("#budget").addEventListener("input", (e) => { st.b = posToBudget(+e.target.value); update(); });
   $("#lam").addEventListener("input", (e) => { st.l = +e.target.value; update(); });
   $("#arw").addEventListener("input", (e) => { st.a = +e.target.value; update(); });
   $("#res").addEventListener("input", (e) => { st.r = +e.target.value; update(); });
+  $("#mul").addEventListener("input", (e) => { st.m = +e.target.value; update(); });
+  $("#eqZero").addEventListener("click", () => { st.l = 0; $("#lam").value = 0; update(); });
+  $("#eqHigh").addEventListener("click", () => { st.l = 2; $("#lam").value = 2; update(); });
+  $("#colorSel").addEventListener("change", (e) => { st.color = e.target.value; document.querySelectorAll("[data-color]").forEach((x) => x.classList.toggle("on", x.dataset.color === st.color)); restyle(); });
   document.querySelectorAll("[data-color]").forEach((b) => b.addEventListener("click", () => {
     st.color = b.dataset.color; document.querySelectorAll("[data-color]").forEach((x) => x.classList.toggle("on", x === b)); restyle(); }));
   document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => {
@@ -423,7 +478,7 @@
   $("#cons").addEventListener("change", (e) => { st.c = e.target.checked ? 1 : 0; update(); });
   $("#routes").addEventListener("change", (e) => { st.routes = e.target.checked; drawRoutes(); });
   $("#reset").addEventListener("click", () => {
-    Object.assign(st, DEF); $("#hor").value = st.h; $("#cons").checked = false; $("#budget").value = budgetToPos(st.b); $("#lam").value = st.l; $("#arw").value = st.a; $("#res").value = st.r; update(); });
+    Object.assign(st, DEF); $("#mul").value = st.m; $("#hor").value = st.h; $("#cons").checked = false; $("#budget").value = budgetToPos(st.b); $("#lam").value = st.l; $("#arw").value = st.a; $("#res").value = st.r; update(); });
   $("#copy").addEventListener("click", async () => {
     writeHash(); try { await navigator.clipboard.writeText(location.href); $("#copyMsg").textContent = "Link copied. It reproduces this scenario."; }
     catch (e) { $("#copyMsg").textContent = "Copy the address bar to share this scenario."; }
@@ -440,17 +495,20 @@
     if (st.spot) {
       const pts = systems.filter((s) => s.county === st.spot && s.lat != null && s.lon !== 0).map((s) => [s.lat, s.lon]);
       if (pts.length) map.fitBounds(L.latLngBounds(pts).pad(0.2), { maxZoom: 11 });
-      showTab("spot");
-    } else { map.setView([36.9, -119.5], 6); drawTab(); }
+      showTab("spot"); if (on3d && window.Xylem3D) Xylem3D.flyToCounty(st.spot);
+    } else { map.setView([36.9, -119.5], 6); drawTab(); if (on3d && window.Xylem3D) Xylem3D.home(); }
   }
   $("#spot").addEventListener("change", (e) => spotlight(e.target.value));
   $("#find").addEventListener("change", (e) => {
-    const i = byLabel.get(e.target.value); if (i === undefined || !dots[i]) return;
+    const v = e.target.value.trim(), i = byLabel.has(v) ? byLabel.get(v) : idx.get(v.toUpperCase()); if (i === undefined || !dots[i]) return;
+    showDetail(i);
     st.spot = systems[i].county; $("#spot").value = st.spot; showTab("spot");
+    if (on3d && window.Xylem3D) { Xylem3D.flyToSystem(i); return; }
     map.flyTo(dots[i].getLatLng(), 11); dots[i].openPopup();
   });
 
   polyGroup.addTo(map);
   syncLabels(); run(); kpis(); restyle(); drawTab();
+  Xylem3D.mount($("#map3d"), data3d());
   window.__xylem = { st, map, routeGroup, viaRoute, get plan() { return plan; }, systems, summary };
 })();

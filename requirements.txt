@@ -1,7 +1,8 @@
-pandas
 numpy
-scipy
 openpyxl
-pytest
-shapely
+pandas
 pyproj
+pytest
+scikit-learn
+scipy
+shapely

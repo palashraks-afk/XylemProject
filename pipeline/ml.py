@@ -10,7 +10,8 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import HistGradientBoostingClassifier
+from scipy.stats import rankdata
+from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score, average_precision_score, brier_score_loss
@@ -129,6 +130,16 @@ def gb_model():
                                           l2_regularization=1.0, random_state=SEED)
 
 
+def rf_model():
+    return make_pipeline(SimpleImputer(strategy="median"),
+                         RandomForestClassifier(n_estimators=500, min_samples_leaf=8, max_features=0.4, class_weight="balanced_subsample",
+                                                random_state=SEED, n_jobs=-1))
+
+
+def rank01(p):
+    return rankdata(p) / len(p)
+
+
 def boot_auc(y, p, n=400):
     rng = np.random.default_rng(SEED)
     vals = []
@@ -157,7 +168,7 @@ def evaluate(train, test):
         "total_risk_score": Xte["total"].fillna(0).values,
         "past_failing_flag": Xte["ind4"].fillna(0).values,
     }
-    models = {"logistic": lr_model().fit(Xtr, ytr), "gradient_boosting": gb_model().fit(Xtr, ytr)}
+    models = {"logistic": lr_model().fit(Xtr, ytr), "gradient_boosting": gb_model().fit(Xtr, ytr), "random_forest": rf_model().fit(Xtr, ytr)}
     out = {}
     for name, p in base.items():
         out[name] = {"auc": round(float(roc_auc_score(yte, p)), 3), "auc_ci95": boot_auc(yte, p), "recall_top10pct": recall_at(yte, p, 0.10)}
@@ -168,7 +179,14 @@ def evaluate(train, test):
         out[name] = {"auc": round(float(roc_auc_score(yte, p)), 3), "auc_ci95": boot_auc(yte, p),
                      "avg_precision": round(float(average_precision_score(yte, p)), 3), "recall_top10pct": recall_at(yte, p, 0.10),
                      "brier": round(float(brier_score_loss(yte, p)), 4)}
+    # Ensemble chosen in advance for robustness, not for its test score: equal-weight rank average of the three models.
+    pe = np.mean([rank01(p) for p in probs.values()], axis=0)
+    probs["ensemble"] = pe
+    out["ensemble"] = {"auc": round(float(roc_auc_score(yte, pe)), 3), "auc_ci95": boot_auc(yte, pe),
+                       "avg_precision": round(float(average_precision_score(yte, pe)), 3), "recall_top10pct": recall_at(yte, pe, 0.10)}
     res["models"] = out
+    qe = pd.qcut(pd.Series(pe).rank(method="first"), 5, labels=False)
+    res["calibration_ensemble"] = [{"quintile": int(k) + 1, "n": int((qe == k).sum()), "observed_rate": round(float(yte[(qe == k).values].mean()), 4)} for k in range(5)]
     # calibration of the gradient-boosting probabilities on the held-out year, by risk quintile
     q = pd.qcut(pd.Series(probs["gradient_boosting"]).rank(method="first"), 5, labels=False)
     res["calibration_gb"] = [{"quintile": int(k) + 1, "n": int((q == k).sum()),
@@ -198,8 +216,7 @@ def main():
     both = pd.concat([tr, te])
     Xb, yb = Xy(both)
     cols = Xb.columns
-    final = gb_model().fit(Xb, yb)
-    lr_final = lr_model().fit(Xb, yb)
+    finals = {"gb": gb_model().fit(Xb, yb), "lr": lr_model().fit(Xb, yb), "rf": rf_model().fit(Xb, yb)}
     f26 = features(2026).set_index("PWSID")
     s26, dac26 = status(2026)
     if SPATIAL:
@@ -207,14 +224,16 @@ def main():
     f26["status0"] = s26.reindex(f26.index).map(STATUS_ORD)
     f26["dac"] = dac26.reindex(f26.index).map({"SDAC": 2, "DAC": 1, "Non-DAC": 0})
     cur = f26[f26.status0.notna() & (f26.status0 < 3)]
-    p = 0.5 * final.predict_proba(cur[cols])[:, 1] + 0.5 * lr_final.predict_proba(cur[cols])[:, 1]
-    forecast = {pid: round(float(v), 4) for pid, v in zip(cur.index, p)}
-    # calibrate the blend to the observed base rate of failing onset so values read as probabilities
+    # each model's probabilities are rescaled to the observed onset rate, then averaged, so values read as probabilities
     rate = float(yb.mean())
-    scale = rate / max(1e-9, float(np.mean(p)))
-    forecast = {k: round(min(0.95, v * scale), 4) for k, v in forecast.items()}
-    res["final_model_note"] = (f"Final model trained on {len(yb)} system-years ({int(yb.sum())} failing onsets), blend of logistic and gradient "
-                               f"boosting, rescaled so the mean forecast equals the observed onset rate ({rate:.3f}).")
+    parts = []
+    for m in finals.values():
+        q = m.predict_proba(cur[cols])[:, 1]
+        parts.append(q * rate / max(1e-9, float(np.mean(q))))
+    p = np.mean(parts, axis=0)
+    forecast = {pid: round(float(min(0.95, v)), 4) for pid, v in zip(cur.index, p)}
+    res["final_model_note"] = (f"Final model trained on {len(yb)} system-years ({int(yb.sum())} failing onsets), average of logistic, gradient "
+                               f"boosting and random forest, each rescaled so the mean forecast equals the observed onset rate ({rate:.3f}).")
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "forecast.json").write_text(json.dumps({"metrics": res, "p_fail": forecast}, separators=(",", ":")))
     print("scored", len(forecast), "systems; mean p", round(float(np.mean(list(forecast.values()))), 4))

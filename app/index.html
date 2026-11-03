@@ -6,6 +6,7 @@
 <title>Xylem: California Water Funding Optimizer</title>
 <meta name="description" content="A placement map for water funding. Set a budget and an equity rule; it returns the California drinking water systems that reach the most people, with the uncertainty shown.">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,7 +22,7 @@
   <aside class="panel controls" aria-label="Scenario controls">
     <h2>Scenario</h2>
     <label class="ctl">
-      <span class="ctl-h">Budget <b id="budgetLabel"></b></span>
+      <span class="ctl-h">Funding budget <b id="budgetLabel"></b></span>
       <input type="range" id="budget" min="0" max="100" step="1">
       <span class="hint" id="budgetHint"></span>
       <div class="chips" aria-label="Budget presets">
@@ -29,18 +30,30 @@
       </div>
     </label>
     <label class="ctl">
-      <span class="ctl-h">Equity weight <b id="lamLabel"></b></span>
+      <span class="ctl-h">Equity priority <b id="lamLabel"></b></span>
       <input type="range" id="lam" min="0" max="3" step="0.1">
-      <span class="hint">0 = count every person equally. Higher favours disadvantaged, poorer, more burdened areas.</span>
+      <span class="hint">Give more weight to disadvantaged communities, affordability, poverty, and environmental burden. 0 counts every person equally.</span>
     </label>
     <label class="ctl">
-      <span class="ctl-h">Reserve for small systems <b id="resLabel"></b></span>
+      <span class="ctl-h">Small-system priority <b id="resLabel"></b></span>
       <input type="range" id="res" min="0" max="0.6" step="0.05">
-      <span class="hint">Share of the budget held for systems with 500 connections or fewer, which cost-effectiveness alone tends to skip.</span>
+      <span class="hint">Share of the budget held for systems with 500 connections or fewer, which a pure people-reached rule tends to skip.</span>
     </label>
+    <label class="ctl">
+      <span class="ctl-h">Cost assumption <b id="mulLabel"></b></span>
+      <input type="range" id="mul" min="0.5" max="2" step="0.05">
+      <span class="hint">Explore lower or higher remediation costs. These are planning estimates, not project quotes.</span>
+      <div class="chips"><button type="button" id="eqZero">Equal population priority</button><button type="button" id="eqHigh">Emphasize equity</button></div>
+    </label>
+    <div class="ctl test">
+      <span class="eyebrow">Test the assumptions</span>
+      <span class="hint">How often is each system selected when its estimated cost changes?</span>
+      <button type="button" id="runScen" class="primary">Run 40 cost scenarios ↗</button>
+      <span class="hint" id="scenOut">Uses your current budget and priorities.</span>
+    </div>
 
     <details class="grp">
-      <summary>At-Risk valuation</summary>
+      <summary>At-risk priority</summary>
       <div class="seg" role="group" aria-label="At-Risk valuation">
         <button data-val="fc" class="on">Forecast</button>
         <button data-val="fixed">Fixed share</button>
@@ -91,14 +104,18 @@
   <section class="stage">
     <div class="kpis" id="kpis"></div>
     <div class="finder">
-      <input id="find" list="syslist" placeholder="Find your water system by name…" aria-label="Find your water system">
+      <input id="find" list="syslist" placeholder="Find a water system or PWSID" aria-label="Find a water system or PWSID">
       <datalist id="syslist"></datalist>
       <select id="spot" aria-label="County spotlight"><option value="">All California</option></select>
+      <select id="colorSel" aria-label="Map colouring"><option value="plan">Funding plan</option><option value="status">Status</option><option value="stab">Stability</option></select>
     </div>
     <div class="mapwrap">
-      <div id="map" role="application" aria-label="Map of failing and at-risk water systems"></div>
-      <div class="legend" id="legend"></div>
+      <div class="vt" role="group" aria-label="Map view"><button type="button" data-view="3d" class="on">3D terrain</button><button type="button" data-view="2d">2D map</button></div>
+      <div id="map" hidden role="application" aria-label="Map of failing and at-risk water systems"></div>
+      <div id="map3d" role="application" aria-label="3D terrain view of the funding plan"></div>
+      <div class="legend" id="legend" hidden></div>
     </div>
+    <div id="detail" class="detail" hidden></div>
     <div class="tabs" role="tablist">
       <button role="tab" data-tab="plan" class="on">Funded plan</button>
       <button role="tab" data-tab="spot">Local view</button>
@@ -114,7 +131,9 @@
 <footer class="foot">Data: California State Water Resources Control Board (SAFER Risk Assessment 2024 to 2026, Affordability Assessment, 2024 Cost Assessment, service-area boundaries). Costs are modelled estimates, not quotes. <a href="https://github.com/palashraks-afk/XylemProject">Source</a></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
 <script src="optimizer.js"></script>
+<script src="map3d.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

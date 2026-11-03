@@ -80,5 +80,5 @@ def test_readme_results_table_matches_summary():
 def test_readme_forecast_numbers_match_metrics(forecast):
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     g = forecast["metrics"]["models"]
-    assert f"AUC {g['gradient_boosting']['auc']}" in readme
+    assert f"AUC {g['ensemble']['auc']:.3f}" in readme
     assert f"{g['status_only']['auc']}" in readme
