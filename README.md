@@ -1,68 +1,42 @@
-# Xylem
+# Xylem · California SAFER Planning Lab
 
-**Give it a budget and an equity rule. It returns the set of California drinking water systems that reaches the most people, and shows how stable that answer is.**
+An interactive planning tool grounded in California's SAFER drinking-water-system snapshot. Start with the map, adjust a budget and policy priorities, inspect each system's inputs, and see the trade-offs.
 
-Xylem is a web app built on the State Water Board's own SAFER, Affordability and Cost Assessment data. It turns "which water systems are failing" into "where does the next dollar reach the most people", with the trade-offs left visible.
-
-## Run it
-
-```bash
+## Run
+```text
 pip install -r requirements.txt
-python pipeline/fetch_data.py        # download raw data (or use the committed data/raw)
-python pipeline/build.py             # join, cost model, optimizer, stress test, validation (about 20 s)
-python pipeline/fetch_boundaries.py  # service-area polygons
-python -m pytest tests -q            # 24 tests, including Python/JS optimizer parity
-cd app && python -m http.server 8765 # open http://localhost:8765
+python pipeline/build.py
+python -m pytest tests -q
+node tests/model.js
+python -m http.server 8765 --directory app
 ```
+Open http://localhost:8765. Node.js is required for the cross-language tests.
+The committed outputs can be served without rebuilding. Refresh sources explicitly with `python pipeline/fetch_data.py`; this changes the analysis snapshot. Regenerate boundaries with `python pipeline/fetch_boundaries.py` after changing eligible systems.
 
-Scenarios are shareable: the controls are stored in the URL (for example `#b=1000&l=2&a=0.5&r=0.3`).
+## Play with the model
+- Set a statewide budget, equity priority, At-Risk priority relative to Failing, a small-system preference, and a cost multiplier.
+- The optimizer maximizes population served × status factor × (1 + equity priority × equity index) × (1 + small-system priority for systems with ≤500 connections).
+- The equity index is the mean of available economic-disadvantage, CalEnviroScreen percentile, affordability, and poverty-percentile components. Full-precision indices are shared by Python and the browser; missing components remain visible.
+- Every project cost rounds upward to $100,000 for budget feasibility. The interface shows estimated spend and the rounded allowance. This is exact optimization of the discretized problem, not the original continuous-cost problem.
+- The status-first comparison selects Failing before At-Risk systems, largest population first. It uses the same rounded costs. It is a simple reference rule, not the state's actual allocation process.
+- Small-system priority is a soft preference. It replaces the old reserve and does not guarantee a spending share.
+- The map includes all source systems as context, with a funding model limited to Failing and At-Risk systems. County selection filters the map and table while the allocation remains statewide.
+- Click systems to inspect model inputs, copy scenario links, or export the statewide selected plan as CSV.
+- Run 40 reproducible cost scenarios for the current controls. These hold all priorities fixed and sample independent lognormal errors (assumed 90% cost range 0.5–2×). Selection frequencies are scenario sensitivity, not real-world success probabilities. Changing any control invalidates the prior result.
 
-## What it does
+## What the model can support
+Comparing transparent policy and cost assumptions. It is not a trained health-outcome predictor, a project cost quote, or a validated funding decision.
 
-- **Optimizer.** For a budget, picks the Failing and At-Risk systems that maximize benefit = people served × status weight × (1 + equity weight × equity index). An exact 0/1 knapsack (dynamic programming), run in your browser. Controls: budget, equity weight, how much At-Risk counts relative to Failing, and a share of budget reserved for small systems.
-- **Cost model.** The state publishes no per-system remediation cost as data. We apply its published average cost per service connection by system size (2024 Cost Assessment, Table 7) to each system, then scale to the state's $5.386B total.
-- **Uncertainty.** 200 stress-test scenarios vary costs and weights and re-run the optimizer. Each system shows how often it is still funded.
-- **Who is left out.** A tab lists the Failing systems the plan does not fund, because pure cost-effectiveness skips small, expensive systems.
-- **Map** with the State Water Board's service-area boundaries (1,061 of 1,062 target systems), colored by plan, status or stability.
+Baseline costs multiply the 2024 state average per-connection costs by each system's connections, then scale the 2026 target list to the 2024 statewide total. This cross-year calibration remains an assumption. County median absolute error was about 41% in the initial model; system-level accuracy is unverified. Size-bin boundaries cause abrupt cost changes. Funded population is potential reach, not measured health improvement or guaranteed unique beneficiaries.
 
-## Results (2026-11-02 SAFER snapshot, 1,062 Failing or At-Risk systems, 1.93M people)
+Readiness, alternatives, completion probability, already-committed funding, recurring operating costs, and consolidation feasibility are not modeled. Historical funding AUC is descriptive and does not validate treatment effects or recommendations. Other SAFER statuses are outside the allocation model, not assumed to have no need.
 
-| Budget | Optimizer reaches | Status-first reaches | Ratio |
-|---|---|---|---|
-| $100M | 221,298 | 168,274 | 1.32× |
-| $250M | 506,981 | 292,238 | 1.73× |
-| $500M | 966,559 | 358,300 | 2.70× |
-| $1B | 1,549,044 | 406,664 | 3.81× |
-| $2B | 1,836,838 | 944,874 | 1.94× |
+## Files
+- `pipeline/`: source ingestion, full-precision equity, baseline cost estimates, reference scoring and optimizer, data exports.
+- `app/`: static map tool, shared browser model, background calculation worker, committed data.
+- `tests/`: brute-force solver comparisons, Python/JavaScript parity, full pipeline/browser result parity, source/output consistency.
+- `MODEL_PLAN.md`: completed first steps and remaining model-validation work.
+- `DataSets.md`: original sources.
 
-Status-first means Failing before At-Risk, largest system first. It is a simple stand-in, not the state's real process, which also weighs readiness, willingness and technical-assistance needs. These are modelled results on modelled costs.
 
-## How well is it tested?
-
-| Check | Result |
-|---|---|
-| Cost model vs the state's 58 county totals | Rank correlation 0.88, Pearson 0.92 |
-| Same check, magnitude | Median absolute error about 41% for counties over $10M. The raw model came out 1.47× the state total before scaling. |
-| Ranking vs funding awarded since 2017 (AUC, 0.5 = no relationship) | 0.69 need-and-equity score, 0.65 efficiency, 0.65 population alone, 0.63 Failing flag alone |
-| Optimizer vs brute force, budget never exceeded, JS port vs Python | Pass (24 tests) |
-
-The AUC values are modest. Past funding reflects need, readiness and politics, not cost-effectiveness, so this shows the ranking is not pointing the wrong way. It does not show the optimizer is right. The county-level cost error is large, which is why every system carries a stability score instead of a single claimed answer.
-
-## Honest limits
-
-- **Costs are modelled, not quotes, and use 2024 averages.** The State Water Board says it did not update the Cost Assessment in 2025 or 2026.
-- **179 systems have no SAFER status** and serve about 25M people (mostly the largest utilities). They are outside this analysis, so big-city need is understated.
-- **1,028 systems have a missing economic status.** Their equity index uses the remaining components.
-- **At-Risk is a score, not a confirmed contaminant**, so it is discounted by default.
-- **At $1B and $2B the optimizer's share of people in disadvantaged areas is slightly below the status-first baseline** (73% vs 74%, 69% vs 72%). It reaches far more people overall, but it is not uniformly better on that measure.
-- Not modelled: readiness, willingness to consolidate, ongoing operations cost, state small systems and domestic wells.
-
-See [NOVELTY.md](NOVELTY.md) for prior work and what is different here.
-
-## Repository
-
-- `app/`: static web app (`index.html`, `app.js`, `optimizer.js`) and its data
-- `pipeline/`: data fetch, cost model, optimizer reference implementation, build, boundaries
-- `tests/`: pytest suite and the Node parity script
-- `data/raw/`: source files; `data/cost_tables.json`: the state's Tables 7 and 9, transcribed by hand and checked against its totals
-- `DataSets.md`: data sources
+Optional browser checks: install Playwright and its Chromium browser, start the local server above, then run `node tests/browser.cjs`. Set `PLAYWRIGHT_BROWSER_CHANNEL=msedge` to use installed Edge.

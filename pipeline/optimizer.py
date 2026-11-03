@@ -1,12 +1,12 @@
 """Budget-constrained funding optimizer (0/1 knapsack, exact dynamic programming).
 
-Reference implementation. app/optimizer.js is a port of this and tests/test_optimizer_parity.py
+Reference implementation. app/optimizer.js is a port of this and tests/test_pipeline.py
 checks the two agree on the same inputs.
 """
 import math
 import numpy as np
 
-UNIT = 250_000  # cost granularity in dollars; costs are rounded UP so a plan never overspends
+UNIT = 100_000  # cost granularity in dollars; costs are rounded UP so a plan never overspends
 SMALL_MAX_CONN = 500
 
 
@@ -40,23 +40,15 @@ def knapsack(costs, benefits, budget):
 
 
 def optimize(costs, benefits, conns, budget, small_reserve=0.0):
-    """Optionally reserve a share of the budget for small systems (<= 500 connections)."""
-    chosen = []
-    spent_small = 0
-    if small_reserve > 0:
-        small = [i for i in range(len(costs)) if conns[i] <= SMALL_MAX_CONN]
-        pick = knapsack([costs[i] for i in small], [benefits[i] for i in small], budget * small_reserve)
-        chosen += [small[k] for k in pick]
-        spent_small = sum(units(costs[i]) * UNIT for i in chosen)
-    taken = set(chosen)
-    rest = [i for i in range(len(costs)) if i not in taken]
-    pick = knapsack([costs[i] for i in rest], [benefits[i] for i in rest], budget - spent_small)
-    chosen += [rest[k] for k in pick]
-    return sorted(chosen)
+    """Exact rounded-cost optimization. Express small-system priority in benefits."""
+    if small_reserve != 0:
+        raise ValueError("Budget reserves require a jointly constrained solver; use a benefit priority instead.")
+    return knapsack(costs, benefits, budget)
 
 
 def greedy_by_population(costs, pops, status_failing, budget):
     """Baseline: what a status-first process does. Failing systems before At-Risk, largest first."""
+    costs = [units(cost) * UNIT for cost in costs]
     order = sorted(range(len(costs)), key=lambda i: (not status_failing[i], -pops[i]))
     chosen, spent = [], 0
     for i in order:

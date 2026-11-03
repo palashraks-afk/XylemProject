@@ -1,7 +1,7 @@
 /* Budget-constrained funding optimizer: exact 0/1 knapsack by dynamic programming.
- * Port of pipeline/optimizer.py; tests/test_optimizer_parity.py checks the two agree. */
+ * Port of pipeline/optimizer.py; tests/test_pipeline.py checks the two agree. */
 (function (root) {
-  const UNIT = 250000;       // cost granularity ($); costs round UP so a plan never overspends
+  const UNIT = 100000;       // cost granularity ($); costs round UP so a plan never overspends
   const SMALL_MAX_CONN = 500;
 
   const units = (c) => Math.max(1, Math.ceil(c / UNIT));
@@ -29,22 +29,9 @@
     return chosen.reverse();
   }
 
-  function optimize(costs, benefits, conns, budget, smallReserve) {
-    let chosen = [];
-    let spentSmall = 0;
-    if (smallReserve > 0) {
-      const small = [];
-      for (let i = 0; i < costs.length; i++) if (conns[i] <= SMALL_MAX_CONN) small.push(i);
-      const pick = knapsack(small.map((i) => costs[i]), small.map((i) => benefits[i]), budget * smallReserve);
-      chosen = pick.map((k) => small[k]);
-      spentSmall = chosen.reduce((s, i) => s + units(costs[i]) * UNIT, 0);
-    }
-    const taken = new Set(chosen);
-    const rest = [];
-    for (let i = 0; i < costs.length; i++) if (!taken.has(i)) rest.push(i);
-    const pick = knapsack(rest.map((i) => costs[i]), rest.map((i) => benefits[i]), budget - spentSmall);
-    chosen = chosen.concat(pick.map((k) => rest[k]));
-    return chosen.sort((a, b) => a - b);
+  function optimize(costs, benefits, conns, budget, smallReserve = 0) {
+    if (smallReserve !== 0) throw new Error("Budget reserves require a jointly constrained solver; use a benefit priority instead.");
+    return knapsack(costs, benefits, budget);
   }
 
   // What a status-first process does: Failing before At-Risk, largest first, until the money runs out.

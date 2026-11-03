@@ -10,6 +10,7 @@ from scipy.stats import spearmanr, pearsonr, rankdata
 sys.path.insert(0, str(Path(__file__).parent))
 from costmodel import system_cost, TABLES  # noqa: E402
 from optimizer import optimize, greedy_by_population  # noqa: E402
+from model import benefit  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data" / "raw"
@@ -34,7 +35,7 @@ def load():
     a["poverty"] = pd.to_numeric(a.poverty.astype(str).str.rstrip("%"), errors="coerce")
     a["bill6hcf"] = pd.to_numeric(a.bill6hcf.astype(str).str.replace("[$,]", "", regex=True), errors="coerce")
     a["aff_thresholds"] = pd.to_numeric(a.aff_thresholds, errors="coerce")
-    d = d.merge(a, on="WATER_SYSTEM_NUMBER", how="left")
+    d = d.merge(a, on="WATER_SYSTEM_NUMBER", how="left", validate="one_to_one")
     d["county"] = d.COUNTY.str.replace(" County", "", case=False).str.strip().str.title()
     return d
 
@@ -45,10 +46,6 @@ def equity_components(d):
     dac = d.SERVICE_AREA_ECONOMIC_STATUS.map({"SDAC": 1.0, "DAC": 0.67, "Non-DAC": 0.0})
     aff = (d.aff_thresholds / 3).clip(0, 1)
     return pd.DataFrame({"dac": dac, "ces": ces_p, "aff": aff, "pov": pov_p})
-
-
-def benefit(pop, failing, eq, lam, ar_w):
-    return pop * np.where(failing, 1.0, ar_w) * (1 + lam * eq)
 
 
 def auc(score, y):
@@ -168,7 +165,8 @@ def main():
             "lat": rr(row.LATITUDE_MEASURE, 4), "lon": rr(row.LONGITUDE_MEASURE, 4),
             "pop": int(row.POPULATION), "conn": int(row.conn), "failing": bool(row.failing),
             "dac": row.SERVICE_AREA_ECONOMIC_STATUS if isinstance(row.SERVICE_AREA_ECONOMIC_STATUS, str) else "Missing",
-            "eq": [rr(row.eq_dac, 2), rr(row.eq_ces, 2), rr(row.eq_aff, 2), rr(row.eq_pov, 2)],
+            "eq": [rr(row.eq_dac, 15), rr(row.eq_ces, 15), rr(row.eq_aff, 15), rr(row.eq_pov, 15)],
+            "equity": float(eq[i]),
             "cost": int(row.cost), "lo": int(row.cost_lo), "hi": int(row.cost_hi),
             "p": [round(float(fund_prob[B][i]), 2) for B in BUDGETS_M],
             "funded17": bool(funded[i]),
@@ -176,6 +174,18 @@ def main():
             "bill": rr(row.bill6hcf, 0),
         })
     (OUT / "systems.json").write_text(json.dumps(systems, separators=(",", ":")))
+    context = []
+    for _, row in d.iterrows():
+        context.append({
+            "id": row.WATER_SYSTEM_NUMBER, "name": str(row.SYSTEM_NAME).title(),
+            "county": row.county, "status": row.FINAL_SAFER_STATUS if pd.notna(row.FINAL_SAFER_STATUS) else "Not Assessed",
+            "pop": int(row.POPULATION) if pd.notna(row.POPULATION) else 0,
+            "conn": int(row.SERVICE_CONNECTIONS) if pd.notna(row.SERVICE_CONNECTIONS) else 0,
+            "lat": rr(row.LATITUDE_MEASURE, 5), "lon": rr(row.LONGITUDE_MEASURE, 5),
+            "dac": row.SERVICE_AREA_ECONOMIC_STATUS if pd.notna(row.SERVICE_AREA_ECONOMIC_STATUS) else "Missing",
+        })
+    (OUT / "safer_context.json").write_text(json.dumps(context, separators=(",", ":"), allow_nan=False), encoding="utf-8")
+
 
     summary = {
         "snapshot": str(d.CREATED_DATE.iloc[0]),

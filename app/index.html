@@ -1,87 +1,44 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Xylem: California Water Funding Optimizer</title>
-<meta name="description" content="Give it a budget and an equity rule. It returns the set of California drinking water systems that reaches the most people, with the uncertainty shown.">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Xylem · California SAFER Planning Lab</title>
+<meta name="description" content="Explore California SAFER drinking-water systems and compare funding choices, equity priorities, and cost uncertainty.">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="top">
-  <div class="brand">
-    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 2.5c3.6 4.3 6 7.4 6 10.6A6 6 0 0 1 6 13.1C6 9.9 8.4 6.800 12 2.500z" fill="currentColor"/></svg>
-    <div><h1>Xylem</h1><p>Where does the next dollar reach the most people?</p></div>
-  </div>
-  <div class="snap" id="snap"></div>
-</header>
-
-<main class="layout">
-  <aside class="panel controls" aria-label="Scenario controls">
-    <h2>Scenario</h2>
-    <label class="ctl">
-      <span class="ctl-h">Budget <b id="budgetLabel"></b></span>
-      <input type="range" id="budget" min="0" max="100" step="1">
-      <span class="hint" id="budgetHint"></span>
-    </label>
-    <label class="ctl">
-      <span class="ctl-h">Equity weight <b id="lamLabel"></b></span>
-      <input type="range" id="lam" min="0" max="3" step="0.1">
-      <span class="hint">0 = count every person equally. Higher favours systems in disadvantaged, poorer, more burdened areas.</span>
-    </label>
-    <label class="ctl">
-      <span class="ctl-h">At-Risk counts as <b id="arwLabel"></b> of Failing</span>
-      <input type="range" id="arw" min="0.1" max="1" step="0.05">
-      <span class="hint">At-Risk is a risk score, not a confirmed violation, so it is discounted.</span>
-    </label>
-    <label class="ctl">
-      <span class="ctl-h">Reserve for small systems <b id="resLabel"></b></span>
-      <input type="range" id="res" min="0" max="0.6" step="0.05">
-      <span class="hint">Share of the budget held for systems with 500 connections or fewer, which pure cost-effectiveness tends to skip.</span>
-    </label>
-    <div class="ctl">
-      <span class="ctl-h">Map colour</span>
-      <div class="seg" role="group" aria-label="Map colour">
-        <button data-color="plan" class="on">Plan</button>
-        <button data-color="status">Status</button>
-        <button data-color="stab">Stability</button>
-      </div>
-      <label class="chk"><input type="checkbox" id="poly" checked> Show service-area boundaries</label>
-    </div>
-    <div class="row-btns">
-      <button id="copy" class="ghost">Copy scenario link</button>
-      <button id="reset" class="ghost">Reset</button>
-    </div>
-    <p class="fine" id="copyMsg" aria-live="polite"></p>
-  </aside>
-
-  <section class="stage">
-    <div class="kpis" id="kpis"></div>
-    <div class="finder">
-      <input id="find" list="syslist" placeholder="Find your water system by name…" aria-label="Find your water system">
-      <datalist id="syslist"></datalist>
-      <select id="spot" aria-label="County spotlight"><option value="">All California</option></select>
-    </div>
-    <div class="mapwrap">
-      <div id="map" role="application" aria-label="Map of failing and at-risk water systems"></div>
-      <div class="legend" id="legend"></div>
-    </div>
-    <div class="tabs" role="tablist">
-      <button role="tab" data-tab="plan" class="on">Funded plan</button>
-      <button role="tab" data-tab="spot">Local view</button>
-      <button role="tab" data-tab="left">Left out</button>
-      <button role="tab" data-tab="county">Counties</button>
-      <button role="tab" data-tab="method">Method and tests</button>
-      <button role="tab" data-tab="gaps">Gaps and prior work</button>
-    </div>
-    <div id="tabbody" class="tabbody"></div>
-  </section>
+<header><a class="brand" href="./" aria-label="Xylem home"><span class="brandmark">X</span><span>Xylem <small>PLANNING LAB</small></span></a><span class="source-pill"><span></span> CALIFORNIA · SAFER</span><span id="snapshot">Loading snapshot…</span></header>
+<main>
+<section class="intro"><div><p class="eyebrow">FROM WATER RISK TO FUNDING CHOICES</p><h1>Put the next dollar<br>on the map.</h1><p class="dek">Start with California’s SAFER systems. Adjust your priorities.<br class="desktop"> See who a funding plan reaches—and who it leaves out.</p></div><div class="intro-note"><span class="note-number" id="target-count">—</span><span>failing &amp; at-risk systems<br>in this planning snapshot</span><a href="#method">How this model works ↗</a></div></section>
+<div id="error" role="alert" hidden></div>
+<div class="workspace">
+<aside class="controls">
+<div class="section-head"><span class="eyebrow">01 / SET THE SCENARIO</span><button id="reset" class="text-btn">Reset</button></div>
+<label class="control"><span>Funding budget <output id="budget-value"></output></span><input id="budget" type="range" min="0" max="2000" step="5" value="500"><small id="budget-hint"></small></label>
+<div class="presets"><button data-budget="100">$100M</button><button data-budget="500">$500M</button><button data-budget="1000">$1B</button><button id="fund-all">Fund all</button></div>
+<label class="control"><span>Equity priority <output id="equity-value"></output></span><input id="equity" type="range" min="0" max="3" step=".1" value="1"><small>Give more weight to disadvantaged communities, affordability, poverty, and environmental burden.</small></label>
+<label class="control"><span>At-risk priority <output id="atRisk-value"></output></span><input id="atRisk" type="range" min="0" max="1" step=".05" value=".5"><small>Relative to a failing system. 0 excludes at-risk systems; 1 counts people in both groups equally.</small></label>
+<label class="control"><span>Small-system priority <output id="small-value"></output></span><input id="small" type="range" min="0" max="3" step=".1" value="0"><small>Extra priority for systems with ≤500 connections. A preference, not a guaranteed budget share.</small></label>
+<label class="control"><span>Cost assumption <output id="cost-value"></output></span><input id="cost" type="range" min=".5" max="2" step=".05" value="1"><small>Explore lower or higher remediation costs. These are planning estimates, not project quotes.</small></label>
+<div class="preset-priorities"><button data-preset="reach">Equal population priority</button><button data-preset="equity">Emphasize equity</button></div>
+<div class="uncertainty"><div class="eyebrow">TEST THE ASSUMPTIONS</div><p>How often is each system selected when its estimated cost changes?</p><button id="stress" class="primary">Run 40 cost scenarios <span>↗</span></button><p id="stress-status" class="micro" aria-live="polite">Uses your current budget and priorities.</p></div>
+<button id="share" class="share">Copy scenario link ↗</button><span id="share-status" class="micro" aria-live="polite"></span>
+<p class="micro rounded-note">Budget calculations round each project up to <span id="rounding-unit"></span>. Unused rounding allowance is included in the budget check.</p>
+</aside>
+<section class="results" aria-label="Scenario results">
+<div class="section-head"><span class="eyebrow">02 / EXPLORE THE PLAN</span><span id="plan-state" role="status">Preparing model…</span></div>
+<div class="metrics" id="metrics" aria-live="polite"></div>
+<div class="map-tools"><label class="search"><span>⌕</span><input type="search" id="search" list="system-list" placeholder="Find a water system or PWSID" aria-label="Find a water system"><datalist id="system-list"></datalist></label><select id="county" aria-label="Filter map and table by county"><option value="">All California</option></select><select id="map-mode" aria-label="Map color"><option value="plan">Funding plan</option><option value="status">SAFER status</option><option value="frequency">Scenario frequency</option></select></div>
+<div class="map-frame"><div id="map" aria-label="California SAFER systems map"></div><div class="map-legend" id="legend"></div><div class="map-caption"><span class="live-dot"></span><span id="map-count">SAFER system locations</span></div></div>
+<div class="map-footer"><label><input type="checkbox" id="context" checked> Show other SAFER systems</label><label><input type="checkbox" id="boundaries" checked> Service areas</label><span>County filters change the view; the plan stays statewide.</span></div>
+<div class="detail" id="detail"><p>SELECT A SYSTEM</p><span>Click a map marker or search by name to inspect its data and the model’s inputs.</span></div>
+<div class="table-head"><div class="tabs" role="group" aria-label="System table"><button data-tab="funded" class="active">Funded</button><button data-tab="left">Failing · left out</button><button data-tab="eligible">All eligible</button></div><button id="export" class="text-btn">Export plan CSV ↓</button></div>
+<div id="table-status" class="micro"></div><div class="table-scroll"><table><thead><tr><th scope="col">Water system</th><th scope="col">Status</th><th scope="col" class="number">People served</th><th scope="col" class="number">Est. cost</th><th scope="col" class="number">Cost-scenario selection</th></tr></thead><tbody id="system-rows"></tbody></table></div>
+</section>
+</div>
+<section class="method" id="method"><div><p class="eyebrow">03 / READ THE MODEL</p><h2>A transparent starting point.<br>Every assumption stays visible.</h2></div><div class="method-grid"><article><span>01</span><h3>Map the source</h3><p id="coverage">SAFER records are joined by water-system ID, with location and service-area coverage reported.</p></article><article><span>02</span><h3>Allocate the budget</h3><p>Priority = people served × status weight × (1 + equity priority × equity index) × (1 + small-system priority for small systems). The optimizer maximizes this weighted score within the rounded-cost budget. It does not necessarily maximize raw population or predict health outcomes. The comparison rule funds failing systems first, then largest population, using the same rounded costs; it is not the state’s actual process.</p></article><article><span>03</span><h3>Challenge the costs</h3><p>Baseline costs use the state’s 2024 per-connection averages, scaled to the 2024 statewide total on a 2026 system list. Reported median county error is about 41%; system-level accuracy is unverified. Cost scenarios hold your priorities fixed and assume independent lognormal errors with a 90% range of 0.5×–2×. Selection frequency describes these assumptions, not real-world success probability.</p></article></div><div class="limitations"><strong>Planning limits</strong><p>Population served is potential reach, not confirmed unique beneficiaries or measured health improvement. Readiness, project alternatives, funding already committed, ongoing operations, and consolidation feasibility are not modeled. Missing equity inputs are shown in each system’s details. Historical funding is a descriptive comparison, not outcome validation. Cost-bin boundaries can create abrupt changes in estimated cost.</p></div></section>
 </main>
-<footer class="foot">Data: California State Water Resources Control Board (SAFER Risk Assessment, Affordability Assessment, 2024 Cost Assessment, service-area boundaries). Costs are modelled estimates, not quotes. <a href="https://github.com/palashraks-afk/XylemProject">Source</a></footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="optimizer.js"></script>
-<script src="app.js"></script>
-</body>
-</html>
+<footer><span>XYLEM / CALIFORNIA WATER FUNDING</span><div><a href="https://data.ca.gov/dataset/safer-failing-and-at-risk-drinking-water-systems" target="_blank" rel="noreferrer">SAFER source ↗</a><a href="https://github.com/palashraks-afk/XylemProject/tree/focused-on-model" target="_blank" rel="noreferrer">Model &amp; code ↗</a></div></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script><script src="optimizer.js"></script><script src="model.js"></script><script src="app.js"></script>
+</body></html>

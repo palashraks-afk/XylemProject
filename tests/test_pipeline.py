@@ -75,14 +75,16 @@ def test_optimizer_never_overspends_and_is_monotone():
         prev = v
 
 
-def test_small_reserve_funds_small_systems():
-    costs = [UNIT * 4] * 4 + [UNIT] * 4
-    ben = [100] * 4 + [1] * 4
-    conns = [5000] * 4 + [50] * 4
-    no = optimize(costs, ben, conns, UNIT * 8, 0.0)
-    yes = optimize(costs, ben, conns, UNIT * 8, 0.5)
-    assert sum(1 for i in no if conns[i] <= 500) == 0
-    assert sum(1 for i in yes if conns[i] <= 500) >= 1
+def test_small_system_preference_is_part_of_joint_objective():
+    from model import benefit
+    costs = [UNIT, UNIT]
+    conns = [50, 5000]
+    plain = benefit([100, 150], [True, True], [0.5, 0.5], 0, 1, conns, 0)
+    weighted = benefit([100, 150], [True, True], [0.5, 0.5], 0, 1, conns, 1)
+    assert optimize(costs, plain, conns, UNIT) == [1]
+    assert optimize(costs, weighted, conns, UNIT) == [0]
+    with pytest.raises(ValueError):
+        optimize(costs, plain, conns, UNIT, 0.5)
 
 
 def test_optimizer_beats_status_first_on_people_reached():
@@ -106,7 +108,7 @@ def test_js_port_matches_python_reference():
     conns = [rnd.randint(5, 1500) for _ in range(n)]
     cases = []
     for budget in (10 * UNIT, 100 * UNIT, 400 * UNIT):
-        for reserve in (0.0, 0.3):
+        for reserve in (0.0,):
             cases.append({"budget": budget, "reserve": reserve,
                           "py": optimize(costs, ben, conns, budget, reserve)})
     script = (ROOT / "tests" / "parity.js")
@@ -164,3 +166,27 @@ def test_polygon_coverage_reported(built):
     gj = json.loads((ROOT / "app/data/boundaries.geojson").read_text())
     assert cov["with_polygon"] == len(gj["features"])
     assert cov["with_polygon"] / cov["targets"] > 0.95
+
+def test_context_contains_all_source_ids(built):
+    import pandas as pd
+    context = json.loads((ROOT / "app/data/safer_context.json").read_text(encoding="utf-8"))
+    source = pd.read_csv(ROOT / "data/raw/SAFER_RA.csv", encoding="utf-8-sig", low_memory=False)
+    assert len(context) == len(source)
+    assert len({s["id"] for s in context}) == len(context)
+    assert {s["id"] for s in context} == set(source.WATER_SYSTEM_NUMBER)
+    assert all(s["status"] for s in context)
+
+def test_browser_model_matches_python_benefit(built):
+    from model import benefit
+    systems, summary = built
+    cases = []
+    for lam, ar, small in [(0, 1, 0), (2, .25, 1.5), (3, 0, 3)]:
+        values = benefit([s["pop"] for s in systems], [s["failing"] for s in systems],
+                         [s["equity"] for s in systems], lam, ar,
+                         [s["conn"] for s in systems], small).tolist()
+        cases.append({"equity": lam, "atRisk": ar, "small": small, "expected": values})
+    code = "const m=require('./app/model.js');let b='';process.stdin.on('data',x=>b+=x);process.stdin.on('end',()=>{const p=JSON.parse(b);console.log(JSON.stringify(p.cases.map(c=>m.inputs(p.systems,c).benefits)));});"
+    result = subprocess.run(["node", "-e", code], input=json.dumps({"systems": systems, "cases": cases}),
+                            capture_output=True, text=True, check=True, cwd=ROOT)
+    for got, case in zip(json.loads(result.stdout), cases):
+        assert got == pytest.approx(case["expected"], rel=1e-12)

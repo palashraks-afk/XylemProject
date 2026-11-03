@@ -56,85 +56,85 @@
   {
    "budget_musd": 100,
    "optimizer": {
-    "systems": 17,
-    "people": 221298,
-    "spent_musd": 98.1,
+    "systems": 25,
+    "people": 225358,
+    "spent_musd": 99.3,
     "dac_people": 216104,
-    "small_systems": 7
+    "small_systems": 15
    },
    "status_first_baseline": {
-    "systems": 13,
-    "people": 168274,
-    "spent_musd": 100.0,
+    "systems": 12,
+    "people": 167377,
+    "spent_musd": 99.6,
     "dac_people": 155181,
-    "small_systems": 3
+    "small_systems": 2
    }
   },
   {
    "budget_musd": 250,
    "optimizer": {
-    "systems": 39,
-    "people": 506981,
-    "spent_musd": 245.5,
-    "dac_people": 485814,
-    "small_systems": 18
+    "systems": 41,
+    "people": 513687,
+    "spent_musd": 248.8,
+    "dac_people": 493289,
+    "small_systems": 19
    },
    "status_first_baseline": {
-    "systems": 32,
-    "people": 292238,
-    "spent_musd": 249.9,
+    "systems": 31,
+    "people": 291297,
+    "spent_musd": 248.8,
     "dac_people": 232154,
-    "small_systems": 5
+    "small_systems": 4
    }
   },
   {
    "budget_musd": 500,
    "optimizer": {
-    "systems": 54,
-    "people": 966559,
-    "spent_musd": 493.1,
-    "dac_people": 945562,
-    "small_systems": 17
+    "systems": 62,
+    "people": 965869,
+    "spent_musd": 498.0,
+    "dac_people": 943343,
+    "small_systems": 25
    },
    "status_first_baseline": {
-    "systems": 68,
-    "people": 358300,
-    "spent_musd": 499.9,
-    "dac_people": 271413,
-    "small_systems": 23
+    "systems": 71,
+    "people": 359689,
+    "spent_musd": 497.2,
+    "dac_people": 270537,
+    "small_systems": 26
    }
   },
   {
    "budget_musd": 1000,
    "optimizer": {
-    "systems": 126,
-    "people": 1549044,
-    "spent_musd": 983.5,
-    "dac_people": 1138374,
-    "small_systems": 44
+    "systems": 134,
+    "people": 1553621,
+    "spent_musd": 994.6,
+    "dac_people": 1141146,
+    "small_systems": 51
    },
    "status_first_baseline": {
     "systems": 185,
-    "people": 406664,
-    "spent_musd": 999.9,
-    "dac_people": 300808,
+    "people": 406652,
+    "spent_musd": 992.3,
+    "dac_people": 300796,
     "small_systems": 140
    }
   },
   {
    "budget_musd": 2000,
    "optimizer": {
-    "systems": 392,
-    "people": 1836838,
-    "spent_musd": 1951.9,
-    "dac_people": 1268885,
-    "small_systems": 264
+    "systems": 406,
+    "people": 1840575,
+    "spent_musd": 1983.1,
+    "dac_people": 1270561,
+    "small_systems": 278
    },
    "status_first_baseline": {
-    "systems": 438,
-    "people": 944874,
-    "spent_musd": 2000.0,
-    "dac_people": 677518,
+    "systems": 437,
+    "people": 904448,
+    "spent_musd": 1980.0,
+    "dac_people": 636968,
     "small_systems": 384
    }
   }
