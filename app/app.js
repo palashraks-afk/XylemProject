@@ -215,6 +215,7 @@
   // ---------- 3D map (default) and 2D map ----------
   let on3d = true;
   const data3d = () => ({ systems, inPlan: plan.inPlan, viaRoute, RT, routeLines, counties: countyGeo, polys, idx, popup, esc, fmtN, colorMode: () => st.color, colorCss: colorFor, onSelect: (i) => showDetail(i),
+    budget: { pos: () => budgetToPos(st.b), label: () => fmtM(st.b * 1e6), set: (p) => { st.b = posToBudget(p); $("#budget").value = p; update(); } },
     summary: () => ({ budget: fmtM(st.b * 1e6), systems: fmtN(plan.chosen.length), people: fmtN(plan.people) }) });
   function setView(v) {
     on3d = v === "3d";

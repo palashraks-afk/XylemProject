@@ -6,6 +6,7 @@
   const FUND = "#19d3a2", FAIL = "#ef4b4b", RISK = "#f3a73a", ROUTE = "#19d3a2";
   const STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
   const DEM = "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png";
+  const EOX = "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2021_3857/default/g/{z}/{y}/{x}.jpg";
   const SAT = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
   const HOME = { center: [-119.3, 37.1], zoom: 5.25, pitch: 55, bearing: -12 };
   const CITIES = { "Los Angeles": [-118.25, 34.05], "San Francisco Bay": [-122.35, 37.78], "San Diego": [-117.16, 32.72], "Sacramento": [-121.49, 38.58],
@@ -24,27 +25,30 @@
     const st = await fetch(STYLE_URL).then((r) => r.json());
     st.sources.dem = { type: "raster-dem", tiles: [DEM], tileSize: 256, maxzoom: 14, encoding: "terrarium", attribution: "Elevation: AWS Terrain Tiles (SRTM, GMTED)" };
     st.sources.demhs = Object.assign({}, st.sources.dem);
+    st.sources.eox = { type: "raster", tiles: [EOX], tileSize: 256, maxzoom: 13, attribution: "Sentinel-2 cloudless by EOX (contains modified Copernicus Sentinel data 2021)" };
     st.sources.sat = { type: "raster", tiles: [SAT], tileSize: 256, maxzoom: 18, attribution: "Imagery &copy; Esri" };
     st.sources.infra = { type: "geojson", data: EMPTY }; st.sources.sites3d = { type: "geojson", data: EMPTY };
     st.sources.sys = { type: "geojson", data: EMPTY }; st.sources.towers = { type: "geojson", data: EMPTY }; st.sources.routes = { type: "geojson", data: EMPTY };
     st.sources.sel = { type: "geojson", data: EMPTY }; st.sources.areas = { type: "geojson", data: EMPTY }; st.sources.counties = { type: "geojson", data: EMPTY };
     st.terrain = { source: "dem", exaggeration: opt.exag };
-    st.sky = { "sky-color": "#6aa6dd", "horizon-color": "#dbe9f5", "fog-color": "#dbe6ef", "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.7, "fog-ground-blend": 0.45,
+    st.sky = { "sky-color": "#6aa6dd", "horizon-color": "#dbe9f5", "fog-color": "#dbe6ef", "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.7, "fog-ground-blend": 0.75,
       "atmosphere-blend": ["interpolate", ["linear"], ["zoom"], 0, 1, 10, 1, 13, 0] };
     st.layers = st.layers.filter((l) => !/^poi_/.test(l.id) && l.id !== "road_one_way_arrow" && l.id !== "road_one_way_arrow_opposite");
     const at = st.layers.findIndex((l) => l.id === "waterway_tunnel");
     st.layers.splice(at, 0,
+      { id: "sat-eox", type: "raster", source: "eox", paint: { "raster-saturation": -0.05 } },
       { id: "sat", type: "raster", source: "sat", layout: { visibility: "visible" }, paint: { "raster-saturation": -0.05, "raster-contrast": 0.08 } },
       { id: "hill", type: "hillshade", source: "demhs", paint: { "hillshade-exaggeration": 0.5, "hillshade-shadow-color": "#142231", "hillshade-highlight-color": "#ffffff", "hillshade-accent-color": "#3a4a5c", "hillshade-illumination-direction": 295 } });
     const b3 = st.layers.find((l) => l.id === "building-3d");
-    b3.minzoom = 13; b3.paint["fill-extrusion-color"] = ["interpolate", ["linear"], ["get", "render_height"], 0, "#d9d4cc", 60, "#e9e6e0", 200, "#f6f4f0"];
+    b3.minzoom = 13; b3.paint["fill-extrusion-color"] = ["interpolate", ["linear"], ["coalesce", ["get", "render_height"], 8], 0, "#d9d4cc", 60, "#e9e6e0", 200, "#f6f4f0"];
+    b3.paint["fill-extrusion-height"] = ["coalesce", ["get", "render_height"], 8]; b3.paint["fill-extrusion-base"] = ["coalesce", ["get", "render_min_height"], 0];
     b3.paint["fill-extrusion-opacity"] = 0.96; b3.paint["fill-extrusion-vertical-gradient"] = true;
     const firstSym = st.layers.findIndex((l) => l.type === "symbol" && !/^waterway|^water_name/.test(l.id));
     const add = (...ls) => st.layers.splice(firstSym, 0, ...ls);
     const w = (a, b, c) => ["interpolate", ["linear"], ["zoom"], 5, a, 9, b, 14, c];
-    const stColor = ["match", ["get", "st"], 0, FUND, 1, FAIL, RISK];
+    const stColor = ["case", ["has", "col"], ["to-color", ["get", "col"]], ["match", ["get", "st"], 0, FUND, 1, FAIL, RISK]];
     add(
-      { id: "areas", type: "fill", source: "areas", paint: { "fill-color": stColor, "fill-opacity": ["match", ["get", "st"], 0, 0.62, 1, 0.62, 0.5] } },
+      { id: "areas", type: "fill", source: "areas", paint: { "fill-color": stColor, "fill-opacity": ["interpolate", ["linear"], ["zoom"], 9, ["match", ["get", "st"], 0, 0.62, 1, 0.62, 0.5], 14, ["match", ["get", "st"], 0, 0.18, 1, 0.2, 0.15]] } },
       { id: "areas-line", type: "line", source: "areas", paint: { "line-color": stColor, "line-width": ["interpolate", ["linear"], ["zoom"], 5, 1.8, 9, 2.4, 13, 3], "line-opacity": 1 } },
       { id: "counties", type: "line", source: "counties", paint: { "line-color": "#ffffff", "line-opacity": 0.28, "line-width": 0.7 } },
       { id: "infra-casing", type: "line", source: "infra", filter: ["in", ["get", "k"], ["literal", ["canal", "aqueduct", "pipeline"]]], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#0b2a4a", "line-opacity": 0.55, "line-width": w(2.6, 4.6, 12) } },
@@ -59,10 +63,10 @@
         paint: { "text-color": "#d6eeff", "text-halo-color": "#0b2a4a", "text-halo-width": 1.4 } });
     st.layers.push(
       { id: "sites-dot", type: "circle", source: "sites3d", filter: ["==", ["geometry-type"], "Point"], minzoom: 8, maxzoom: 12, paint: { "circle-radius": 3, "circle-color": ["get", "c"], "circle-stroke-color": "#fff", "circle-stroke-width": 1 } },
-      { id: "sys-risk", type: "circle", source: "sys", minzoom: 8.5, filter: ["==", ["get", "st"], 2], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 8.5, ["*", ["get", "k"], 0.7], 14, 5], "circle-color": RISK, "circle-opacity": 0.75, "circle-stroke-color": "#fff", "circle-stroke-width": 0.6 } },
+      { id: "sys-risk", type: "circle", source: "sys", minzoom: 8.5, filter: ["==", ["get", "st"], 2], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 8.5, ["*", ["get", "k"], 0.7], 14, 5], "circle-color": ["case", ["has", "col"], ["to-color", ["get", "col"]], RISK], "circle-opacity": 0.75, "circle-stroke-color": "#fff", "circle-stroke-width": 0.6 } },
       { id: "sys", type: "circle", source: "sys", filter: ["!=", ["get", "st"], 2], layout: { "circle-sort-key": ["-", 3, ["get", "st"]] },
         paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["*", ["get", "k"], 0.6], 8, ["*", ["get", "k"], 1.1], 12, ["*", ["get", "k"], 1.5], 15, 5],
-          "circle-color": ["match", ["get", "st"], 0, FUND, FAIL], "circle-opacity": ["match", ["get", "st"], 0, 1, 0.8],
+          "circle-color": ["case", ["has", "col"], ["to-color", ["get", "col"]], ["match", ["get", "st"], 0, FUND, FAIL]], "circle-opacity": ["match", ["get", "st"], 0, 1, 0.8],
           "circle-stroke-color": "#ffffff", "circle-stroke-width": ["match", ["get", "st"], 0, 1.8, 0.5] } },
       { id: "sel", type: "circle", source: "sel", paint: { "circle-radius": 17, "circle-color": "rgba(255,255,255,0)", "circle-stroke-color": "#fff", "circle-stroke-width": 2.5 } });
     return st;
@@ -71,24 +75,28 @@
   // ---------- data ----------
   function refreshSystems() {
     if (!ready || !D) return;
-    const mode = D.colorMode(), feats = [], towers = [], areas = [];
+    const mode = D.colorMode(), stab = mode === "stab", feats = [], towers = [], areas = [];
     const stOf = (i) => { const s = D.systems[i]; return mode === "plan" && D.inPlan[i] ? 0 : s.failing ? 1 : 2; };
     if (D.polys) D.polys.features.forEach((ft) => { const i = D.idx.get(ft.properties.id); if (i === undefined || (!opt.unfunded && !D.inPlan[i])) return;
-      areas.push({ type: "Feature", properties: { st: stOf(i) }, geometry: ft.geometry }); });
+      areas.push({ type: "Feature", properties: stab ? { st: stOf(i), col: D.colorCss(i) } : { st: stOf(i) }, geometry: ft.geometry }); });
     map.getSource("areas").setData({ type: "FeatureCollection", features: areas });
     D.systems.forEach((s, i) => {
       if (s.lat == null || !s.lon) return;
       const funded = !!D.inPlan[i], st = stOf(i), k = Math.min(9, 2.4 + Math.sqrt(s.pop) / 55);
       if (!opt.unfunded && !funded) return;
-      feats.push({ type: "Feature", properties: { i, st, k: funded ? k * 1.3 : k * 0.65 }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } });
-      const r = Math.min(34, 11 + Math.sqrt(s.pop) / 22) * (funded ? 1.5 : 1), c = funded ? "#1fbf93" : s.failing ? "#d94444" : "#e0a03a", h = r * 1.9;
-      towers.push(poly(circle(s.lon, s.lat, r * 0.3, 8), { c: "#c9d1d9", b: 0, h }), poly(circle(s.lon, s.lat, r, 16), { c, b: h, h: h + r * 1.05 }));
+      feats.push({ type: "Feature", properties: stab ? { i, st, k: funded ? k * 1.3 : k * 0.65, col: D.colorCss(i) } : { i, st, k: funded ? k * 1.3 : k * 0.65 }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } });
+      const r = Math.min(34, 11 + Math.sqrt(s.pop) / 22) * (funded ? 1.5 : 1), c = stab ? D.colorCss(i) : funded ? "#1fbf93" : s.failing ? "#d94444" : "#e0a03a", leg = r * 1.7, steel = "#c9d1d9";
+      const at = (mx, my) => [s.lon + mx / (111320 * Math.cos(s.lat * Math.PI / 180)), s.lat + my / 111320], o = r * 0.55, w = Math.max(1.2, r * 0.16);
+      [[o, o], [-o, o], [o, -o], [-o, -o]].forEach(([x, y]) => { const p = at(x, y); towers.push(poly(square(p[0], p[1], w, w), { c: steel, b: 0, h: leg })); });
+      towers.push(poly(circle(s.lon, s.lat, r * 0.16, 6), { c: steel, b: 0, h: leg }), poly(circle(s.lon, s.lat, r, 18), { c, b: leg, h: leg + r * 1.1 }),
+        poly(circle(s.lon, s.lat, r * 0.74, 14), { c, b: leg + r * 1.1, h: leg + r * 1.42 }), poly(circle(s.lon, s.lat, r * 0.3, 10), { c: steel, b: leg + r * 1.42, h: leg + r * 1.75 }));
     });
     map.getSource("sys").setData({ type: "FeatureCollection", features: feats });
     map.getSource("towers").setData({ type: "FeatureCollection", features: towers });
     const rt = [];
     if (D.routeLines) D.routeLines.features.forEach((f) => { const i = D.idx.get(f.properties.id), r = D.RT[f.properties.id]; if (i !== undefined && D.inPlan[i] && r && r.viable && r.receiver) rt.push(f); });
     map.getSource("routes").setData({ type: "FeatureCollection", features: rt });
+    if (hud.bud && D.budget && document.activeElement !== hud.bud) { hud.bud.value = D.budget.pos(); hud.bl.textContent = D.budget.label(); }
     if (hud.chip) { const s = D.summary(); hud.chip.innerHTML = `<span>Budget <b>${s.budget}</b></span><span><b>${s.systems}</b> systems funded</span><span><b>${s.people}</b> people reached</span>`; }
   }
   function refreshInfra() {
@@ -107,7 +115,7 @@
   function applyOpts() {
     if (!ready) return;
     const sat = opt.base === "sat", vis = (id, on) => map.getLayer(id) && map.setLayoutProperty(id, "visibility", on ? "visible" : "none");
-    vis("sat", sat); vis("water", !sat); vis("building", false);
+    vis("sat", sat); vis("sat-eox", sat); vis("water", !sat); vis("building", false);
     map.setPaintProperty("hill", "hillshade-exaggeration", sat ? ["interpolate", ["linear"], ["zoom"], 6, 0.3, 12, 0.08] : ["interpolate", ["linear"], ["zoom"], 6, 0.6, 13, 0.3]);
     map.getStyle().layers.forEach((l) => { if (/^(road_|bridge_|tunnel_)/.test(l.id) && l.type === "line") map.setPaintProperty(l.id, "line-opacity", sat ? 0.55 : 1); });
     vis("areas", opt.areas); vis("areas-line", opt.areas);
@@ -146,6 +154,7 @@
     buildHud();
     map.on("load", async () => {
       ready = true; load.remove(); applyOpts(); refreshSystems();
+      const at = box.querySelector(".maplibregl-ctrl-attrib"); if (at) at.classList.remove("maplibregl-compact-show");
       try { infra = await fetch("data/infrastructure.json").then((r) => r.json()); refreshInfra(); } catch (e) { /* infrastructure layer is optional */ }
       if (D.counties) map.getSource("counties").setData(D.counties);
     });
@@ -162,13 +171,15 @@
     const el = (h) => { const d = document.createElement("div"); d.innerHTML = h.trim(); return d.firstChild; };
     hud.chip = el(`<div class="chip3d"></div>`);
     const panel = el(`<div class="hud3d">
+      <label class="rng bud">Budget <b data-bl></b><input type="range" data-bud min="0" max="100" step="1" value="50" aria-label="Funding budget"></label>
+      <details class="more"${innerWidth > 900 ? " open" : ""}><summary>Layers and view</summary>
       <select data-jump aria-label="Jump to"><option value="">Jump to a city…</option>${Object.keys(CITIES).map((c) => `<option>${c}</option>`).join("")}</select>
       <label class="chk"><input type="checkbox" data-k="areas" checked> Service-area shading</label>
       <label class="chk"><input type="checkbox" data-k="infra" checked> Canals, plants, towers</label>
       <label class="chk"><input type="checkbox" data-k="buildings" checked> Buildings</label>
       <label class="chk"><input type="checkbox" data-k="unfunded" checked> Systems not funded</label>
       <label class="rng">Relief <input type="range" data-k="exag" min="1" max="3" step="0.1" value="${opt.exag}"></label>
-      <button class="ghost" data-act="home">Whole state</button></div>`);
+      <button class="ghost" data-act="home">Whole state</button></details></div>`);
     const legend = el(`<div class="leg3d"><div><span class="sw" style="background:${FUND}"></span>Selected for funding</div><div><span class="sw" style="background:${FAIL}"></span>Failing, not selected</div>
       <div><span class="sw" style="background:${RISK}"></span>At-risk, not selected</div><div class="mute">Each service area is shaded in its colour.</div><div><span class="sw bar" style="background:#3fb8ff"></span>Canal or aqueduct</div>
       <div><span class="sw bar" style="background:#ffd38a"></span>Tunnel</div><div><span class="sw sq" style="background:#7fc3ff"></span>Treatment plant</div>
@@ -177,6 +188,8 @@
     panel.addEventListener("input", (e) => { const k = e.target.dataset.k; if (!k) return; opt[k] = e.target.type === "checkbox" ? e.target.checked : +e.target.value; if (k === "unfunded") refreshSystems(); applyOpts(); });
     panel.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
       if (b.dataset.act === "home") V.home(); });
+    hud.bud = panel.querySelector("[data-bud]"); hud.bl = panel.querySelector("[data-bl]");
+    hud.bud.addEventListener("input", () => D.budget.set(+hud.bud.value));
     panel.querySelector("[data-jump]").addEventListener("change", (e) => { const c = CITIES[e.target.value]; if (c) V.flyToLonLat(c[0], c[1], 13.4); e.target.value = ""; });
   }
 })();
