@@ -58,12 +58,18 @@
 
   <section class="stage">
     <div class="kpis" id="kpis"></div>
+    <div class="finder">
+      <input id="find" list="syslist" placeholder="Find your water system by name…" aria-label="Find your water system">
+      <datalist id="syslist"></datalist>
+      <select id="spot" aria-label="County spotlight"><option value="">All California</option></select>
+    </div>
     <div class="mapwrap">
       <div id="map" role="application" aria-label="Map of failing and at-risk water systems"></div>
       <div class="legend" id="legend"></div>
     </div>
     <div class="tabs" role="tablist">
       <button role="tab" data-tab="plan" class="on">Funded plan</button>
+      <button role="tab" data-tab="spot">Local view</button>
       <button role="tab" data-tab="left">Left out</button>
       <button role="tab" data-tab="county">Counties</button>
       <button role="tab" data-tab="method">Method and tests</button>

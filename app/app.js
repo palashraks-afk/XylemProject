@@ -246,7 +246,25 @@
     return el;
   }
 
-  const TABS = { plan: tabPlan, left: tabLeft, county: tabCounty, method: tabMethod, gaps: tabGaps };
+  function tabSpot() {
+    const el = document.createElement("div"); el.className = "prose";
+    if (!st.spot) { el.innerHTML = `<p class="mute">Pick a county above the map, or search for your water system, to see what this plan means locally.</p>`; return el; }
+    const ix = systems.map((_, i) => i).filter((i) => systems[i].county === st.spot);
+    const sum = (a, arr) => a.reduce((s, i) => s + arr[i], 0);
+    const people = sum(ix, pops), got = ix.filter((i) => plan.inPlan[i]), gotP = sum(got, pops);
+    const leftF = ix.filter((i) => failing[i] && !plan.inPlan[i]), leftP = sum(leftF, pops);
+    const nF = ix.filter((i) => failing[i]).length, cost = sum(ix, costs);
+    el.innerHTML = `<p class="story"><b>${esc(st.spot)} County.</b> ${ix.length} Failing or At-Risk water systems (${nF} Failing) serve ${fmtN(people)} people, and fixing them is modelled at ${fmtM(cost)}. With a ${fmtM(st.b * 1e6)} statewide budget, this plan funds ${got.length} of them and reaches ${fmtN(gotP)} people (${pct(gotP / Math.max(1, people))}). ${leftF.length ? `${leftF.length} Failing systems serving ${fmtN(leftP)} people are not funded at this budget.` : "No Failing system here is left unfunded."}</p>`;
+    const rows = ix.map((i) => ({ ...systems[i], inplan: plan.inPlan[i] ? "Yes" : "No", cpp: systems[i].cost / systems[i].pop }));
+    el.appendChild(table([
+      { k: "name", h: "System" }, { k: "failing", h: "Status", f: tagS }, { k: "pop", h: "People", num: 1, f: (r) => fmtN(r.pop) },
+      { k: "cost", h: "Cost", num: 1, f: (r) => fmtM(r.cost) }, { k: "cpp", h: "$/person", num: 1, f: (r) => "$" + fmtN(r.cpp) },
+      { k: "inplan", h: "In plan" }, { k: "dac", h: "Economic status" },
+    ], rows, "pop", true));
+    return el;
+  }
+
+  const TABS = { plan: tabPlan, spot: tabSpot, left: tabLeft, county: tabCounty, method: tabMethod, gaps: tabGaps };
   function drawTab() { const b = $("#tabbody"); b.innerHTML = ""; b.appendChild(TABS[st.tab]()); }
 
   // ---------- wiring ----------
@@ -279,6 +297,27 @@
     writeHash(); try { await navigator.clipboard.writeText(location.href); $("#copyMsg").textContent = "Link copied. It reproduces this scenario."; }
     catch (e) { $("#copyMsg").textContent = "Copy the address bar to share this scenario."; }
     setTimeout(() => ($("#copyMsg").textContent = ""), 3000); });
+
+  // find-your-system search and county spotlight
+  const label = (s) => `${s.name} · ${s.county}`;
+  const byLabel = new Map(systems.map((s, i) => [label(s), i]));
+  $("#syslist").innerHTML = systems.map((s) => `<option value="${esc(label(s))}">`).join("");
+  [...new Set(systems.map((s) => s.county))].sort().forEach((c) => $("#spot").insertAdjacentHTML("beforeend", `<option>${esc(c)}</option>`));
+  function showTab(t) { st.tab = t; document.querySelectorAll("[data-tab]").forEach((x) => x.classList.toggle("on", x.dataset.tab === t)); drawTab(); }
+  function spotlight(county) {
+    st.spot = county || ""; $("#spot").value = st.spot;
+    if (st.spot) {
+      const pts = systems.filter((s) => s.county === st.spot && s.lat != null && s.lon !== 0).map((s) => [s.lat, s.lon]);
+      if (pts.length) map.fitBounds(L.latLngBounds(pts).pad(0.2), { maxZoom: 11 });
+      showTab("spot");
+    } else { map.setView([36.9, -119.5], 6); drawTab(); }
+  }
+  $("#spot").addEventListener("change", (e) => spotlight(e.target.value));
+  $("#find").addEventListener("change", (e) => {
+    const i = byLabel.get(e.target.value); if (i === undefined || !dots[i]) return;
+    st.spot = systems[i].county; $("#spot").value = st.spot; showTab("spot");
+    map.flyTo(dots[i].getLatLng(), 11); dots[i].openPopup();
+  });
 
   polyGroup.addTo(map);
   syncLabels(); run(); kpis(); restyle(); drawTab();

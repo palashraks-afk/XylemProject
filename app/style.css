@@ -44,6 +44,10 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
 .kpi .s { font-size: 12px; color: var(--mute); }
 .kpi.hero .v { color: var(--accent); }
 .up { color: var(--good); font-weight: 600; }
+.finder { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.finder input, .finder select { padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); font: inherit; font-size: 14px; }
+.finder input { flex: 1 1 260px; min-width: 0; }
+.story { font-size: 16px; line-height: 1.55; max-width: 70ch; margin-bottom: 12px; }
 .mapwrap { position: relative; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); }
 #map { height: 460px; background: var(--panel); }
 .legend { position: absolute; left: 10px; bottom: 10px; z-index: 500; background: color-mix(in srgb, var(--panel) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 12px; }
