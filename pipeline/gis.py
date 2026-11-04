@@ -8,6 +8,10 @@ import pandas as pd
 from shapely.geometry import shape, mapping
 from sklearn.neighbors import BallTree
 
+import sys
+sys.path.insert(0, str(Path(__file__).parent))
+from coords import corrected  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data" / "raw"
 OUT = ROOT / "app" / "data"
@@ -64,6 +68,9 @@ def main():
     n_counties = counties()
     d = pd.read_csv(RAW / "SAFER_RA.csv", encoding="utf-8-sig", low_memory=False)
     d = d[(d.LONGITUDE_MEASURE != 0) & d.LATITUDE_MEASURE.notna()].reset_index(drop=True)
+    loc = corrected(d)
+    d["LATITUDE_MEASURE"] = d.WATER_SYSTEM_NUMBER.map(loc.lat)
+    d["LONGITUDE_MEASURE"] = d.WATER_SYSTEM_NUMBER.map(loc.lon)
     pts = np.radians(d[["LATITUDE_MEASURE", "LONGITUDE_MEASURE"]].values)
     tree = BallTree(pts, metric="haversine")
     incl = tree.query_radius(pts, r=RADIUS_KM / EARTH_KM)

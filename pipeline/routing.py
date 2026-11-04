@@ -24,6 +24,9 @@ from shapely.geometry import shape, Point
 from shapely.ops import nearest_points, transform
 from shapely.strtree import STRtree
 
+sys.path.insert(0, str(Path(__file__).parent))
+from coords import corrected  # noqa: E402
+
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data" / "raw"
 OUT = ROOT / "app" / "data"
@@ -85,6 +88,7 @@ def load_systems():
 
 def main():
     d = load_systems()
+    loc = corrected(d)
     recv = d[(~d.FINAL_SAFER_STATUS.isin(["Failing", "At-Risk"])) & (d.FEDERAL_CLASSIFICATION_TYPE == "COMMUNITY")
              & (d.conn > RECEIVER_MIN_CONN)].copy()
     cache = RAW / "receiver_polygons.json"
@@ -111,7 +115,7 @@ def main():
     reach_m = MAX_ROUTE_MI / CIRCUITY / MI_PER_M   # straight-line search radius that could still be <= 3 route miles
     routes, feats = {}, []
     for _, r in join.iterrows():
-        x, y = to_m(r.LONGITUDE_MEASURE, r.LATITUDE_MEASURE)
+        x, y = to_m(loc.at[r.WATER_SYSTEM_NUMBER, "lon"], loc.at[r.WATER_SYSTEM_NUMBER, "lat"])
         pt = Point(x, y)
         best = None
         for k in tree.query(pt.buffer(reach_m)):
@@ -139,6 +143,8 @@ def main():
         rec = {"eligible": True, "viable": bool(ok), "receiver": best["pid"], "receiver_name": best["rname"].title(),
                "receiver_conn": best["rconn"], "kind": kind, "route_mi": round(best["dist_m"] * CIRCUITY * MI_PER_M, 2),
                "cost": int(total), "per_conn": int(total / conn), "pipeline": int(parts["pipeline"])}
+        rp = rgeom[best["k"]].representative_point()
+        rec["rlon"], rec["rlat"] = [round(v, 5) for v in to_ll(rp.x, rp.y)]
         if not ok:
             rec["reason"] = "over the state's funding viability threshold"
         routes[r.WATER_SYSTEM_NUMBER] = rec

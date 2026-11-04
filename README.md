@@ -85,3 +85,11 @@ See [NOVELTY.md](NOVELTY.md) for prior work, [GRADING.md](GRADING.md) for the sc
 - `tests/`: pytest suite and the Node parity script
 - `data/raw/`: source files; `data/cost_tables.json`: the state's Tables 7 and 9, transcribed by hand and checked against its totals
 - `DataSets.md`: data sources
+
+## Placement quality control
+
+All 1,062 Failing or At-Risk systems have coordinates inside California and inside their registered county. 27 of the 1,061 that have a service-area polygon had a point more than about 0.5 km outside their own polygon (3 of them by more than 25 km). `pipeline/coords.py` moves those points inside the state's boundary, which is also what the consolidation method measures from, and marks the 3 large moves as uncertain in `systems.json` (`loc: "polygon_far"`), because either the point or the polygon could be wrong. `tests/test_coords.py` checks the result.
+
+## Speed
+
+The exact optimizer runs in a Web Worker (`app/worker.js`), the hidden 2D map is no longer restyled while the 3D map is showing, and the 3D map rebuilds its heavy layers (towers, service areas) only after a slider has been still for 150 ms, reusing prebuilt tower geometry. In one browser run of ten slider moves, main-thread blocking fell from about 1,200 ms (13 long tasks) to about 300 ms (3 long tasks) and mean time to a new plan from 212 ms to 137 ms. A single measurement in one browser pane, not a benchmark.

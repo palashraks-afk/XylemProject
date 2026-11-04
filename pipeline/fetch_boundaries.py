@@ -1,5 +1,6 @@
 """Fetch simplified service-area polygons for Failing / At-Risk systems from the State Water Board SABL layer."""
 import json
+import pandas as pd
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -10,7 +11,8 @@ URL = ("https://gispublic.waterboards.ca.gov/portalserver/rest/services/Drinking
 
 
 def main():
-    ids = [s["id"] for s in json.loads((ROOT / "app/data/systems.json").read_text())]
+    d = pd.read_csv(ROOT / "data/raw/SAFER_RA.csv", encoding="utf-8-sig", low_memory=False)
+    ids = d[d.FINAL_SAFER_STATUS.isin(["Failing", "At-Risk"])].WATER_SYSTEM_NUMBER.tolist()
     feats, seen = [], set()
     for i in range(0, len(ids), 80):
         chunk = ids[i:i + 80]

@@ -10,6 +10,7 @@ from scipy.stats import spearmanr, pearsonr, rankdata
 sys.path.insert(0, str(Path(__file__).parent))
 from costmodel import system_cost, TABLES  # noqa: E402
 from optimizer import optimize, greedy_by_population  # noqa: E402
+from coords import corrected  # noqa: E402
 import extra_features as ef  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -77,6 +78,11 @@ def main():
     ctx = d.groupby("FINAL_SAFER_STATUS").POPULATION.agg(["count", "sum"]).rename(columns={"sum": "pop"})
 
     s = d[d.FINAL_SAFER_STATUS.isin(["Failing", "At-Risk"])].copy().reset_index(drop=True)
+    loc = corrected(d)    # moves points that fall outside their own service-area polygon (see pipeline/coords.py)
+    s["LATITUDE_MEASURE"] = s.WATER_SYSTEM_NUMBER.map(loc.lat)
+    s["LONGITUDE_MEASURE"] = s.WATER_SYSTEM_NUMBER.map(loc.lon)
+    s["locsrc"] = s.WATER_SYSTEM_NUMBER.map(loc.src)
+    s["moved_km"] = s.WATER_SYSTEM_NUMBER.map(loc.moved_km)
     s["failing"] = s.FINAL_SAFER_STATUS.eq("Failing")
     s["conn"] = s.SERVICE_CONNECTIONS.clip(lower=1).astype(int)
     s["cost_raw"] = [system_cost(c, st) for c, st in zip(s.conn, s.FINAL_SAFER_STATUS)]
@@ -187,6 +193,7 @@ def main():
             "cost": int(row.cost), "lo": int(row.cost_lo), "hi": int(row.cost_hi),
             "p": [round(float(fund_prob[B][i]), 2) for B in BUDGETS_M],
             "funded17": bool(funded[i]),
+            "loc": None if row.locsrc == "safer" else row.locsrc, "moved": None if row.locsrc == "safer" else float(row.moved_km),
             "pf": None if row.failing else round(float(pf[i]), 4),
             "pv": pv.get(row.WATER_SYSTEM_NUMBER),
             "analytes": (row.PRIMARY_ANALYTES if isinstance(row.PRIMARY_ANALYTES, str) else "")[:80],

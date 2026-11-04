@@ -67,13 +67,26 @@
       systems[i].cost = costs[i]; systems[i].lo = Math.round(costs[i] * 0.5); systems[i].hi = Math.round(costs[i] * 2);
     }
   }
-  function run() {
+  // The exact optimizer runs in a Web Worker so dragging a slider never blocks the page.
+  let worker = null, jobId = 0, runId = 0; const jobs = new Map();
+  try {
+    worker = new Worker("worker.js");
+    worker.onmessage = (e) => { const j = jobs.get(e.data.id); if (j) { jobs.delete(e.data.id); j(e.data); } };
+    worker.onerror = () => { worker = null; jobs.forEach((j) => j(null)); jobs.clear(); };
+  } catch (e) { worker = null; }
+  function solve(c, b, budget, reserve) {
+    const sync = () => ({ chosen: XylemOpt.optimize(c, b, conns, budget, reserve), base: XylemOpt.statusFirst(c, pops, failing, budget) });
+    if (!worker) return Promise.resolve(sync());
+    return new Promise((res) => { const id = ++jobId; jobs.set(id, (r) => res(r || sync())); worker.postMessage({ id, costs: c, ben: b, conns, pops, failing, budget, reserve }); });
+  }
+  async function run() {
+    const my = ++runId;
     applyCosts();
     // At-Risk value: chance of becoming Failing within the horizon (from the forecast model), or a fixed share of Failing
     const wRisk = (i) => failing[i] ? 1 : st.v === "fc" ? 1 - Math.pow(1 - (systems[i].pf == null ? AT_RISK_RATE : systems[i].pf), st.h) : st.a;
     const ben = pops.map((p, i) => p * wRisk(i) * (1 + st.l * eq[i]));
-    const chosen = XylemOpt.optimize(costs, ben, conns, st.b * 1e6, st.r);
-    const base = XylemOpt.statusFirst(costs, pops, failing, st.b * 1e6);
+    const { chosen, base } = await solve(costs.slice(), ben, st.b * 1e6, st.r);
+    if (my !== runId) return false;      // a newer slider move superseded this run
     const inPlan = new Uint8Array(N); chosen.forEach((i) => (inPlan[i] = 1));
     const sum = (ix, arr) => ix.reduce((s, i) => s + arr[i], 0);
     const dacMask = systems.map((s) => (s.eq[0] !== null && s.eq[0] > 0 ? 1 : 0));
@@ -91,6 +104,7 @@
     plan.stabK = k; plan.stabOK = bd < Math.log(1.6) && !st.c && st.v === "fc" && st.l <= 2; plan.stabBudget = bs[k];   // stress tests ran on average-based costs
     const strong = plan.stabOK ? chosen.filter((i) => systems[i].p[k] >= 0.5).length / Math.max(1, chosen.length) : null;
     plan.robust = strong;
+    return true;
   }
 
   // ---------- map ----------
@@ -198,7 +212,7 @@
         .bindPopup(() => popup(i)).addTo(routeGroup);
     });
   }
-  function restyle() {
+  function restyleLeaflet() {
     drawRoutes(); drawCounties();
     dots.forEach((m, i) => { if (m) m.setStyle({ fillColor: colorFor(i), fillOpacity: opacityFor(i) }); });
     polyLayers.forEach((l, i) => l.setStyle({ color: colorFor(i), fillColor: colorFor(i), fillOpacity: plan.inPlan[i] ? 0.45 : 0.15, weight: plan.inPlan[i] ? 1.6 : 0.8 }));
@@ -209,19 +223,20 @@
     }[st.color];
     $("#legend").innerHTML = leg.map(([c, t]) => `<div><span class="dot" style="background:${c}"></span>${t}</div>`).join("")
       + (st.color === "stab" && !plan.stabOK ? `<div class="mute">Stress tests cover $100M–$2B</div>` : "") + `<div class="mute">Dot size = people served</div>`;
-    if (on3d && window.Xylem3D) Xylem3D.setData(data3d());
   }
+  // Only the visible map is updated; the 2D Leaflet map catches up when it is switched to.
+  function restyle() { if (on3d && window.Xylem3D) Xylem3D.setData(data3d()); else restyleLeaflet(); }
 
   // ---------- 3D map (default) and 2D map ----------
   let on3d = true;
-  const data3d = () => ({ systems, inPlan: plan.inPlan, viaRoute, RT, routeLines, counties: countyGeo, polys, idx, popup, esc, fmtN, colorMode: () => st.color, colorCss: colorFor, onSelect: (i) => showDetail(i),
+  const data3d = () => ({ systems, inPlan: plan.inPlan, viaRoute, RT, routeLines, gis, counties: countyGeo, polys, idx, popup, esc, fmtN, colorMode: () => st.color, colorCss: colorFor, onSelect: (i) => showDetail(i),
     budget: { pos: () => budgetToPos(st.b), label: () => fmtM(st.b * 1e6), set: (p) => { st.b = posToBudget(p); $("#budget").value = p; update(); } },
     summary: () => ({ budget: fmtM(st.b * 1e6), systems: fmtN(plan.chosen.length), people: fmtN(plan.people) }) });
   function setView(v) {
     on3d = v === "3d";
     document.querySelectorAll("[data-view]").forEach((b) => b.classList.toggle("on", b.dataset.view === v));
     $("#map").hidden = on3d; $("#map3d").hidden = !on3d; $("#legend").hidden = on3d;
-    if (on3d) { Xylem3D.setData(data3d()); Xylem3D.show(); } else map.invalidateSize();
+    if (on3d) { Xylem3D.setData(data3d()); Xylem3D.show(); } else { restyleLeaflet(); map.invalidateSize(); }
   }
   document.querySelectorAll("[data-view]").forEach((b) => b.addEventListener("click", () => setView(b.dataset.view)));
 
@@ -230,7 +245,7 @@
   function rng(seed) { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
   async function runScenarios() {
     const btn = $("#runScen"), out = $("#scenOut"), K = 40, rand = rng(11), hits = new Uint16Array(N);
-    btn.disabled = true; run();
+    btn.disabled = true; await run();
     const wRisk = (i) => failing[i] ? 1 : st.v === "fc" ? 1 - Math.pow(1 - (systems[i].pf == null ? AT_RISK_RATE : systems[i].pf), st.h) : st.a;
     const ben = pops.map((p, i) => p * wRisk(i) * (1 + st.l * eq[i]));
     for (let k = 0; k < K; k++) {
@@ -471,7 +486,7 @@
     history.replaceState(null, "", "#" + p.toString());
   }
   let timer = null;
-  function update() { syncLabels(); clearTimeout(timer); timer = setTimeout(() => { run(); kpis(); restyle(); drawTab(); writeHash(); }, 60); }
+  function update() { syncLabels(); clearTimeout(timer); timer = setTimeout(async () => { if (await run()) { kpis(); restyle(); drawTab(); writeHash(); } }, 30); }
 
   $("#budget").value = budgetToPos(st.b);
   $("#lam").value = st.l; $("#arw").value = st.a; $("#res").value = st.r; $("#mul").value = st.m;
@@ -540,7 +555,7 @@
   });
 
   polyGroup.addTo(map);
-  syncLabels(); run(); kpis(); restyle(); drawTab();
+  syncLabels(); await run(); kpis(); restyle(); drawTab();
   Xylem3D.mount($("#map3d"), data3d());
   window.__xylem = { st, map, routeGroup, viaRoute, get plan() { return plan; }, systems, summary };
 })();

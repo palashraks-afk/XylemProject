@@ -14,7 +14,7 @@
   const EMPTY = { type: "FeatureCollection", features: [] };
   const V = (window.Xylem3D = {});
   let map = null, D = null, box = null, ready = false, infra = null, popup = null, hud = {};
-  const opt = { base: "sat", areas: true, infra: true, buildings: true, unfunded: true, exag: 1.8 };
+  const opt = { base: "sat", areas: true, infra: true, buildings: true, unfunded: true, exag: 1.8, allconn: false, hot: false, hubs: false };
 
   const circle = (lon, lat, r, n = 14) => { const dl = r / 111320, dx = r / (111320 * Math.cos(lat * Math.PI / 180)), c = [];
     for (let k = 0; k <= n; k++) { const a = (k / n) * 2 * Math.PI; c.push([lon + Math.cos(a) * dx, lat + Math.sin(a) * dl]); } return c; };
@@ -29,6 +29,7 @@
     st.sources.sat = { type: "raster", tiles: [SAT], tileSize: 256, maxzoom: 18, attribution: "Imagery &copy; Esri" };
     st.sources.infra = { type: "geojson", data: EMPTY }; st.sources.sites3d = { type: "geojson", data: EMPTY };
     st.sources.sys = { type: "geojson", data: EMPTY }; st.sources.towers = { type: "geojson", data: EMPTY }; st.sources.routes = { type: "geojson", data: EMPTY };
+    st.sources.allroutes = { type: "geojson", data: EMPTY }; st.sources.hot = { type: "geojson", data: EMPTY }; st.sources.hubs = { type: "geojson", data: EMPTY };
     st.sources.sel = { type: "geojson", data: EMPTY }; st.sources.areas = { type: "geojson", data: EMPTY }; st.sources.counties = { type: "geojson", data: EMPTY };
     st.terrain = { source: "dem", exaggeration: opt.exag };
     st.sky = { "sky-color": "#6aa6dd", "horizon-color": "#dbe9f5", "fog-color": "#dbe6ef", "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.7, "fog-ground-blend": 0.75,
@@ -55,6 +56,7 @@
       { id: "infra-water", type: "line", source: "infra", filter: ["in", ["get", "k"], ["literal", ["canal", "aqueduct"]]], layout: { "line-cap": "round", "line-join": "round" }, paint: { "line-color": "#3fb8ff", "line-width": w(1.4, 2.6, 8) } },
       { id: "infra-pipe", type: "line", source: "infra", filter: ["==", ["get", "k"], "pipeline"], paint: { "line-color": "#b9c4cf", "line-width": w(1, 1.8, 5) } },
       { id: "infra-tunnel", type: "line", source: "infra", filter: ["==", ["get", "k"], "tunnel"], paint: { "line-color": "#ffd38a", "line-width": w(1.2, 2, 5), "line-dasharray": [2, 1.5] } },
+      { id: "routes-all", type: "line", source: "allroutes", layout: { visibility: "none" }, paint: { "line-color": "#9fd8ff", "line-opacity": 0.6, "line-width": ["interpolate", ["linear"], ["zoom"], 6, 0.9, 14, 3], "line-dasharray": [2, 1.5] } },
       { id: "routes-casing", type: "line", source: "routes", paint: { "line-color": "#06382c", "line-width": ["interpolate", ["linear"], ["zoom"], 8, 3, 14, 9] } },
       { id: "routes", type: "line", source: "routes", paint: { "line-color": ROUTE, "line-width": ["interpolate", ["linear"], ["zoom"], 8, 1.6, 14, 5] } },
       { id: "sites3d", type: "fill-extrusion", source: "sites3d", minzoom: 12, paint: { "fill-extrusion-color": ["get", "c"], "fill-extrusion-height": ["get", "h"], "fill-extrusion-base": ["get", "b"], "fill-extrusion-opacity": 1 } },
@@ -68,36 +70,93 @@
         paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["*", ["get", "k"], 0.6], 8, ["*", ["get", "k"], 1.1], 12, ["*", ["get", "k"], 1.5], 15, 5],
           "circle-color": ["case", ["has", "col"], ["to-color", ["get", "col"]], ["match", ["get", "st"], 0, FUND, FAIL]], "circle-opacity": ["match", ["get", "st"], 0, 1, 0.8],
           "circle-stroke-color": "#ffffff", "circle-stroke-width": ["match", ["get", "st"], 0, 1.8, 0.5] } },
+      { id: "hot", type: "circle", source: "hot", layout: { visibility: "none" }, paint: { "circle-radius": 15, "circle-color": "rgba(0,0,0,0)", "circle-stroke-width": 2.4, "circle-stroke-color": ["case", [">", ["get", "z"], 2.58], "#ff6a2a", "#ffc233"] } },
+      { id: "hubs", type: "circle", source: "hubs", layout: { visibility: "none" }, paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 5, 6, 12, 11], "circle-color": "#8a5cf0", "circle-stroke-color": "#fff", "circle-stroke-width": 2 } },
       { id: "sel", type: "circle", source: "sel", paint: { "circle-radius": 17, "circle-color": "rgba(255,255,255,0)", "circle-stroke-color": "#fff", "circle-stroke-width": 2.5 } });
     return st;
   }
 
   // ---------- data ----------
-  function refreshSystems() {
-    if (!ready || !D) return;
-    const mode = D.colorMode(), stab = mode === "stab", feats = [], towers = [], areas = [];
-    const stOf = (i) => { const s = D.systems[i]; return mode === "plan" && D.inPlan[i] ? 0 : s.failing ? 1 : 2; };
-    if (D.polys) D.polys.features.forEach((ft) => { const i = D.idx.get(ft.properties.id); if (i === undefined || (!opt.unfunded && !D.inPlan[i])) return;
-      areas.push({ type: "Feature", properties: stab ? { st: stOf(i), col: D.colorCss(i) } : { st: stOf(i) }, geometry: ft.geometry }); });
-    map.getSource("areas").setData({ type: "FeatureCollection", features: areas });
+  // Tower shapes never change; only their colour and whether they are drawn in full do. Build the geometry once and reuse it.
+  let geo = null, heavyTimer = null, heavyDone = false, lastSig = "";
+  const STEEL = "#c9d1d9";
+  function buildGeo() {
+    geo = D.systems.map((s) => {
+      if (s.lat == null || !s.lon) return null;
+      const base = Math.min(34, 11 + Math.sqrt(s.pop) / 22);
+      const at = (r, mx, my) => [s.lon + mx / (111320 * Math.cos(s.lat * Math.PI / 180)), s.lat + my / 111320];
+      const full = (r) => { const leg = r * 1.7, o = r * 0.55, w = Math.max(1.2, r * 0.16), parts = [];
+        [[o, o], [-o, o], [o, -o], [-o, -o]].forEach(([x, y]) => { const p = at(r, x, y); parts.push({ g: square(p[0], p[1], w, w), b: 0, h: leg, s: 1 }); });
+        parts.push({ g: circle(s.lon, s.lat, r * 0.16, 6), b: 0, h: leg, s: 1 }, { g: circle(s.lon, s.lat, r, 18), b: leg, h: leg + r * 1.1, s: 0 },
+          { g: circle(s.lon, s.lat, r * 0.74, 14), b: leg + r * 1.1, h: leg + r * 1.42, s: 0 }, { g: circle(s.lon, s.lat, r * 0.3, 10), b: leg + r * 1.42, h: leg + r * 1.75, s: 1 });
+        return parts; };
+      // not-funded systems get a lighter tower (leg, tank, roof): about a third of the data, and they are de-emphasised anyway
+      const lite = (r) => { const leg = r * 1.7;
+        return [{ g: circle(s.lon, s.lat, r * 0.16, 6), b: 0, h: leg, s: 1 }, { g: circle(s.lon, s.lat, r, 12), b: leg, h: leg + r * 1.1, s: 0 },
+          { g: circle(s.lon, s.lat, r * 0.74, 10), b: leg + r * 1.1, h: leg + r * 1.42, s: 0 }]; };
+      return { full: full(base * 1.5), lite: lite(base) };
+    });
+  }
+  const stateOf = (i, mode) => (mode === "plan" && D.inPlan[i] ? 0 : D.systems[i].failing ? 1 : 2);
+
+  // Cheap part: one point per system. Runs on every slider tick.
+  function refreshPoints() {
+    const mode = D.colorMode(), stab = mode === "stab", feats = [];
     D.systems.forEach((s, i) => {
       if (s.lat == null || !s.lon) return;
-      const funded = !!D.inPlan[i], st = stOf(i), k = Math.min(9, 2.4 + Math.sqrt(s.pop) / 55);
+      const funded = !!D.inPlan[i], st = stateOf(i, mode), k = Math.min(9, 2.4 + Math.sqrt(s.pop) / 55);
       if (!opt.unfunded && !funded) return;
       feats.push({ type: "Feature", properties: stab ? { i, st, k: funded ? k * 1.3 : k * 0.65, col: D.colorCss(i) } : { i, st, k: funded ? k * 1.3 : k * 0.65 }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } });
-      const r = Math.min(34, 11 + Math.sqrt(s.pop) / 22) * (funded ? 1.5 : 1), c = stab ? D.colorCss(i) : funded ? "#1fbf93" : s.failing ? "#d94444" : "#e0a03a", leg = r * 1.7, steel = "#c9d1d9";
-      const at = (mx, my) => [s.lon + mx / (111320 * Math.cos(s.lat * Math.PI / 180)), s.lat + my / 111320], o = r * 0.55, w = Math.max(1.2, r * 0.16);
-      [[o, o], [-o, o], [o, -o], [-o, -o]].forEach(([x, y]) => { const p = at(x, y); towers.push(poly(square(p[0], p[1], w, w), { c: steel, b: 0, h: leg })); });
-      towers.push(poly(circle(s.lon, s.lat, r * 0.16, 6), { c: steel, b: 0, h: leg }), poly(circle(s.lon, s.lat, r, 18), { c, b: leg, h: leg + r * 1.1 }),
-        poly(circle(s.lon, s.lat, r * 0.74, 14), { c, b: leg + r * 1.1, h: leg + r * 1.42 }), poly(circle(s.lon, s.lat, r * 0.3, 10), { c: steel, b: leg + r * 1.42, h: leg + r * 1.75 }));
     });
     map.getSource("sys").setData({ type: "FeatureCollection", features: feats });
+    if (hud.bud && D.budget && document.activeElement !== hud.bud) { hud.bud.value = D.budget.pos(); hud.bl.textContent = D.budget.label(); }
+    if (hud.chip) { const s = D.summary(); hud.chip.innerHTML = `<span>Budget <b>${s.budget}</b></span><span><b>${s.systems}</b> systems funded</span><span><b>${s.people}</b> people reached</span>`; }
+  }
+
+  // Heavy part: service-area shading, towers and routes (megabytes of geometry). Waits until the slider has been still for a moment.
+  function refreshHeavy() {
+    if (!ready || !D) return;
+    const mode = D.colorMode(), stab = mode === "stab";
+    const sig = mode + "|" + opt.unfunded + "|" + Array.prototype.join.call(D.inPlan, "");
+    if (!stab && sig === lastSig) return;
+    lastSig = stab ? "" : sig;
+    if (!geo) buildGeo();
+    const towers = [], areas = [];
+    if (D.polys) D.polys.features.forEach((ft) => { const i = D.idx.get(ft.properties.id); if (i === undefined || (!opt.unfunded && !D.inPlan[i])) return;
+      areas.push({ type: "Feature", properties: stab ? { st: stateOf(i, mode), col: D.colorCss(i) } : { st: stateOf(i, mode) }, geometry: ft.geometry }); });
+    map.getSource("areas").setData({ type: "FeatureCollection", features: areas });
+    D.systems.forEach((s, i) => {
+      const g = geo[i]; if (!g) return;
+      const funded = !!D.inPlan[i]; if (!opt.unfunded && !funded) return;
+      const c = stab ? D.colorCss(i) : funded ? "#1fbf93" : s.failing ? "#d94444" : "#e0a03a";
+      (funded ? g.full : g.lite).forEach((p) => towers.push({ type: "Feature", properties: { c: p.s ? STEEL : c, b: p.b, h: p.h }, geometry: { type: "Polygon", coordinates: [p.g] } }));
+    });
     map.getSource("towers").setData({ type: "FeatureCollection", features: towers });
     const rt = [];
     if (D.routeLines) D.routeLines.features.forEach((f) => { const i = D.idx.get(f.properties.id), r = D.RT[f.properties.id]; if (i !== undefined && D.inPlan[i] && r && r.viable && r.receiver) rt.push(f); });
     map.getSource("routes").setData({ type: "FeatureCollection", features: rt });
-    if (hud.bud && D.budget && document.activeElement !== hud.bud) { hud.bud.value = D.budget.pos(); hud.bl.textContent = D.budget.label(); }
-    if (hud.chip) { const s = D.summary(); hud.chip.innerHTML = `<span>Budget <b>${s.budget}</b></span><span><b>${s.systems}</b> systems funded</span><span><b>${s.people}</b> people reached</span>`; }
+  }
+
+  function refreshSystems() {
+    if (!ready || !D) return;
+    refreshPoints();
+    clearTimeout(heavyTimer);
+    if (!heavyDone) { heavyDone = true; refreshHeavy(); } else heavyTimer = setTimeout(refreshHeavy, 150);
+  }
+
+  // Static context layers: every viable connection, spatial hotspots, consolidation hubs. Set once.
+  function refreshContext() {
+    if (!D) return;
+    const all = [];
+    if (D.routeLines) D.routeLines.features.forEach((f) => { const r = D.RT[f.properties.id]; if (r && r.viable && r.receiver) all.push(f); });
+    map.getSource("allroutes").setData({ type: "FeatureCollection", features: all });
+    const hot = [], hubs = [];
+    if (D.gis) {
+      D.systems.forEach((s) => { const z = D.gis.z[s.id]; if (z > 1.96 && s.lat != null && s.lon) hot.push({ type: "Feature", properties: { z }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } }); });
+      D.gis.hubs.forEach((h) => { if (h.lat != null) hubs.push({ type: "Feature", properties: { name: h.name, n: h.n, people: h.people, cost: h.cost }, geometry: { type: "Point", coordinates: [h.lon, h.lat] } }); });
+    }
+    map.getSource("hot").setData({ type: "FeatureCollection", features: hot });
+    map.getSource("hubs").setData({ type: "FeatureCollection", features: hubs });
   }
   function refreshInfra() {
     if (!ready || !infra) return;
@@ -120,7 +179,7 @@
     map.getStyle().layers.forEach((l) => { if (/^(road_|bridge_|tunnel_)/.test(l.id) && l.type === "line") map.setPaintProperty(l.id, "line-opacity", sat ? 0.55 : 1); });
     vis("areas", opt.areas); vis("areas-line", opt.areas);
     ["infra-casing", "infra-water", "infra-pipe", "infra-tunnel", "infra-label", "sites3d", "sites-dot"].forEach((id) => vis(id, opt.infra));
-    vis("building-3d", opt.buildings);
+    vis("building-3d", opt.buildings); vis("routes-all", opt.allconn); vis("hot", opt.hot); vis("hubs", opt.hubs);
     map.setTerrain({ source: "dem", exaggeration: opt.exag });
   }
 
@@ -153,12 +212,15 @@
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
     buildHud();
     map.on("load", async () => {
-      ready = true; load.remove(); applyOpts(); refreshSystems();
+      ready = true; load.remove(); applyOpts(); refreshSystems(); refreshContext();
       const at = box.querySelector(".maplibregl-ctrl-attrib"); if (at) at.classList.remove("maplibregl-compact-show");
       try { infra = await fetch("data/infrastructure.json").then((r) => r.json()); refreshInfra(); } catch (e) { /* infrastructure layer is optional */ }
       if (D.counties) map.getSource("counties").setData(D.counties);
     });
     map.on("click", (e) => { const f = map.queryRenderedFeatures([[e.point.x - 8, e.point.y - 8], [e.point.x + 8, e.point.y + 8]], { layers: ["sys", "sys-risk"] }); if (f.length) select(f[0].properties.i); });
+    map.on("click", (e) => { const f = map.queryRenderedFeatures([[e.point.x - 9, e.point.y - 9], [e.point.x + 9, e.point.y + 9]], { layers: ["hubs"] }); if (!f.length) return;
+      const p = f[0].properties; if (popup) popup.remove();
+      popup = new maplibregl.Popup({ maxWidth: "280px" }).setLngLat(f[0].geometry.coordinates).setHTML(`<b>${D.esc(p.name)}</b><br>Could absorb ${p.n} Failing or At-Risk neighbours (${D.fmtN(p.people)} people) within the state's 3-mile rule. Receiver capacity is not modelled.`).addTo(map); });
     map.on("mousemove", (e) => { const f = map.queryRenderedFeatures([[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]], { layers: ["sys", "sys-risk"] }); map.getCanvas().style.cursor = f.length ? "pointer" : ""; });
     map.on("error", (e) => console.warn("map3d:", e && e.error && e.error.message));
   };
@@ -178,6 +240,9 @@
       <label class="chk"><input type="checkbox" data-k="infra" checked> Canals, plants, towers</label>
       <label class="chk"><input type="checkbox" data-k="buildings" checked> Buildings</label>
       <label class="chk"><input type="checkbox" data-k="unfunded" checked> Systems not funded</label>
+      <label class="chk"><input type="checkbox" data-k="allconn"> All possible connections</label>
+      <label class="chk"><input type="checkbox" data-k="hot"> Hotspot rings</label>
+      <label class="chk"><input type="checkbox" data-k="hubs"> Consolidation hubs</label>
       <label class="rng">Relief <input type="range" data-k="exag" min="1" max="3" step="0.1" value="${opt.exag}"></label>
       <button class="ghost" data-act="home">Whole state</button></details></div>`);
     const legend = el(`<div class="leg3d"><div><span class="sw" style="background:${FUND}"></span>Selected for funding</div><div><span class="sw" style="background:${FAIL}"></span>Failing, not selected</div>
