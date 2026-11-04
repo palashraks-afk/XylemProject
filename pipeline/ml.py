@@ -11,7 +11,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+import model_zoo
 import violation_model as vm
+from model_selection import STACK, CORE
 from scipy.stats import rankdata
 from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.impute import SimpleImputer
@@ -109,7 +111,7 @@ def panel(y0, y1):
     x["status0"] = s0.map(STATUS_ORD)
     x["dac"] = dac0.map({"SDAC": 2, "DAC": 1, "Non-DAC": 0})
     if STAGE1:
-        x["p_hbv"] = stage1(y0).reindex(x.index)      # chance of a new health-based violation in the next 12 months (stage 1, trained on earlier cycles only)
+        add_stage1(x, y0)
     x["s1"] = s1
     x = x[x.status0.notna() & (x.status0 < 3) & x.s1.isin(list(STATUS_ORD))]
     x["y"] = (x.s1 == "Failing").astype(int)
@@ -121,10 +123,21 @@ STAGE1 = "--no-stage1" not in sys.argv
 _STAGE1 = {}
 
 
-def stage1(year):
-    if year not in _STAGE1:
-        _STAGE1[year] = vm.predict_for_cycle(year)[0]
-    return _STAGE1[year]
+def stage1(year, target="hbv"):
+    if (year, target) not in _STAGE1:
+        _STAGE1[(year, target)] = vm.predict_for_cycle(year, target=target)[0]
+    return _STAGE1[(year, target)]
+
+
+STAGE1_COLS = (("hbv", "p_hbv"), ("any", "p_any"), ("monrep", "p_monrep"), ("mcl", "p_mcl"))
+
+
+def add_stage1(x, year):
+    """Chances of a new health-based / any / monitoring-and-reporting / MCL violation in the next 12 months (stage 1, trained on earlier cycles only), and their logits."""
+    for t, col in STAGE1_COLS:
+        x[col] = stage1(year, t).reindex(x.index)
+        pr = x[col].clip(1e-4, 1 - 1e-4)
+        x["l" + col[1:]] = np.log(pr / (1 - pr))
 
 
 def Xy(x):
@@ -132,24 +145,29 @@ def Xy(x):
     return x[cols], x["y"].values
 
 
-def lr_model():
-    return make_pipeline(SimpleImputer(strategy="median", add_indicator=True), StandardScaler(),
-                         LogisticRegression(C=0.3, max_iter=2000, class_weight="balanced"))
+class Subset:
+    """A fitted model that sees only some of the columns (the stage-2 candidates differ in which features they use)."""
+    def __init__(self, model, cols):
+        self.model, self.cols = model, cols
+
+    def predict_proba(self, X):
+        return self.model.predict_proba(X[self.cols])
 
 
-def gb_model():
-    return HistGradientBoostingClassifier(max_depth=3, learning_rate=0.05, max_iter=200, min_samples_leaf=15,
-                                          l2_regularization=1.0, random_state=SEED)
+def fit_family(family, X, y):
+    kind, cfg, feats = model_zoo.stage2_config(family)
+    cols = [c for c in CORE if c in X.columns] if feats == "core" else [c for c in STACK if c in X.columns] if feats == "stack" else list(X.columns)
+    if not cols or (feats == "stack" and len(cols) < len(STACK)):
+        return None                                          # e.g. the run without stage-1 forecasts has no stack inputs
+    return Subset(model_zoo.make(kind, **cfg).fit(X[cols], y), cols)
 
 
-def rf_model():
-    return make_pipeline(SimpleImputer(strategy="median"),
-                         RandomForestClassifier(n_estimators=500, min_samples_leaf=8, max_features=0.4, class_weight="balanced_subsample",
-                                                random_state=SEED, n_jobs=-1))
-
-
-def rank01(p):
-    return rankdata(p) / len(p)
+FAMILIES = {"logistic": "lr", "gradient_boosting": "hgb", "random_forest": "rf", "extra_trees": "et", "stacked_logistic": "stack"}
+# the older helper names stay for scripts that import them
+lr_model = lambda: model_zoo.make("lr", C=0.3)    # noqa: E731
+gb_model = lambda: model_zoo.make("hgb", max_depth=3, learning_rate=0.05, max_iter=200, min_samples_leaf=15, l2_regularization=1.0)    # noqa: E731
+rf_model = lambda: model_zoo.make("rf", min_samples_leaf=8, max_features=0.4)    # noqa: E731
+rank01 = model_zoo.rank01
 
 
 def boot_auc(y, p, n=400):
@@ -180,7 +198,8 @@ def evaluate(train, test):
         "total_risk_score": Xte["total"].fillna(0).values,
         "past_failing_flag": Xte["ind4"].fillna(0).values,
     }
-    models = {"logistic": lr_model().fit(Xtr, ytr), "gradient_boosting": gb_model().fit(Xtr, ytr), "random_forest": rf_model().fit(Xtr, ytr)}
+    models = {name: fit_family(fam, Xtr, ytr) for name, fam in FAMILIES.items()}
+    models = {k: v for k, v in models.items() if v is not None}
     out = {}
     for name, p in base.items():
         out[name] = {"auc": round(float(roc_auc_score(yte, p)), 3), "auc_ci95": boot_auc(yte, p), "recall_top10pct": recall_at(yte, p, 0.10)}
@@ -191,7 +210,7 @@ def evaluate(train, test):
         out[name] = {"auc": round(float(roc_auc_score(yte, p)), 3), "auc_ci95": boot_auc(yte, p),
                      "avg_precision": round(float(average_precision_score(yte, p)), 3), "recall_top10pct": recall_at(yte, p, 0.10),
                      "brier": round(float(brier_score_loss(yte, p)), 4)}
-    # Ensemble chosen in advance for robustness, not for its test score: equal-weight rank average of the three models.
+    # Ensemble chosen in advance for robustness, not for its test score: equal-weight rank average of the models.
     pe = np.mean([rank01(p) for p in probs.values()], axis=0)
     probs["ensemble"] = pe
     out["ensemble"] = {"auc": round(float(roc_auc_score(yte, pe)), 3), "auc_ci95": boot_auc(yte, pe),
@@ -225,6 +244,14 @@ def main():
     STAGE1 = True
     res["without_stage1"] = {k: r_base["models"][k] for k in ("logistic", "gradient_boosting", "random_forest", "ensemble")}
     res["stage1_failing_onset_auc"] = round(float(roc_auc_score(te.y.values, te["p_hbv"].fillna(0).values)), 3)
+    sel = model_zoo.selection()
+    if sel:                                       # the comparison tables the app shows (data/model_selection.json, written by model_selection.py)
+        res["model_selection"] = {
+            "stage1": {"chosen": sel["stage1"]["chosen"], "n_rows": sel["stage1"]["n_rows"], "n_features": sel["stage1"]["n_features"], "calibration": sel["stage1"]["calibration"],
+                       "baseline_violation_count_test_auc": sel["stage1"]["baseline_violation_count_test_auc"],
+                       "candidates": [{"name": c["name"], "family": c["family"], "val": c["val"], "test": c["test"]} for c in sel["stage1"]["candidates"]]},
+            "stage2": {"chosen": sel["stage2"]["chosen"], "baselines": sel["stage2"]["baselines"], "ensemble": sel["stage2"]["ensemble"],
+                       "candidates": [{"name": c["name"], "family": c["family"], "cv": c["cv"], "test": c["test"]} for c in sel["stage2"]["candidates"]]}}
     res["stage1_model"] = vm.evaluate()
     res["source_value"] = vm.source_value()
     src = ROOT / "data" / "extra_sources.json"
@@ -240,7 +267,7 @@ def main():
     both = pd.concat([tr, te])
     Xb, yb = Xy(both)
     cols = Xb.columns
-    finals = {"gb": gb_model().fit(Xb, yb), "lr": lr_model().fit(Xb, yb), "rf": rf_model().fit(Xb, yb)}
+    finals = {k: v for k, v in ((n, fit_family(f, Xb, yb)) for n, f in FAMILIES.items()) if v is not None}
     f26 = features(2026).set_index("PWSID")
     s26, dac26 = status(2026)
     if SPATIAL:
@@ -248,7 +275,7 @@ def main():
     f26["status0"] = s26.reindex(f26.index).map(STATUS_ORD)
     f26["dac"] = dac26.reindex(f26.index).map({"SDAC": 2, "DAC": 1, "Non-DAC": 0})
     if STAGE1:
-        f26["p_hbv"] = stage1(2026).reindex(f26.index)
+        add_stage1(f26, 2026)
     cur = f26[f26.status0.notna() & (f26.status0 < 3)]
     # each model's probabilities are rescaled to the observed onset rate, then averaged, so values read as probabilities
     rate = float(yb.mean())

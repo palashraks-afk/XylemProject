@@ -99,3 +99,48 @@ def test_equity_index_has_six_components_in_range():
     vals = [x for s in systems for x in s["eq"] if x is not None]
     assert min(vals) >= 0 and max(vals) <= 1
     assert sum(s["eq"][4] is not None for s in systems) > 0.9 * len(systems)       # tract social vulnerability joined for nearly all
+
+
+def selection():
+    return json.loads((ROOT / "data" / "model_selection.json").read_text())
+
+
+def test_model_selection_never_uses_the_test_years_to_choose():
+    s1 = selection()["stage1"]
+    assert max(s1["folds"]["val"]) < min(s1["folds"]["test"])          # validation strictly earlier than test
+    assert min(s1["folds"]["test"]) >= 2024
+    assert len(s1["candidates"]) >= 15 and {c["family"] for c in s1["candidates"]} >= {"hgb", "rf", "et", "lr", "ensemble"}
+    best_val = max(c["val"]["auc"] for c in s1["candidates"] if c["family"] != "ensemble")
+    chosen = next(c for c in s1["candidates"] if c["name"] == s1["chosen"])
+    assert chosen["val"]["auc"] >= best_val - 0.002                    # the pick is within tolerance of the best on validation alone
+
+
+def test_every_tuned_stage1_model_beats_the_violation_count_baseline_on_test():
+    s1 = selection()["stage1"]
+    base = np.mean(list(s1["baseline_violation_count_test_auc"].values()))
+    assert all(c["test"]["auc"] > base for c in s1["candidates"] if c["family"] in ("hgb", "rf", "et"))
+
+
+def test_stage1_calibration_fixes_inflated_ensemble_probabilities_on_the_test_years():
+    s1 = selection()["stage1"]
+    assert s1["calibrator"]["x"] and len(s1["calibrator"]["x"]) == len(s1["calibrator"]["y"])
+    for y, c in s1["calibration"].items():
+        assert c["mean_pred_raw"] > 2 * c["observed_rate"], y                # raw ensemble scores are not probabilities
+        assert abs(c["mean_pred_calibrated"] - c["observed_rate"]) < 0.02, y  # calibrated ones are
+        assert c["brier_calibrated"] < c["brier_raw"], y
+
+
+def test_stage2_final_model_is_the_ensemble_and_beats_baselines_on_the_held_out_year():
+    s2 = selection()["stage2"]
+    assert s2["chosen"] == "ensemble_best_of_each_family" and len(s2["ensemble"]["members"]) >= 4
+    base = {b["name"]: b for b in s2["baselines"]}
+    assert s2["ensemble"]["test"]["auc"] > base["safer_status_alone"]["test"]["auc"] + 0.1
+    assert s2["ensemble"]["test"]["auc"] >= base["p_hbv_alone"]["test"]["auc"]
+    assert max(c["cv"]["auc"] for c in s2["candidates"]) > s2["ensemble"]["test"]["auc"] + 0.05      # within-year CV is optimistic vs the held-out year
+
+
+def test_final_forecast_metrics_improved_over_the_pre_data_model_with_interval_above_chance():
+    m = forecast()["metrics"]
+    e, w = m["models"]["ensemble"], m["without_stage1"]["ensemble"]
+    assert e["auc"] > w["auc"] + 0.05 and e["avg_precision"] > 1.5 * w["avg_precision"]
+    assert e["auc_ci95"][0] > 0.6 and set(m["models"]) >= {"logistic", "gradient_boosting", "random_forest", "extra_trees", "stacked_logistic", "ensemble"}

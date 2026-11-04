@@ -15,6 +15,8 @@ import pandas as pd
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import roc_auc_score, average_precision_score
 
+import model_zoo
+
 import extra_features as ef
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -37,11 +39,37 @@ def spine():
     return s[s.pws_type_code.isin(["CWS", "NTNCWS"]) | s.pws_type_code.isna()]
 
 
-def label(pw, y):
+# What "a new violation" means, one stage-1 model per definition. The SAFER Failing list also reacts to monitoring and treatment failures, so
+# forecasts of the broader events add signal to the health-based one (chosen on the 2024 to 2025 transition; see model_selection.py).
+TARGETS = {
+    "hbv": lambda v: v.is_health_based_ind == "Y",
+    "any": lambda v: v.violation_category_code.isin(["MCL", "TT", "MR", "MON", "RPT", "MRDL"]),
+    "monrep": lambda v: v.violation_category_code.isin(["MR", "MON", "RPT"]),
+    "mcl": lambda v: v.violation_category_code == "MCL",
+}
+
+
+def label(pw, y, target="hbv"):
     v = ef.violations()
     c = pd.Timestamp(cutoff(y))
-    hit = v[(v.is_health_based_ind == "Y") & (v.b > c) & (v.b <= c + pd.DateOffset(years=1))].pwsid.unique()
+    hit = v[TARGETS[target](v) & (v.b > c) & (v.b <= c + pd.DateOffset(years=1))].pwsid.unique()
     return pd.Series(pw.isin(hit).astype(int), index=pw)
+
+
+_LABELS = {}
+
+
+def labels_for(p, target):
+    """Label column for the cached panel (labels are cheap to recompute, so the cache only holds features)."""
+    if target == "hbv":
+        return p.y
+    if target not in _LABELS:
+        out = pd.Series(np.nan, index=p.index)
+        for y in CYCLES[:-1]:
+            sel = (p.cycle == y).to_numpy()
+            out[sel] = label(p.index[sel], y, target).values
+        _LABELS[target] = out
+    return _LABELS[target]
 
 
 def panel():
@@ -76,14 +104,25 @@ def model():
     return HistGradientBoostingClassifier(max_depth=4, learning_rate=0.05, max_iter=250, min_samples_leaf=40, l2_regularization=2.0, random_state=SEED)
 
 
-def predict_for_cycle(y, p=None):
-    """Probability of a new health-based violation in the 12 months after cycle y, from a model trained on earlier cycles only."""
+def calibrate(pr):
+    """Map raw ensemble scores to probabilities with the isotonic map fitted on the forward-chaining validation cycles (model_selection.py)."""
+    cal = model_zoo.selection().get("stage1", {}).get("calibrator")
+    return np.interp(pr, cal["x"], cal["y"]) if cal else pr
+
+
+def predict_for_cycle(y, p=None, target="hbv", calibrate_output=True):
+    """Probability of a new violation of the given kind in the 12 months after cycle y, from the selected stage-1 model(s) trained on earlier cycles only."""
     p = panel() if p is None else p
     cols = feature_cols(p)
-    tr = p[(p.cycle < y) & p.y.notna()]
+    lab = labels_for(p, target)
+    mask = ((p.cycle < y) & lab.notna()).to_numpy()
+    tr, ytr = p[mask], lab[mask].to_numpy()
     te = p[p.cycle == y]
-    m = model().fit(tr[cols], tr.y)
-    return pd.Series(m.predict_proba(te[cols])[:, 1], index=te.index), m
+    members = [model_zoo.make(k, **cfg).fit(tr[cols], ytr) for k, cfg in model_zoo.stage1_members()]
+    pr = np.mean([m.predict_proba(te[cols])[:, 1] for m in members], axis=0)
+    if target == "hbv" and calibrate_output:
+        pr = calibrate(pr)
+    return pd.Series(pr, index=te.index), members
 
 
 def evaluate():

@@ -74,11 +74,11 @@
   {
    "budget_musd": 250,
    "optimizer": {
-    "systems": 50,
-    "people": 302503,
-    "spent_musd": 243.4,
-    "dac_people": 241976,
-    "small_systems": 23
+    "systems": 51,
+    "people": 309772,
+    "spent_musd": 243.3,
+    "dac_people": 253145,
+    "small_systems": 24
    },
    "status_first_baseline": {
     "systems": 32,
@@ -91,11 +91,11 @@
   {
    "budget_musd": 500,
    "optimizer": {
-    "systems": 93,
-    "people": 488923,
-    "spent_musd": 488.1,
-    "dac_people": 376726,
-    "small_systems": 39
+    "systems": 90,
+    "people": 539915,
+    "spent_musd": 488.4,
+    "dac_people": 431902,
+    "small_systems": 38
    },
    "status_first_baseline": {
     "systems": 68,
@@ -108,11 +108,11 @@
   {
    "budget_musd": 1000,
    "optimizer": {
-    "systems": 192,
-    "people": 956318,
-    "spent_musd": 976.7,
-    "dac_people": 777567,
-    "small_systems": 111
+    "systems": 171,
+    "people": 1084241,
+    "spent_musd": 979.0,
+    "dac_people": 844964,
+    "small_systems": 90
    },
    "status_first_baseline": {
     "systems": 185,
@@ -125,11 +125,11 @@
   {
    "budget_musd": 2000,
    "optimizer": {
-    "systems": 392,
-    "people": 1732395,
-    "spent_musd": 1952.4,
-    "dac_people": 1246363,
-    "small_systems": 272
+    "systems": 409,
+    "people": 1685510,
+    "spent_musd": 1950.4,
+    "dac_people": 1247637,
+    "small_systems": 292
    },
    "status_first_baseline": {
     "systems": 438,
@@ -143,8 +143,8 @@
  "validation": {
   "n_systems": 1062,
   "n_funded_since_2017": 176,
-  "auc_need_benefit_vs_funded": 0.723,
-  "auc_efficiency_vs_funded": 0.697,
+  "auc_need_benefit_vs_funded": 0.721,
+  "auc_efficiency_vs_funded": 0.692,
   "auc_population_vs_funded": 0.646,
   "auc_failing_flag_vs_funded": 0.627,
   "funded_share_failing": 0.254,

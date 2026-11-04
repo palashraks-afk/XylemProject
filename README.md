@@ -39,10 +39,10 @@ Scenarios are shareable: the controls are stored in the URL, and a plan can be d
 | Budget | Optimizer reaches | Status-first reaches | Ratio |
 |---|---|---|---|
 | $100M | 171,738 | 168,274 | 1.02× |
-| $250M | 302,503 | 292,238 | 1.04× |
-| $500M | 488,923 | 358,300 | 1.36× |
-| $1000M | 956,318 | 406,664 | 2.35× |
-| $2000M | 1,732,395 | 944,874 | 1.83× |
+| $250M | 309,772 | 292,238 | 1.06× |
+| $500M | 539,915 | 358,300 | 1.51× |
+| $1000M | 1,084,241 | 406,664 | 2.67× |
+| $2000M | 1,685,510 | 944,874 | 1.78× |
 
 The optimizer's lead depends on how At-Risk systems are valued: the forecast gives each a chance of failing, so a smoother forecast narrows it. Status-first means Failing before At-Risk, largest system first. It is a simple stand-in, not the state's real process, which also weighs readiness, willingness and technical-assistance needs. At small budgets the optimizer is barely better than that baseline; the advantage appears from about $500M. All results are modelled, on modelled costs.
 
@@ -50,11 +50,13 @@ The optimizer's lead depends on how At-Risk systems are valued: the forecast giv
 
 | Check | Result |
 |---|---|
-| Failure forecast, trained 2024→2025, tested 2025→2026 (120 onsets in 2,616 systems) | AUC 0.722 (95% interval 0.669 to 0.773) for an ensemble of logistic regression, gradient boosting and random forest, vs 0.618 for SAFER status alone and 0.606 for the total risk score. Before the extra public data the same ensemble scored 0.7. Trees alone: gradient boosting 0.739, random forest 0.739 |
-| Same test, ranking | Observed onset rate rises from 1.5% in the lowest-risk fifth to 12.0% in the highest (ensemble ranking). The top 10% of systems catch 37.5% of onsets, up from 22.5% before the extra data; average precision 0.196 vs 0.108 |
+| Failure forecast, trained 2024→2025, tested 2025→2026 (120 onsets in 2,616 systems) | AUC 0.771 (95% interval 0.722 to 0.816) for an ensemble of logistic regression, gradient boosting, random forest, extra trees and a stacked logistic model, vs 0.618 for SAFER status alone and 0.606 for the total risk score. Before the extra public data the same kind of ensemble scored 0.691. Single models: logistic 0.707, boosting 0.761, random forest 0.773, extra trees 0.781, stacked 0.766 |
+| Same test, ranking | Observed onset rate rises from 0.4% in the lowest-risk fifth to 12.8% in the highest (ensemble ranking). The top 10% of systems catch 40.0% of onsets, up from 22.5% before the extra data; average precision 0.246 vs 0.101 |
 | Same test, levels | Predicted probabilities run low because the onset rate rose from 2.6% to 4.6% between years; forecasts are rescaled and approximate |
 | Spatial features (Failing neighbours within 10 and 25 km) added to the forecast | No gain (gradient boosting AUC 0.744 without, 0.739 with) |
-| Stage-1 model: new health-based violation in the next 12 months, trained on 2017 onward, tested on each of 2022 to 2025 | AUC 0.904, 0.911, 0.917, 0.914; a plain count of past violations scores 0.869, 0.849, 0.886, 0.874 |
+| Stage-1 model: new health-based violation in the next 12 months, ensemble tuned on 2021 to 2023 and tested on 2024 and 2025 | AUC 0.91, 0.923, 0.918, 0.929; a plain count of past violations scores 0.869, 0.849, 0.886, 0.874 |
+| Model comparison | 20 stage-1 candidates and 31 stage-2 candidates compared; tuning changed little (every well-built stage-1 model within about 0.01 AUC). Within-year cross-validation ranked the logistic model first (CV AUC 0.908) but it scored 0.707 on the held-out year, so the final model is the ensemble of the best of each family. The ensemble's raw scores ran about 3× too high; an isotonic map fitted on 2021 to 2023 only cuts the Brier score on the test years (0.0292 to 0.0141 in 2025) and is applied to the violation chance shown in the app |
+| Model comparison | 20 stage-1 candidates and 31 stage-2 candidates compared; tuning changed little (every well-built stage-1 model within about 0.01 AUC). Within-year cross-validation ranked the logistic model first (CV AUC 0.908) but it scored 0.707 on the held-out year, so the final model is the ensemble of the best of each family. The ensemble's raw scores ran about 3× too high; an isotonic map fitted on 2021 to 2023 only cuts the Brier score on the test years (0.0292 to 0.0141 in 2025) and is applied to the violation chance shown in the app |
 | Value of the extra data | Stage 1 with all sources scores AUC 0.9154 vs 0.7705 with system size alone; see the source table in the app's Method tab |
 | Cost model vs the state's 58 county totals | Rank correlation 0.88, Pearson 0.92; median absolute error about 41%; raw model 1.47× the state total before scaling |
 | Routing vs the state's own consolidation share | Viable for 46% of Failing and 46% of At-Risk systems vs the state's 44% and 43% (different year and list) |
