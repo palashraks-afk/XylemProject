@@ -13,6 +13,10 @@
     "Fresno": [-119.79, 36.74], "Bakersfield": [-119.02, 35.37], "San Jose": [-121.89, 37.34] };
   const EMPTY = { type: "FeatureCollection", features: [] };
   const V = (window.Xylem3D = {});
+  const Q = window.XylemQuality;
+  let tier = "high", pref = "auto", qs = null, gov = null, moving = false, lastT = 0;
+  const envNow = () => ({ pref, cores: navigator.hardwareConcurrency, memory: navigator.deviceMemory, dpr: devicePixelRatio, coarse: matchMedia("(pointer: coarse)").matches, saveData: !!(navigator.connection && navigator.connection.saveData) });
+  const readPref = () => { try { return localStorage.getItem("xylem.quality") || "auto"; } catch (e) { return "auto"; } };
   let map = null, D = null, box = null, ready = false, infra = null, popup = null, hud = {};
   const opt = { base: "sat", areas: true, infra: true, buildings: true, unfunded: true, exag: 1.8, allconn: false, hot: false, hubs: false };
 
@@ -117,7 +121,7 @@
   function refreshHeavy() {
     if (!ready || !D) return;
     const mode = D.colorMode(), stab = mode === "stab";
-    const sig = mode + "|" + opt.unfunded + "|" + Array.prototype.join.call(D.inPlan, "");
+    const sig = mode + "|" + opt.unfunded + "|" + tier + "|" + Array.prototype.join.call(D.inPlan, "");
     if (!stab && sig === lastSig) return;
     lastSig = stab ? "" : sig;
     if (!geo) buildGeo();
@@ -128,6 +132,7 @@
     D.systems.forEach((s, i) => {
       const g = geo[i]; if (!g) return;
       const funded = !!D.inPlan[i]; if (!opt.unfunded && !funded) return;
+      if (!funded && !qs.unfundedTowers) return;
       const c = stab ? D.colorCss(i) : funded ? "#1fbf93" : s.failing ? "#d94444" : "#e0a03a";
       (funded ? g.full : g.lite).forEach((p) => towers.push({ type: "Feature", properties: { c: p.s ? STEEL : c, b: p.b, h: p.h }, geometry: { type: "Polygon", coordinates: [p.g] } }));
     });
@@ -173,14 +178,16 @@
   }
   function applyOpts() {
     if (!ready) return;
+    qs = Q.settings(tier, devicePixelRatio);
     const sat = opt.base === "sat", vis = (id, on) => map.getLayer(id) && map.setLayoutProperty(id, "visibility", on ? "visible" : "none");
     vis("sat", sat); vis("sat-eox", sat); vis("water", !sat); vis("building", false);
     map.setPaintProperty("hill", "hillshade-exaggeration", sat ? ["interpolate", ["linear"], ["zoom"], 6, 0.3, 12, 0.08] : ["interpolate", ["linear"], ["zoom"], 6, 0.6, 13, 0.3]);
     map.getStyle().layers.forEach((l) => { if (/^(road_|bridge_|tunnel_)/.test(l.id) && l.type === "line") map.setPaintProperty(l.id, "line-opacity", sat ? 0.55 : 1); });
     vis("areas", opt.areas); vis("areas-line", opt.areas);
     ["infra-casing", "infra-water", "infra-pipe", "infra-tunnel", "infra-label", "sites3d", "sites-dot"].forEach((id) => vis(id, opt.infra));
-    vis("building-3d", opt.buildings); vis("routes-all", opt.allconn); vis("hot", opt.hot); vis("hubs", opt.hubs);
-    map.setTerrain({ source: "dem", exaggeration: opt.exag });
+    vis("building-3d", opt.buildings && qs.buildings !== false); if (qs.buildings !== false && map.getLayer("building-3d")) map.setLayerZoomRange("building-3d", qs.buildings, 24); vis("routes-all", opt.allconn); vis("hot", opt.hot); vis("hubs", opt.hubs);
+    map.setTerrain(qs.terrain ? { source: "dem", exaggeration: opt.exag } : null); vis("hill", qs.hillshade);
+    map.setPixelRatio(qs.pixelRatio); map.setMaxPitch(qs.maxPitch);
   }
 
   // ---------- fly-to ----------
@@ -203,6 +210,7 @@
   // ---------- mount ----------
   V.mount = async function (container, data) {
     D = data; box = container; box.innerHTML = "";
+    pref = readPref(); tier = Q.pickTier(envNow()); qs = Q.settings(tier, devicePixelRatio); gov = Q.createGovernor();
     // If 3D cannot start (no WebGL, tile or style server unreachable, too slow), hand control back so the app shows the 2D map.
     let failed = false;
     const fail = (why) => { if (failed) return; failed = true; box.textContent = "The 3D map could not load (" + why + "). Showing the 2D map."; if (D && D.onFail) D.onFail(why); };
@@ -210,7 +218,7 @@
     const mapDiv = document.createElement("div"); mapDiv.className = "gl3d"; box.appendChild(mapDiv);
     const load = document.createElement("div"); load.className = "load3d"; load.textContent = "Loading California terrain…"; box.appendChild(load);
     let style; try { style = await buildStyle(); } catch (e) { fail("map style unreachable"); return; }
-    try { map = new maplibregl.Map(Object.assign({ container: mapDiv, style, maxPitch: 82, maxZoom: 17.5, minZoom: 4, attributionControl: false, canvasContextAttributes: { antialias: true } }, HOME)); }
+    try { map = new maplibregl.Map(Object.assign({ container: mapDiv, style, maxPitch: qs.maxPitch, pixelRatio: qs.pixelRatio, maxZoom: 17.5, minZoom: 4, attributionControl: false, canvasContextAttributes: { antialias: qs.antialias } }, HOME)); }
     catch (e) { fail("WebGL is unavailable"); return; }
     // A slow start (not a hard failure) must not destroy the map: show 2D meanwhile and offer 3D again when it is ready.
     // The clock only runs while the tab is visible, because browsers pause map rendering in background tabs.
@@ -230,6 +238,9 @@
     map.on("click", (e) => { const f = map.queryRenderedFeatures([[e.point.x - 9, e.point.y - 9], [e.point.x + 9, e.point.y + 9]], { layers: ["hubs"] }); if (!f.length) return;
       const p = f[0].properties; if (popup) popup.remove();
       popup = new maplibregl.Popup({ maxWidth: "280px" }).setLngLat(f[0].geometry.coordinates).setHTML(`<b>${D.esc(p.name)}</b><br>Could absorb ${p.n} Failing or At-Risk neighbours (${D.fmtN(p.people)} people) within the state's 3-mile rule. Receiver capacity is not modelled.`).addTo(map); });
+    map.on("movestart", () => { moving = true; lastT = performance.now(); gov.reset(); });
+    map.on("moveend", () => { moving = false; });
+    map.on("render", () => { const now = performance.now(); if (moving && pref === "auto" && ready && gov.push(now - lastT)) downgrade(); lastT = now; });
     map.on("mousemove", (e) => { const f = map.queryRenderedFeatures([[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]], { layers: ["sys", "sys-risk"] }); map.getCanvas().style.cursor = f.length ? "pointer" : ""; });
     map.on("error", (e) => console.warn("map3d:", e && e.error && e.error.message));
   };
@@ -238,9 +249,12 @@
   V.hide = () => {};
   V.map = () => map;
 
+  function toast(msg) { if (!hud.toast) return; hud.toast.textContent = msg; hud.toast.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => (hud.toast.hidden = true), 7000); }
+  function setTier(t) { tier = t; lastSig = ""; applyOpts(); refreshHeavy(); const o = hud.q && hud.q.querySelector('option[value="auto"]'); if (o) o.textContent = "Auto (" + tier + ")"; }
+  function downgrade() { const t = Q.lower(tier); if (t === tier) return; setTier(t); toast("Switched to " + t + " graphics to keep the map smooth. Change it under Layers and view."); }
   function buildHud() {
     const el = (h) => { const d = document.createElement("div"); d.innerHTML = h.trim(); return d.firstChild; };
-    hud.chip = el(`<div class="chip3d"></div>`);
+    hud.chip = el(`<div class="chip3d"></div>`); hud.toast = el(`<div class="toast3d" role="status" hidden></div>`);
     const panel = el(`<div class="hud3d">
       <label class="rng bud">Budget <b data-bl></b><input type="range" data-bud min="0" max="100" step="1" value="50" aria-label="Funding budget"></label>
       <details class="more"${innerWidth > 900 ? " open" : ""}><summary>Layers and view</summary>
@@ -253,12 +267,15 @@
       <label class="chk"><input type="checkbox" data-k="hot"> Hotspot rings</label>
       <label class="chk"><input type="checkbox" data-k="hubs"> Consolidation hubs</label>
       <label class="rng">Relief <input type="range" data-k="exag" min="1" max="3" step="0.1" value="${opt.exag}"></label>
+      <label class="rng">Graphics <select data-q aria-label="Graphics quality"><option value="auto">Auto (${tier})</option><option value="high">High</option><option value="balanced">Balanced</option><option value="low">Low (fastest)</option></select></label>
       <button class="ghost" data-act="home">Whole state</button></details></div>`);
     const legend = el(`<div class="leg3d"><div><span class="sw" style="background:${FUND}"></span>Selected for funding</div><div><span class="sw" style="background:${FAIL}"></span>Failing, not selected</div>
       <div><span class="sw" style="background:${RISK}"></span>At-risk, not selected</div><div class="mute">Each service area is shaded in its colour.</div><div><span class="sw bar" style="background:#3fb8ff"></span>Canal or aqueduct</div>
       <div><span class="sw bar" style="background:#ffd38a"></span>Tunnel</div><div><span class="sw sq" style="background:#7fc3ff"></span>Treatment plant</div>
       <div><span class="sw bar" style="background:${ROUTE}"></span>Consolidation pipeline</div></div>`);
-    box.append(hud.chip, panel, legend);
+    box.append(hud.chip, panel, legend, hud.toast);
+    hud.q = panel.querySelector("[data-q]"); hud.q.value = pref;
+    hud.q.addEventListener("change", () => { pref = hud.q.value; try { localStorage.setItem("xylem.quality", pref); } catch (e) { /* private mode */ } gov.reset(); setTier(Q.pickTier(envNow())); });
     panel.addEventListener("input", (e) => { const k = e.target.dataset.k; if (!k) return; opt[k] = e.target.type === "checkbox" ? e.target.checked : +e.target.value; if (k === "unfunded") refreshSystems(); applyOpts(); });
     panel.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
       if (b.dataset.act === "home") V.home(); });

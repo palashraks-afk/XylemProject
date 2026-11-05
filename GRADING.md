@@ -1,56 +1,58 @@
-# Self-grading, weaknesses and fixes
+# Self-grading, written from a judge's point of view
 
-Graded with the project scoring template (0 to 10, evidence required, a gap named for every score below 8). Profile fit is left out because the team background was not provided, so the mean is over 10 criteria. The challenge's own judging criteria are Impact, Challenge Fit and Feasibility, and Innovation; they are mapped at the end.
+This is the author's (Claude's) own critique, written as a skeptical judge would read the project. It is not a feature of the app. Graded with the project scoring template (0 to 10, evidence required, a gap named for every score below 8). Profile fit is left out because the team background was not provided, so the mean is over 10 criteria. The detailed list of critiques and fixes, with evidence tags, is in [AUDIT.md](AUDIT.md).
 
-These scores are the author's (Claude's) judgment from the repository, test output and the running app, not an outside judge's. Earlier rounds are summarised, not reproduced: round 1 (6.4) and round 2 (7.1) predate the 3D terrain map, the 23 added data sources, the two-stage forecast and model comparison.
+Scores are judgment from the repository, test output and measurements, not an outside judge's. Round 1 scored 6.4 and round 2 scored 7.1, before the 3D terrain map, the 23 added data sources and the two-stage forecast existed.
 
-## Round 3 critique (what was wrong when this round started)
+## What a skeptical judge would say, by official criterion
 
-Each item was checked, not assumed.
+**Impact.** "Real data, real people, a usable plan. But nobody who funds water has used it, it covers one state, and the costs it ranks by are modelled with about 41% typical county error." True. No practitioner has seen it; that is the single biggest gap.
 
-| # | Weakness | Evidence | Fix |
-|---|---|---|---|
-| 1 | **No live link.** A judge cannot open the project. | `https://palashraks-afk.github.io/XylemProject/` returns HTTP 404 (checked 2026-11-04) | Workflow is in the repo; the repository owner must enable Pages (below). Not fixable from code. |
-| 2 | **No guided path for a judge.** The app opens on a dense control panel; the story and the criteria are spread over seven tabs. | Reading the page | **Judges' view** (`app/judges.js`): a five-step tour that drives the live 3D map, and the three criteria answered with figures read from the app's own data files, each with a "Not claimed" line. Open with the header button or `?judges=1`. |
-| 3 | **The 3D map is a single point of failure.** It needs WebGL and three outside servers (style, terrain, imagery). If any fails during judging the page shows nothing. | Code review of `map3d.js` | Falls back to the 2D map on no WebGL, unreachable style, or a slow start, and offers 3D again if it recovers. Tested by simulating an unreachable style server and missing MapLibre. The slow-start clock does not run in a background tab. |
-| 4 | **Results were unexplained.** A system was "Selected" or not with no reason. | `showDetail` in `app.js` | "Why selected / why not selected" line built from the same numbers the optimizer used ($/person against the plan median, status weight, equity). |
-| 5 | **Documentation drift.** README repeated a table row; this file quoted superseded numbers. | `tests/test_judges_view.py` found the duplicate | Row removed, file rewritten, a test now fails if rows repeat. |
-| 6 | **The optimizer's advantage is smaller than first claimed.** | README results table | Stated plainly in the README and in step 3 of the tour: about equal to a status-first plan at $250M or less, 1.5× at $500M, 2.7× at $1B. |
+**Challenge fit and feasibility.** "It answers Water Access with the state's own methods, and it runs. But I cannot open it: there is no live link. The 3D map needs three outside servers, and the app feels slow." Checked: the Pages address returns 404. The lag is not in the JavaScript (plan update about 55 ms, heaviest table 48 ms); it is graphics load. This round added graphics tiers and a frame-time governor, but I could not watch them run, because the test browser did not paint.
 
-## Round 3 scores
+**Innovation.** "An exact budget optimizer with a forecast and state-method routing on one map is a new combination. The forecast is only modestly better than the state's own status." Checked: within At-Risk systems, the systems the app actually scores, the base-feature forecast reaches AUC 0.633 (0.558 to 0.713), against a headline 0.689. Two ideas I tried to improve it (last-year status, training on the At-Risk population) gave no gain beyond noise.
+
+## Scores
 
 | Criterion | Score | Evidence | Gap and what would fix it |
 |---|---|---|---|
-| Impact | 7 | 1.93M people at risk (state data); plan CSV; per-system reason, cost, $/person, stability; Local view for any county | No real-user feedback; California only; costs are planning estimates. Fix: one practitioner reply (draft in `OUTREACH.md`) |
-| Creativity | 8 | Real-terrain 3D map with towers placed on actual systems, real canals and plants, guided tour | Visual novelty is easy to match. Fix: user story from a real place |
-| Novelty | 6 | No tool found combining exact budget optimizer, forecast-valued prevention and state-method routing (limited search, see `NOVELTY.md`) | Prior art is close. Novelty is the combination |
-| Fit to the brief | 8 | Water Access: affordability, equity and small-system priority are in the objective; uses the state's own methods | "Global" not addressed beyond `PORTABILITY.md` |
-| Scientific rigor | 8 | Strict temporal backtest (ensemble AUC 0.771 vs 0.618 for status alone, with intervals); 51 candidate models compared; county cost calibration reported with its error; routing checked against the state's own share; failures and null results reported | Costs ±41% typical county error; forecast gain modest; levels approximate. Fix: a 2027 backtest year |
-| Depth of real data | 8 | Three years of SAFER risk files, affordability, 23 public datasets, terrain, OpenStreetMap infrastructure, state boundaries | Remediation costs are modelled, not observed; none published |
-| Feasibility | 6 | 62 automated tests including a Python/JavaScript optimizer parity check; works in a browser; 2D fallback | **No live link; no pilot.** Fix: enable Pages, one practitioner trial |
-| Interactive and visual | 8 | 3D terrain, tour, presets, layers, CSV, shareable links, reasons | **Rendering not re-verified this round**: the browser pane stopped painting during testing (zero animation frames), so the tour's logic was tested but its camera moves and layers were not seen. Look at it on a real desktop and phone |
-| Technical depth | 8 | Exact optimizer in a worker, ensemble forecast, spatial statistics, state-method routing, coordinate quality control | Sensors and groundwater not built |
-| Uniqueness | 8 | A judge can fly to their own area and see why a system was or was not funded | Still one state |
-| **Mean (10)** | **7.5** | | Not 9. The three things that would move it most are outside the code: a live link, a practitioner's reaction, and a result outside California |
+| Impact | 7 | 1.93M people at risk; actionable plan with reasons, cost, $/person, stability; county views | No practitioner feedback; California only. Fix: one reply (`OUTREACH.md`) |
+| Creativity | 8 | Real-terrain 3D placement map, towers on actual systems, real canals and plants | Visual novelty is easy to match |
+| Novelty | 6 | No tool found combining these (limited search; `NOVELTY.md`) | Prior art is close |
+| Fit to the brief | 8 | Water Access: affordability, equity, small-system priority in the objective; the state's own methods | "Global" only in `PORTABILITY.md` |
+| Scientific rigor | 8 | Strict temporal backtest with intervals; 51 candidate models; cost calibration error reported; null results kept; within-At-Risk accuracy disclosed | Within-At-Risk AUC not yet computed for the deployed model; costs ±41%; 120 test onsets |
+| Depth of real data | 8 | Three SAFER years, affordability, 23 public datasets, terrain, OpenStreetMap, boundaries | Remediation costs are modelled; none are published |
+| Feasibility | 6 | 63 tests, optimizer parity check, 2D fallback | **No live link, no pilot** |
+| Interactive and visual | 7 | 3D terrain, presets, layers, CSV, reasons, graphics tiers | **Rendering and the tiers were not seen running** (test browser painted zero frames). Verify on a real desktop and phone |
+| Technical depth | 8 | Exact optimizer in a worker, ensemble forecast, spatial statistics, routing, coordinate QA, quality governor | Sensors and groundwater not built |
+| Uniqueness | 7 | A judge can fly to their own area and see why a system was or was not funded | One state; the 3D idea is not unique |
+| **Mean (10)** | **7.3** | | Not above 8 |
 
-## Against the challenge's three criteria
+Against the challenge's three criteria: Impact 7, Challenge Fit and Feasibility 7, Innovation 7.
 
-| Criterion | Score | Why |
+## Why it is not above 8, and what would honestly get it there
+
+I will not score it above 8 on my own say-so; the evidence does not support it. Three things move the number, and none of them is code I can write:
+
+| Change | Moves | By about |
 |---|---|---|
-| Impact | 7 | Real reach in California, actionable output; no user evidence; global market unproven |
-| Challenge fit and feasibility | 7 | Direct fit and a working, tested tool; no live deployment, routes approximate |
-| Innovation | 7.5 | New combination on public data with an honest backtest; prior art is close |
+| A live link (enable Pages) | Feasibility 6 → 7 | +0.1 on the mean |
+| Seeing it render smoothly on a real desktop and phone | Interactive 7 → 8 | +0.1 |
+| One practitioner's reaction, quoted with permission | Impact 7 → 8 | +0.1 |
+| A result outside California | Impact, Novelty | +0.1 to +0.2 |
 
-## How to put the link live (owner only)
+Even with all four, about 7.7 to 7.9. An outside judge's scores could differ in either direction.
 
-On GitHub: repository **Settings → Pages → Build and deployment → Source: GitHub Actions**, then **Actions → Deploy app to GitHub Pages → Run workflow** (or push to `main`). The workflow in `.github/workflows/pages.yml` publishes `app/`. The link will be `https://palashraks-afk.github.io/XylemProject/`; add `?judges=1` to open the Judges' view.
+## Put the link live (owner only)
+
+On GitHub: repository **Settings → Pages → Build and deployment → Source: GitHub Actions**, then **Actions → Deploy app to GitHub Pages → Run workflow** (or push to `main`). The workflow in `.github/workflows/pages.yml` publishes `app/`. The address will be `https://palashraks-afk.github.io/XylemProject/`.
 
 ## Top open gaps
 
 | Gap | Criterion | Fix | Owner | Due |
 |---|---|---|---|---|
-| No live link | Feasibility | Enable Pages (above) | Repository owner | Before submission (Nov 20, 1:00 PM PT) |
-| No practitioner feedback | Impact, Feasibility | Send `OUTREACH.md`; quote any reply with permission | Rahul | Nov 13 |
-| Rendering not seen this round | Interactive | Open the live link on a desktop and a phone; screenshot for the submission | Rahul | After Pages |
-| California only | Impact, Fit | Say so in the pitch, or prove the method on one other dataset | Rahul | Nov 16 |
-| Sensors and groundwater not built | Technical depth | Decide what they mean; build one | Rahul / Claude | Nov 15 |
+| No live link | Feasibility | Enable Pages | Repository owner | Before Nov 20, 1:00 PM PT |
+| No practitioner feedback | Impact | Send `OUTREACH.md`; quote a reply with permission | Rahul | Nov 13 |
+| Rendering and graphics tiers unseen | Interactive | Open the live link on a desktop and a phone; screenshot | Rahul | After Pages |
+| Within-At-Risk accuracy of the deployed model | Rigor | Run on a machine with the extra datasets and enough disk | Rahul / Claude | Nov 12 |
+| California only | Impact | Say so in the pitch, or add one other dataset | Rahul | Nov 16 |

@@ -25,7 +25,7 @@ Scenarios are shareable: the controls are stored in the URL, and a plan can be d
 ## What it does
 
 - **3D map (default).** Real terrain (SRTM), satellite imagery, and every California city's buildings, with the plan placed on it as extruded water towers, plus real canals, aqueducts, tunnels, treatment plants and water towers from OpenStreetMap. The 2D map is one click away. The infrastructure is context only; it does not enter the optimizer or the costs.
-- **Judges' view.** A header button (or `?judges=1`) opens a five-step tour that drives the live 3D map, then the three challenge criteria answered with figures read from the app's own data files and a "Not claimed" line for each. Every system's result also carries a plain-language reason. If 3D cannot load (no WebGL, a tile server down) the app falls back to the 2D map.
+- **Resilience and explanations.** Every system's result carries a plain-language reason (why it was or was not selected). If 3D cannot load (no WebGL, a tile server down) the app falls back to the 2D map.
 - **Placement optimizer.** For a budget, picks the Failing and At-Risk systems that maximize benefit = people served × status value × (1 + equity weight × equity index). An exact 0/1 knapsack, run in the browser. Controls: budget (with presets), equity weight, a reserve for small systems.
 - **More data.** 23 public datasets are joined to every system (violation and enforcement history, facilities, rates, school lead tests, shortage scores, dry wells, groundwater basins, social vulnerability, CalEnviroScreen, weather and drought, wildfires, terrain, nearby infrastructure). The equity index now has six components, two of them from this data.
 - **Forecast (machine learning).** At-Risk systems are valued at their forecast chance of becoming Failing within a look-ahead you choose, instead of an arbitrary discount. Strict temporal backtest below.
@@ -76,7 +76,7 @@ The forecast gain is modest and most failing onsets are not predicted. Past fund
 - **No real-user feedback yet.**
 - Not modelled: readiness to build, willingness to consolidate, ongoing operations cost, state small systems and domestic wells, sensors and groundwater.
 
-See [NOVELTY.md](NOVELTY.md) for prior work, [GRADING.md](GRADING.md) for the scored self-assessment and what was fixed, and [PORTABILITY.md](PORTABILITY.md).
+See [NOVELTY.md](NOVELTY.md) for prior work, [GRADING.md](GRADING.md) for the scored self-assessment, [AUDIT.md](AUDIT.md) for 100 critiques and fixes across five areas with evidence tags, and [PORTABILITY.md](PORTABILITY.md).
 
 ## Repository
 

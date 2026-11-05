@@ -130,26 +130,5 @@ th.num, td.num { text-align: right; }
 .hud3d .more summary::after { content: "+"; } .hud3d .more[open] summary::after { content: "−"; } .hud3d .more summary::-webkit-details-marker { display: none; }
 .hud3d .more[open] > * + * { margin-top: 8px; }
 @media (max-width: 900px) { .chip3d { top: 52px; left: 10px; right: 10px; transform: none; flex-wrap: wrap; justify-content: center; gap: 4px 12px; white-space: normal; } .hud3d { top: 116px; } }
-
-/* ---- Judges' view ---- */
-.judgesBtn { margin-left: auto; padding: 8px 14px; border: 1px solid var(--accent); border-radius: 99px; background: transparent; color: var(--accent); font: inherit; font-weight: 700; font-size: 13.5px; cursor: pointer; }
-.judgesBtn:hover:not(:disabled) { background: var(--accent); color: var(--accent-ink); }
-.judgesBtn:disabled { opacity: .5; cursor: default; }
-.judges { position: fixed; right: 16px; bottom: 16px; z-index: 60; width: min(400px, calc(100vw - 32px)); max-height: min(72vh, 620px); overflow: auto; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
-.judges[hidden] { display: none; }
-.jhead { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--panel); }
-.jhead .seg { margin-left: auto; }
-.jhead .x { border: 0; background: transparent; color: var(--mute); font-size: 22px; line-height: 1; cursor: pointer; }
-.jbody { padding: 14px 16px 16px; }
-.jstep h3, .jcrit h3 { margin: 4px 0 8px; font-size: 17px; }
-.jstep p { font-size: 15px; line-height: 1.55; }
-.jnav { display: flex; align-items: center; justify-content: space-between; margin-top: 14px; gap: 10px; }
-.jnav button { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
-.jnav button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.jnav button:disabled { opacity: .4; cursor: default; }
-.dots { display: flex; gap: 6px; } .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--line); } .dots i.on { background: var(--accent); }
-.jcrit { margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--line); } .jcrit:last-child { border-bottom: 0; margin-bottom: 0; }
-.jcrit ul { margin: 0 0 8px; padding-left: 18px; } .jcrit li { margin-bottom: 6px; font-size: 14px; line-height: 1.5; }
-.jno { font-size: 13px; color: var(--mute); margin: 0; }
-.why { margin: 10px 0 0; font-size: 13.5px; line-height: 1.5; color: var(--ink); }
-@media (max-width: 700px) { .judges { right: 8px; left: 8px; bottom: 8px; width: auto; max-height: 58vh; } .judgesBtn { margin-left: 0; } }
+.toast3d { position: absolute; left: 50%; bottom: 54px; transform: translateX(-50%); z-index: 6; max-width: min(520px, 90%); padding: 9px 14px; border-radius: 10px; background: rgba(12,22,32,.9); color: #eef3f7; font-size: 13px; text-align: center; border: 1px solid rgba(255,255,255,.2); }
+.toast3d[hidden] { display: none; }
