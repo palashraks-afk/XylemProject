@@ -229,7 +229,7 @@
 
   // ---------- 3D map (default) and 2D map ----------
   let on3d = true;
-  const data3d = () => ({ systems, inPlan: plan.inPlan, viaRoute, RT, routeLines, gis, counties: countyGeo, polys, idx, popup, esc, fmtN, colorMode: () => st.color, colorCss: colorFor, onSelect: (i) => showDetail(i),
+  const data3d = () => ({ systems, inPlan: plan.inPlan, viaRoute, RT, routeLines, gis, counties: countyGeo, onFail: (why) => { setView("2d"); const n = $("#copyMsg"); if (n) n.textContent = "3D map unavailable (" + why + "); showing the 2D map."; }, onRecover: () => { const n = $("#copyMsg"); if (n) n.textContent = "3D map is ready. Press 3D terrain to switch."; }, polys, idx, popup, esc, fmtN, colorMode: () => st.color, colorCss: colorFor, onSelect: (i) => showDetail(i),
     budget: { pos: () => budgetToPos(st.b), label: () => fmtM(st.b * 1e6), set: (p) => { st.b = posToBudget(p); $("#budget").value = p; update(); } },
     summary: () => ({ budget: fmtM(st.b * 1e6), systems: fmtN(plan.chosen.length), people: fmtN(plan.people) }) });
   function setView(v) {
@@ -263,6 +263,14 @@
 
   // ---------- selected-system card ----------
   let sel3 = -1;
+  const median = (a) => { const v = a.slice().sort((x, y) => x - y), m = v.length >> 1; return !v.length ? 0 : v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2; };
+  // A plain-language reason for each system's result, built from the same numbers the optimizer used.
+  function whyText(i) {
+    const s = systems[i], cpp = s.cost / Math.max(1, s.pop), med = median(plan.chosen.map((j) => systems[j].cost / Math.max(1, systems[j].pop)));
+    const w = Math.min(1, plan.ben[i] / Math.max(1e-9, s.pop * (1 + st.l * eq[i])));
+    if (plan.inPlan[i]) return `<p class="why"><b>Why selected:</b> reaches ${fmtN(s.pop)} people for ${fmtM(s.cost)} ($${fmtN(cpp)} per person${med ? `, against a plan median of $${fmtN(med)}` : ""}). ${s.failing ? "It is Failing, so it counts in full." : `It is At-Risk, counted at ${pct(w)} of a Failing system.`}${eq[i] > 0.5 && st.l > 0 ? " Its disadvantaged-area score raised its priority." : ""}</p>`;
+    return `<p class="why"><b>Why not selected:</b> at $${fmtN(cpp)} per person${med ? ` (${(cpp / med).toFixed(1)}× the plan median of $${fmtN(med)})` : ""} the budget runs out before it. ${s.failing ? "It is Failing, so a larger budget or more small-system priority would bring systems like it in." : `It is At-Risk, counted at ${pct(w)} of a Failing system.`}</p>`;
+  }
   function showDetail(i) {
     sel3 = i; const d = $("#detail"); if (i < 0) { d.hidden = true; return; }
     const s = systems[i], fresh = scen && scen.key === [st.b, st.l, st.h, st.v, st.a, st.r, st.c, st.m].join();
@@ -274,7 +282,7 @@
       <div><span class="l">Weighted priority score</span><b>${fmtN(plan.ben[i])}</b></div>
       ${s.pv != null ? `<div><span class="l">New health violation, next 12 months</span><b>${pct(s.pv, 0)}</b></div>` : ""}
       <div><span class="l">Selected when costs vary</span><b>${fresh ? `${scen.hits[i]} of ${scen.K} scenarios` : plan.stabOK ? pct(s.p[plan.stabK]) + " of stress tests" : "run the scenarios"}</b></div></div>
-      <div style="margin-top:10px">${routeLine(i)}</div>${s.analytes ? `<div class="mute">Issue: ${esc(s.analytes)}</div>` : ""}`;
+      ${whyText(i)}<div style="margin-top:10px">${routeLine(i)}</div>${s.analytes ? `<div class="mute">Issue: ${esc(s.analytes)}</div>` : ""}`;
     $("#detailX").onclick = () => showDetail(-1);
   }
 

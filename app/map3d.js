@@ -203,16 +203,25 @@
   // ---------- mount ----------
   V.mount = async function (container, data) {
     D = data; box = container; box.innerHTML = "";
-    if (!window.maplibregl) { box.textContent = "This browser cannot show the 3D map (WebGL is required)."; return; }
+    // If 3D cannot start (no WebGL, tile or style server unreachable, too slow), hand control back so the app shows the 2D map.
+    let failed = false;
+    const fail = (why) => { if (failed) return; failed = true; box.textContent = "The 3D map could not load (" + why + "). Showing the 2D map."; if (D && D.onFail) D.onFail(why); };
+    if (!window.maplibregl) { fail("WebGL or MapLibre is unavailable"); return; }
     const mapDiv = document.createElement("div"); mapDiv.className = "gl3d"; box.appendChild(mapDiv);
     const load = document.createElement("div"); load.className = "load3d"; load.textContent = "Loading California terrain…"; box.appendChild(load);
-    let style; try { style = await buildStyle(); } catch (e) { load.textContent = "Could not load the map style. Check your connection."; return; }
-    map = new maplibregl.Map(Object.assign({ container: mapDiv, style, maxPitch: 82, maxZoom: 17.5, minZoom: 4, attributionControl: false, canvasContextAttributes: { antialias: true } }, HOME));
+    let style; try { style = await buildStyle(); } catch (e) { fail("map style unreachable"); return; }
+    try { map = new maplibregl.Map(Object.assign({ container: mapDiv, style, maxPitch: 82, maxZoom: 17.5, minZoom: 4, attributionControl: false, canvasContextAttributes: { antialias: true } }, HOME)); }
+    catch (e) { fail("WebGL is unavailable"); return; }
+    // A slow start (not a hard failure) must not destroy the map: show 2D meanwhile and offer 3D again when it is ready.
+    // The clock only runs while the tab is visible, because browsers pause map rendering in background tabs.
+    let slow = false;
+    const arm = () => setTimeout(() => { if (ready || failed) return; if (document.hidden) { arm(); return; } slow = true; if (D && D.onFail) D.onFail("took too long to load"); }, 25000);
+    arm();
     map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
     buildHud();
     map.on("load", async () => {
-      ready = true; load.remove(); applyOpts(); refreshSystems(); refreshContext();
+      ready = true; load.remove(); applyOpts(); refreshSystems(); refreshContext(); if (slow && D && D.onRecover) D.onRecover();
       const at = box.querySelector(".maplibregl-ctrl-attrib"); if (at) at.classList.remove("maplibregl-compact-show");
       try { infra = await fetch("data/infrastructure.json").then((r) => r.json()); refreshInfra(); } catch (e) { /* infrastructure layer is optional */ }
       if (D.counties) map.getSource("counties").setData(D.counties);
