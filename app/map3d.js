@@ -36,13 +36,14 @@
     st.sources.allroutes = { type: "geojson", data: EMPTY }; st.sources.hot = { type: "geojson", data: EMPTY }; st.sources.hubs = { type: "geojson", data: EMPTY };
     st.sources.sel = { type: "geojson", data: EMPTY }; st.sources.areas = { type: "geojson", data: EMPTY }; st.sources.counties = { type: "geojson", data: EMPTY };
     st.terrain = { source: "dem", exaggeration: opt.exag };
+    st.light = { anchor: "map", position: [1.6, 205, 38], color: "#fff1d6", intensity: 0.5 };   // low sun from the south-west: towers and buildings get a lit and a shaded face
     st.sky = { "sky-color": "#6aa6dd", "horizon-color": "#dbe9f5", "fog-color": "#dbe6ef", "sky-horizon-blend": 0.6, "horizon-fog-blend": 0.7, "fog-ground-blend": 0.75,
       "atmosphere-blend": ["interpolate", ["linear"], ["zoom"], 0, 1, 10, 1, 13, 0] };
     st.layers = st.layers.filter((l) => !/^poi_/.test(l.id) && l.id !== "road_one_way_arrow" && l.id !== "road_one_way_arrow_opposite");
     const at = st.layers.findIndex((l) => l.id === "waterway_tunnel");
     st.layers.splice(at, 0,
-      { id: "sat-eox", type: "raster", source: "eox", paint: { "raster-saturation": -0.05 } },
-      { id: "sat", type: "raster", source: "sat", layout: { visibility: "visible" }, paint: { "raster-saturation": -0.05, "raster-contrast": 0.08 } },
+      { id: "sat-eox", type: "raster", source: "eox", paint: { "raster-saturation": -0.4, "raster-brightness-max": 0.8 } },
+      { id: "sat", type: "raster", source: "sat", layout: { visibility: "visible" }, paint: { "raster-saturation": -0.42, "raster-brightness-max": 0.78, "raster-contrast": 0.12 } },
       { id: "hill", type: "hillshade", source: "demhs", paint: { "hillshade-exaggeration": 0.5, "hillshade-shadow-color": "#142231", "hillshade-highlight-color": "#ffffff", "hillshade-accent-color": "#3a4a5c", "hillshade-illumination-direction": 295 } });
     const b3 = st.layers.find((l) => l.id === "building-3d");
     b3.minzoom = 13; b3.paint["fill-extrusion-color"] = ["interpolate", ["linear"], ["coalesce", ["get", "render_height"], 8], 0, "#d9d4cc", 60, "#e9e6e0", 200, "#f6f4f0"];
@@ -68,6 +69,7 @@
       { id: "infra-label", type: "symbol", source: "infra", minzoom: 7.5, filter: ["!=", ["get", "n"], ""], layout: { "symbol-placement": "line", "text-field": ["get", "n"], "text-font": ["Noto Sans Italic"], "text-size": 11, "symbol-spacing": 400 },
         paint: { "text-color": "#d6eeff", "text-halo-color": "#0b2a4a", "text-halo-width": 1.4 } });
     st.layers.push(
+      { id: "sys-glow", type: "circle", source: "sys", minzoom: 3, filter: ["==", ["get", "st"], 0], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, ["*", ["get", "k"], 2.2], 9, ["*", ["get", "k"], 3.4], 14, 16], "circle-color": FUND, "circle-blur": 1, "circle-opacity": 0.42, "circle-pitch-alignment": "map" } },
       { id: "sites-dot", type: "circle", source: "sites3d", filter: ["==", ["geometry-type"], "Point"], minzoom: 8, maxzoom: 12, paint: { "circle-radius": 3, "circle-color": ["get", "c"], "circle-stroke-color": "#fff", "circle-stroke-width": 1 } },
       { id: "sys-risk", type: "circle", source: "sys", minzoom: 8.5, filter: ["==", ["get", "st"], 2], paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 8.5, ["*", ["get", "k"], 0.7], 14, 5], "circle-color": ["case", ["has", "col"], ["to-color", ["get", "col"]], RISK], "circle-opacity": 0.75, "circle-stroke-color": "#fff", "circle-stroke-width": 0.6 } },
       { id: "sys", type: "circle", source: "sys", filter: ["!=", ["get", "st"], 2], layout: { "circle-sort-key": ["-", 3, ["get", "st"]] },
@@ -238,6 +240,7 @@
     map.on("click", (e) => { const f = map.queryRenderedFeatures([[e.point.x - 9, e.point.y - 9], [e.point.x + 9, e.point.y + 9]], { layers: ["hubs"] }); if (!f.length) return;
       const p = f[0].properties; if (popup) popup.remove();
       popup = new maplibregl.Popup({ maxWidth: "280px" }).setLngLat(f[0].geometry.coordinates).setHTML(`<b>${D.esc(p.name)}</b><br>Could absorb ${p.n} Failing or At-Risk neighbours (${D.fmtN(p.people)} people) within the state's 3-mile rule. Receiver capacity is not modelled.`).addTo(map); });
+    map.addControl(new maplibregl.ScaleControl({ unit: "imperial" }), "bottom-left");
     map.on("movestart", () => { moving = true; lastT = performance.now(); gov.reset(); });
     map.on("moveend", () => { moving = false; });
     map.on("render", () => { const now = performance.now(); if (moving && pref === "auto" && ready && gov.push(now - lastT)) downgrade(); lastT = now; });
@@ -257,7 +260,8 @@
     hud.chip = el(`<div class="chip3d"></div>`); hud.toast = el(`<div class="toast3d" role="status" hidden></div>`);
     const panel = el(`<div class="hud3d">
       <label class="rng bud">Budget <b data-bl></b><input type="range" data-bud min="0" max="100" step="1" value="50" aria-label="Funding budget"></label>
-      <details class="more"${innerWidth > 900 ? " open" : ""}><summary>Layers and view</summary>
+      <details class="more"><summary>Layers and view</summary>
+      <div class="seg" role="group" aria-label="Basemap"><button type="button" data-base="sat" class="on">Satellite</button><button type="button" data-base="map">Map</button></div>
       <select data-jump aria-label="Jump to"><option value="">Jump to a city…</option>${Object.keys(CITIES).map((c) => `<option>${c}</option>`).join("")}</select>
       <label class="chk"><input type="checkbox" data-k="areas" checked> Service-area shading</label>
       <label class="chk"><input type="checkbox" data-k="infra" checked> Canals, plants, towers</label>
@@ -269,15 +273,19 @@
       <label class="rng">Relief <input type="range" data-k="exag" min="1" max="3" step="0.1" value="${opt.exag}"></label>
       <label class="rng">Graphics <select data-q aria-label="Graphics quality"><option value="auto">Auto (${tier})</option><option value="high">High</option><option value="balanced">Balanced</option><option value="low">Low (fastest)</option></select></label>
       <button class="ghost" data-act="home">Whole state</button></details></div>`);
-    const legend = el(`<div class="leg3d"><div><span class="sw" style="background:${FUND}"></span>Selected for funding</div><div><span class="sw" style="background:${FAIL}"></span>Failing, not selected</div>
+    const fs = el(`<button class="fs3d" type="button" aria-label="Full screen" title="Full screen">⛶</button>`);
+    const legend = el(`<details class="leg3d"${innerWidth > 1100 ? " open" : ""}><summary>Legend</summary><div><span class="sw" style="background:${FUND}"></span>Selected for funding</div><div><span class="sw" style="background:${FAIL}"></span>Failing, not selected</div>
       <div><span class="sw" style="background:${RISK}"></span>At-risk, not selected</div><div class="mute">Each service area is shaded in its colour.</div><div><span class="sw bar" style="background:#3fb8ff"></span>Canal or aqueduct</div>
       <div><span class="sw bar" style="background:#ffd38a"></span>Tunnel</div><div><span class="sw sq" style="background:#7fc3ff"></span>Treatment plant</div>
-      <div><span class="sw bar" style="background:${ROUTE}"></span>Consolidation pipeline</div></div>`);
-    box.append(hud.chip, panel, legend, hud.toast);
+      <div><span class="sw bar" style="background:${ROUTE}"></span>Consolidation pipeline</div></details>`);
+    box.append(hud.chip, panel, legend, fs, hud.toast);
+    fs.addEventListener("click", () => { if (document.fullscreenElement) document.exitFullscreen(); else if (box.requestFullscreen) box.requestFullscreen(); });
+    document.addEventListener("fullscreenchange", () => { fs.textContent = document.fullscreenElement ? "✕" : "⛶"; setTimeout(() => map && map.resize(), 120); });
     hud.q = panel.querySelector("[data-q]"); hud.q.value = pref;
     hud.q.addEventListener("change", () => { pref = hud.q.value; try { localStorage.setItem("xylem.quality", pref); } catch (e) { /* private mode */ } gov.reset(); setTier(Q.pickTier(envNow())); });
     panel.addEventListener("input", (e) => { const k = e.target.dataset.k; if (!k) return; opt[k] = e.target.type === "checkbox" ? e.target.checked : +e.target.value; if (k === "unfunded") refreshSystems(); applyOpts(); });
     panel.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
+      if (b.dataset.base) { opt.base = b.dataset.base; panel.querySelectorAll("[data-base]").forEach((x) => x.classList.toggle("on", x === b)); applyOpts(); return; }
       if (b.dataset.act === "home") V.home(); });
     hud.bud = panel.querySelector("[data-bud]"); hud.bl = panel.querySelector("[data-bl]");
     hud.bud.addEventListener("input", () => D.budget.set(+hud.bud.value));

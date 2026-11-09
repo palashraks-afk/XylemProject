@@ -38,3 +38,9 @@ def test_readme_has_no_repeated_table_rows():
     rows = [l for l in (ROOT / "README.md").read_text(encoding="utf-8").splitlines() if l.startswith("|") and not re.match(r"^\|[-| ]+\|$", l)]
     dupes = {l[:80] for l in rows if rows.count(l) > 1}
     assert not dupes, dupes
+
+
+def test_3d_map_has_lighting_glow_and_basemap_switch():
+    js = (ROOT / "app" / "map3d.js").read_text(encoding="utf-8")
+    for needle in ('st.light', 'id: "sys-glow"', 'data-base="map"', "requestFullscreen"):
+        assert needle in js, needle
