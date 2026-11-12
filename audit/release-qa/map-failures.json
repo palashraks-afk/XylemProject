@@ -1,0 +1,35 @@
+[
+  {
+    "mode": "stalled-style",
+    "status": "PASS",
+    "message": "3D map style unavailable. Switched to 2D; allocations and CSV remain available.",
+    "elapsedMs": 12688,
+    "fallback2d": true,
+    "state": {
+      "systems": 97,
+      "people": 476663
+    }
+  },
+  {
+    "mode": "stalled-tiles",
+    "status": "PASS",
+    "message": "3D map tiles are taking too long. Switched to 2D; allocations and CSV remain available.",
+    "elapsedMs": 20672,
+    "fallback2d": true,
+    "state": {
+      "systems": 97,
+      "people": 476663
+    }
+  },
+  {
+    "mode": "imagery-failure",
+    "status": "PASS",
+    "message": "Some 3D map imagery or terrain could not load. Allocations and CSV remain available; try the 2D map.",
+    "elapsedMs": 20746,
+    "fallback2d": true,
+    "state": {
+      "systems": 97,
+      "people": 476663
+    }
+  }
+]

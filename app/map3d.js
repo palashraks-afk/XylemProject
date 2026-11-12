@@ -22,7 +22,8 @@
   const poly = (ring, p) => ({ type: "Feature", properties: p, geometry: { type: "Polygon", coordinates: [ring] } });
 
   async function buildStyle() {
-    const st = await fetch(STYLE_URL).then((r) => r.json());
+    const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 12000);
+    let st; try { const response = await fetch(STYLE_URL, {signal: controller.signal}); if (!response.ok) throw new Error("Map style unavailable"); st = await response.json(); } finally { clearTimeout(timeout); }
     st.sources.dem = { type: "raster-dem", tiles: [DEM], tileSize: 256, maxzoom: 14, encoding: "terrarium", attribution: "Elevation: AWS Terrain Tiles (SRTM, GMTED)" };
     st.sources.demhs = Object.assign({}, st.sources.dem);
     st.sources.eox = { type: "raster", tiles: [EOX], tileSize: 256, maxzoom: 13, attribution: "Sentinel-2 cloudless by EOX (contains modified Copernicus Sentinel data 2021)" };
@@ -76,6 +77,8 @@
   function refreshSystems() {
     if (!ready || !D) return;
     const mode = D.colorMode(), stab = mode === "stab", feats = [], towers = [], areas = [];
+    if (hud.legend) hud.legend.innerHTML = mode === "plan" ? `<div>Green: selected · Red: Failing · Amber: At-Risk</div><div class="mute">Saved service areas.</div>` : mode === "status" ? `<div>Red: Failing · Amber: At-Risk</div>` : `<div>Stored selection frequency: pale to dark blue.</div><div class="mute">Grey: unavailable for these controls. Sensitivity, not outcome probability.</div>`;
+    if (hud.legend) hud.legend.insertAdjacentHTML("beforeend", `<div class="mute">Blue lines: canals/aqueducts · Amber lines: tunnels.</div><div class="mute">Green lines: approximate consolidation routes.</div>`);
     const stOf = (i) => { const s = D.systems[i]; return mode === "plan" && D.inPlan[i] ? 0 : s.failing ? 1 : 2; };
     if (D.polys) D.polys.features.forEach((ft) => { const i = D.idx.get(ft.properties.id); if (i === undefined || (!opt.unfunded && !D.inPlan[i])) return;
       areas.push({ type: "Feature", properties: stab ? { st: stOf(i), col: D.colorCss(i) } : { st: stOf(i) }, geometry: ft.geometry }); });
@@ -85,7 +88,7 @@
       const funded = !!D.inPlan[i], st = stOf(i), k = Math.min(9, 2.4 + Math.sqrt(s.pop) / 55);
       if (!opt.unfunded && !funded) return;
       feats.push({ type: "Feature", properties: stab ? { i, st, k: funded ? k * 1.3 : k * 0.65, col: D.colorCss(i) } : { i, st, k: funded ? k * 1.3 : k * 0.65 }, geometry: { type: "Point", coordinates: [s.lon, s.lat] } });
-      const r = Math.min(34, 11 + Math.sqrt(s.pop) / 22) * (funded ? 1.5 : 1), c = stab ? D.colorCss(i) : funded ? "#1fbf93" : s.failing ? "#d94444" : "#e0a03a", leg = r * 1.7, steel = "#c9d1d9";
+      const r = Math.min(34, 11 + Math.sqrt(s.pop) / 22) * (funded ? 1.5 : 1), c = stab ? D.colorCss(i) : mode === "plan" && funded ? "#1fbf93" : s.failing ? "#d94444" : "#e0a03a", leg = r * 1.7, steel = "#c9d1d9";
       const at = (mx, my) => [s.lon + mx / (111320 * Math.cos(s.lat * Math.PI / 180)), s.lat + my / 111320], o = r * 0.55, w = Math.max(1.2, r * 0.16);
       [[o, o], [-o, o], [o, -o], [-o, -o]].forEach(([x, y]) => { const p = at(x, y); towers.push(poly(square(p[0], p[1], w, w), { c: steel, b: 0, h: leg })); });
       towers.push(poly(circle(s.lon, s.lat, r * 0.16, 6), { c: steel, b: 0, h: leg }), poly(circle(s.lon, s.lat, r, 18), { c, b: leg, h: leg + r * 1.1 }),
@@ -94,7 +97,7 @@
     map.getSource("sys").setData({ type: "FeatureCollection", features: feats });
     map.getSource("towers").setData({ type: "FeatureCollection", features: towers });
     const rt = [];
-    if (D.routeLines) D.routeLines.features.forEach((f) => { const i = D.idx.get(f.properties.id), r = D.RT[f.properties.id]; if (i !== undefined && D.inPlan[i] && r && r.viable && r.receiver) rt.push(f); });
+    if (D.routeLines) D.routeLines.features.forEach((f) => { const i = D.idx.get(f.properties.id), r = D.RT[f.properties.id]; if (D.drawRoutes && i !== undefined && D.inPlan[i] && D.viaRoute[i] && r && r.viable && r.receiver) rt.push(f); });
     map.getSource("routes").setData({ type: "FeatureCollection", features: rt });
     if (hud.bud && D.budget && document.activeElement !== hud.bud) { hud.bud.value = D.budget.pos(); hud.bl.textContent = D.budget.label(); }
     if (hud.chip) { const s = D.summary(); hud.chip.innerHTML = `<span>Budget <b>${s.budget}</b></span><span><b>${s.systems}</b> systems funded</span><span><b>${s.people}</b> people reached</span>`; }
@@ -144,23 +147,25 @@
   // ---------- mount ----------
   V.mount = async function (container, data) {
     D = data; box = container; box.innerHTML = "";
-    if (!window.maplibregl) { box.textContent = "This browser cannot show the 3D map (WebGL is required)."; return; }
+    if (!window.maplibregl) { D.onMapFailure("3D map library unavailable. The 2D map, allocations and CSV remain available."); return; }
     const mapDiv = document.createElement("div"); mapDiv.className = "gl3d"; box.appendChild(mapDiv);
     const load = document.createElement("div"); load.className = "load3d"; load.textContent = "Loading California terrain…"; box.appendChild(load);
-    let style; try { style = await buildStyle(); } catch (e) { load.textContent = "Could not load the map style. Check your connection."; return; }
-    map = new maplibregl.Map(Object.assign({ container: mapDiv, style, maxPitch: 82, maxZoom: 17.5, minZoom: 4, attributionControl: false, canvasContextAttributes: { antialias: true } }, HOME));
+    let style; try { style = await buildStyle(); } catch (e) { load.remove(); D.onMapFailure("3D map style unavailable. Switched to 2D; allocations and CSV remain available."); return; }
+    try { map = new maplibregl.Map(Object.assign({ container: mapDiv, style, maxPitch: 82, maxZoom: 17.5, minZoom: 4, attributionControl: false, canvasContextAttributes: { antialias: true } }, HOME)); } catch (error) { load.remove(); D.onMapFailure("3D graphics unavailable. Switched to 2D; allocations and CSV remain available."); return; }
+    const loadDeadline = setTimeout(() => { if (!ready) { load.remove(); D.onMapFailure("3D map tiles are taking too long. Switched to 2D; allocations and CSV remain available."); } }, 20000);
+    map.getCanvas().addEventListener("webglcontextlost", () => D.onMapFailure("3D graphics lost. Switched to 2D; allocations and CSV remain available."));
     map.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");
     buildHud();
     map.on("load", async () => {
-      ready = true; load.remove(); applyOpts(); refreshSystems();
+      clearTimeout(loadDeadline); ready = true; load.remove(); applyOpts(); refreshSystems();
       const at = box.querySelector(".maplibregl-ctrl-attrib"); if (at) at.classList.remove("maplibregl-compact-show");
-      try { infra = await fetch("data/infrastructure.json").then((r) => r.json()); refreshInfra(); } catch (e) { /* infrastructure layer is optional */ }
+      infra = D.infrastructure; refreshInfra();
       if (D.counties) map.getSource("counties").setData(D.counties);
     });
     map.on("click", (e) => { const f = map.queryRenderedFeatures([[e.point.x - 8, e.point.y - 8], [e.point.x + 8, e.point.y + 8]], { layers: ["sys", "sys-risk"] }); if (f.length) select(f[0].properties.i); });
     map.on("mousemove", (e) => { const f = map.queryRenderedFeatures([[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]], { layers: ["sys", "sys-risk"] }); map.getCanvas().style.cursor = f.length ? "pointer" : ""; });
-    map.on("error", (e) => console.warn("map3d:", e && e.error && e.error.message));
+    map.on("error", (e) => { load.remove(); D.onMapStatus("Some 3D map imagery or terrain could not load. Allocations and CSV remain available; try the 2D map."); console.warn("map3d:", e && e.error && e.error.message); });
   };
   V.setData = (data) => { D = data; refreshSystems(); };
   V.show = () => { if (map) { map.resize(); } };
@@ -185,6 +190,7 @@
       <div><span class="sw bar" style="background:#ffd38a"></span>Tunnel</div><div><span class="sw sq" style="background:#7fc3ff"></span>Treatment plant</div>
       <div><span class="sw bar" style="background:${ROUTE}"></span>Consolidation pipeline</div></div>`);
     box.append(hud.chip, panel, legend);
+    hud.legend = legend;
     panel.addEventListener("input", (e) => { const k = e.target.dataset.k; if (!k) return; opt[k] = e.target.type === "checkbox" ? e.target.checked : +e.target.value; if (k === "unfunded") refreshSystems(); applyOpts(); });
     panel.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
       if (b.dataset.act === "home") V.home(); });

@@ -1,20 +1,20 @@
-# Draft outreach note (not sent)
+# Practitioner review invitation — draft only, not sent
 
-For Rahul to edit and send. One real reaction from a practitioner is worth more to the Impact score than another feature.
+Select a relevant practitioner and confirm the sender's identity before use. Possible roles: a regional drinking-water funding specialist, community water organization or district manager. No relationship, student status, recipient endorsement or challenge entry is assumed. Sending requires explicit authorization; no outreach was sent. Publication of a review link also requires authorization.
 
-Possible recipients: a regional staffer at the State Water Board's Division of Financial Assistance, a community water organisation working in the Central Valley, or a local water district manager. Choose people you can name honestly; do not claim a connection you do not have.
+Subject: Five-minute review of a California water-funding prototype
 
----
+Hello [recipient name],
 
-Subject: Student project: where does a water-funding budget reach the most people?
+I'm working on Xylem, a California water-funding planning prototype using preserved State Water Board inputs. It lets a reviewer set a budget, compare equity and small-system priorities, inspect systems selected or left out, and export the allocation.
 
-Hi [name],
+Reach means modeled population under the chosen objective, not measured intervention benefit. Costs use state averages rather than project quotes. Consolidation routes are geographic approximations and do not establish receiver capacity or engineering feasibility. Forecast-based funding weights are diagnostic snapshot estimates; annual failure probabilities and the constant-annual-risk multi-year conversion remain unvalidated.
 
-I'm a student entering the Xylem Global Student Innovation Challenge (Water Access). I built a free, open map that takes the State Water Board's SAFER, Affordability and Cost Assessment data and, for a budget you set, shows which failing and at-risk systems that money would reach, how each could be fixed (including consolidation routes using the state's own unit costs), and how stable the answer is.
+Would you review a five-minute local demonstration or approved screenshots and flag what is missing or misleading? In particular, would the priority rules and exclusions help or hinder a real funding discussion? The review checklist also asks about costs, readiness, operations and consolidation feasibility.
 
-It is a planning aid, not a cost quote: costs are modelled from the state's 2024 averages and the county-level error against the state's totals is about 41%. The link is [live URL once Pages is on].
-
-Would you be willing to look at it for five minutes and tell me what is wrong, missing or misleading? A one-line reply is plenty. If it is useful, I would like to quote you (with your permission) in my submission.
+[Insert an approved review link or arrange a local demonstration. No new public release is assumed.]
 
 Thank you,
-[your name]
+[sender name]
+
+Record feedback separately from model outcomes. Do not quote a reviewer or identify them publicly without their permission; an invitation is not an endorsement. The checklist is in [DEMO_REVIEW.md](audit/DEMO_REVIEW.md).

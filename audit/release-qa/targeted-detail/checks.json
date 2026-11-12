@@ -1,0 +1,61 @@
+{
+  "started": "2026-11-12T07:09:22.009Z",
+  "checks": [
+    {
+      "name": "chrome selected detail refresh and fixed-share popup",
+      "status": "PASS",
+      "evidence": {
+        "id": "CA0105009",
+        "before": "×\nCA0105009 · ALAMEDA COUNTY\nMountain House School\nAt-Risk · 50 people served · 1 connections · Miss/Indet\nIn this plan\nNot selected\nEstimated cost\n$0.2M\nIllustrative cost range\n$0.1M–$0.3M\nWeighted priority score\n12\nDiagnostic violation estimate (unvalidated)\n0%\nSelected when costs vary\n0% of stress tests\nConsolidate intoCity Of Mountain House\nRoute1.53 mi · $3.6M ($3,602,251/conn)\nMeets the state's funding viability test",
+        "after": "×\nCA0105009 · ALAMEDA COUNTY\nMountain House School\nAt-Risk · 50 people served · 1 connections · Miss/Indet\nIn this plan\nNot selected\nEstimated cost\n$0.3M\nIllustrative cost range\n$0.2M–$0.7M\nWeighted priority score\n12\nDiagnostic violation estimate (unvalidated)\n0%\nSelected when costs vary\nrun the scenarios\nConsolidate intoCity Of Mountain House\nRoute1.53 mi · $3.6M ($3,602,251/conn)\nMeets the state's funding viability test",
+        "updatedPopup": "Mountain House School\nAlameda County · At-Risk · Miss/Indet\nPeople served\n50\nConnections\n1\nModelled cost\n$0.3M ($0.2M–$0.7M)\nCost per person\n$6,885\nIn plan\nNo\nFunded in\nunavailable for these controls\nFunding since 2017\nYes\nExploratory 5-year weight\n21%\nAnnual and multi-year risk unvalidated; constant annual risk assumed for forecast weights.\nHotspot score (25 km)\n-0.8\nConsolidate into\nCity Of Mountain House\nRoute\n1.53 mi · $3.6M ($3,602,251/conn)\nMeets the state's funding viability test",
+        "popup": "Mountain House School\nAlameda County · At-Risk · Miss/Indet\nPeople served\n50\nConnections\n1\nModelled cost\n$0.3M ($0.2M–$0.7M)\nCost per person\n$6,885\nIn plan\nNo\nFunded in\nunavailable for these controls\nFunding since 2017\nYes\nFixed At-Risk share\n50%\nAnnual and multi-year risk unvalidated; constant annual risk assumed for forecast weights.\nHotspot score (25 km)\n-0.8\nConsolidate into\nCity Of Mountain House\nRoute\n1.53 mi · $3.6M ($3,602,251/conn)\nMeets the state's funding viability test"
+      }
+    },
+    {
+      "name": "chrome uncaught browser errors",
+      "status": "PASS",
+      "evidence": {
+        "errors": [],
+        "failedRequests": []
+      }
+    },
+    {
+      "name": "msedge selected detail refresh and fixed-share popup",
+      "status": "PASS",
+      "evidence": {
+        "id": "CA0105009",
+        "before": "×\nCA0105009 · ALAMEDA COUNTY\nMountain House School\nAt-Risk · 50 people served · 1 connections · Miss/Indet\nIn this plan\nNot selected\nEstimated cost\n$0.2M\nIllustrative cost range\n$0.1M–$0.3M\nWeighted priority score\n12\nDiagnostic violation estimate (unvalidated)\n0%\nSelected when costs vary\n0% of stress tests\nConsolidate intoCity Of Mountain House\nRoute1.53 mi · $3.6M ($3,602,251/conn)\nMeets the state's funding viability test",
+        "after": "×\nCA0105009 · ALAMEDA COUNTY\nMountain House School\nAt-Risk · 50 people served · 1 connections · Miss/Indet\nIn this plan\nNot selected\nEstimated cost\n$0.3M\nIllustrative cost range\n$0.2M–$0.7M\nWeighted priority score\n12\nDiagnostic violation estimate (unvalidated)\n0%\nSelected when costs vary\nrun the scenarios\nConsolidate intoCity Of Mountain House\nRoute1.53 mi · $3.6M ($3,602,251/conn)\nMeets the state's funding viability test",
+        "updatedPopup": "Mountain House School\nAlameda County · At-Risk · Miss/Indet\nPeople served\n50\nConnections\n1\nModelled cost\n$0.3M ($0.2M–$0.7M)\nCost per person\n$6,885\nIn plan\nNo\nFunded in\nunavailable for these controls\nFunding since 2017\nYes\nExploratory 5-year weight\n21%\nAnnual and multi-year risk unvalidated; constant annual risk assumed for forecast weights.\nHotspot score (25 km)\n-0.8\nConsolidate into\nCity Of Mountain House\nRoute\n1.53 mi · $3.6M ($3,602,251/conn)\nMeets the state's funding viability test",
+        "popup": "Mountain House School\nAlameda County · At-Risk · Miss/Indet\nPeople served\n50\nConnections\n1\nModelled cost\n$0.3M ($0.2M–$0.7M)\nCost per person\n$6,885\nIn plan\nNo\nFunded in\nunavailable for these controls\nFunding since 2017\nYes\nFixed At-Risk share\n50%\nAnnual and multi-year risk unvalidated; constant annual risk assumed for forecast weights.\nHotspot score (25 km)\n-0.8\nConsolidate into\nCity Of Mountain House\nRoute\n1.53 mi · $3.6M ($3,602,251/conn)\nMeets the state's funding viability test"
+      }
+    },
+    {
+      "name": "msedge uncaught browser errors",
+      "status": "PASS",
+      "evidence": {
+        "errors": [],
+        "failedRequests": []
+      }
+    }
+  ],
+  "browsers": [
+    {
+      "channel": "chrome",
+      "version": "157.0.8103.78"
+    },
+    {
+      "channel": "msedge",
+      "version": "119.0.2151.72"
+    }
+  ],
+  "limitations": [
+    "Mobile viewport/touch emulation only; physical iOS/Safari and screen readers not tested."
+  ],
+  "finished": "2026-11-12T07:09:29.159Z",
+  "summary": {
+    "passed": 4,
+    "failed": 0
+  }
+}

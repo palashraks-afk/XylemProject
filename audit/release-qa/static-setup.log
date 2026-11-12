@@ -1,0 +1,8 @@
+{
+  "snapshot_id": "806032f64da14561b81c55e72179ec22f299774fa97b9b5f08c4742909f9c0bd",
+  "data_files": 10,
+  "vendor_files": 6,
+  "result": "PASS"
+}
+Serve app: python -m http.server 8885 --bind 127.0.0.1 --directory app
+Open http://127.0.0.1:8885 (use HTTP on loopback, not a file URL).

@@ -31,6 +31,7 @@
   const gis = await loadData("gis.json");
   const forecast = await loadData("forecast.json");
   const countyGeo = await loadData("counties.geojson");
+  const infrastructure = await loadData("infrastructure.json");
   const AT_RISK_RATE = forecast.metrics.fallback_at_risk_probability;
 
   const N = systems.length;
@@ -53,15 +54,21 @@
   const budgetToPos = (b) => Math.round((Math.log(b / BMIN) / Math.log(BMAX / BMIN)) * 100);
 
   const st = Object.assign({}, DEF, { color: "plan", poly: true, tab: "plan", routes: true, shade: "none", hot: false, hubs: false });
+  function controlNumber(p, key, fallback, min, max, step) {
+    if (!p.has(key) || !p.get(key).trim()) return fallback;
+    const value = Number(p.get(key));
+    if (!Number.isFinite(value)) return fallback;
+    return Math.min(max, Math.max(min, Number((Math.round(value / step) * step).toFixed(10))));
+  }
   (function readHash() {
     const p = new URLSearchParams(location.hash.slice(1));
-    if (p.has("b")) st.b = Math.min(BMAX, Math.max(BMIN, +p.get("b")));
-    if (p.has("l")) st.l = +p.get("l");
-    if (p.has("a")) st.a = +p.get("a");
-    if (p.has("r")) st.r = +p.get("r");
+    st.b = controlNumber(p, "b", st.b, BMIN, BMAX, 5);
+    st.l = controlNumber(p, "l", st.l, 0, 3, 0.1);
+    st.a = controlNumber(p, "a", st.a, 0.1, 1, 0.05);
+    st.r = controlNumber(p, "r", st.r, 0, 0.6, 0.05);
     if (p.has("c")) st.c = +p.get("c") ? 1 : 0;
-    if (p.has("m")) st.m = Math.min(2, Math.max(0.5, +p.get("m")));
-    if (p.has("h")) st.h = Math.min(10, Math.max(1, +p.get("h")));
+    st.m = controlNumber(p, "m", st.m, 0.5, 2, 0.05);
+    st.h = controlNumber(p, "h", st.h, 1, 10, 1);
     if (p.has("v")) st.v = p.get("v") === "fixed" ? "fixed" : "fc";
   })();
 
@@ -106,9 +113,13 @@
   }
 
   // ---------- map ----------
-  const map = L.map("map", { zoomControl: true, preferCanvas: true }).setView([36.9, -119.5], 6);
+  function mapStatus(message) { const el = $("#mapStatus"); el.textContent = message; el.hidden = !message; }
+  const map = L.map("map", { zoomControl: false, preferCanvas: true }).setView([36.9, -119.5], 6);
+  L.control.zoom({position: "topright"}).addTo(map);
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "&copy; OpenStreetMap contributors", maxZoom: 14 }).addTo(map);
+    attribution: "&copy; OpenStreetMap contributors", maxZoom: 14 })
+    .on("tileerror", () => mapStatus("2D basemap unavailable. Saved system boundaries, allocations and CSV export remain available."))
+    .addTo(map);
   const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
   const idx = new Map(systems.map((s, i) => [s.id, i]));
   const dots = [], polyLayers = new Map();
@@ -137,7 +148,7 @@
   }
   function popup(i) {
     const s = systems[i];
-    const stab = plan.stabOK ? `${pct(s.p[plan.stabK])} of stress tests at ~$${plan.stabBudget}M` : "n/a at this budget";
+    const stab = plan.stabOK ? `${pct(s.p[plan.stabK])} of stress tests at ~$${plan.stabBudget}M` : "unavailable for these controls";
     return `<h4>${esc(s.name)}</h4><div class="mute">${esc(s.county)} County · ${s.failing ? "Failing" : "At-Risk"} · ${esc(s.dac)}</div>
       <div class="r"><span>People served</span><b>${fmtN(s.pop)}</b></div>
       <div class="r"><span>Connections</span><b>${fmtN(s.conn)}</b></div>
@@ -146,7 +157,7 @@
       <div class="r"><span>In plan</span><b>${plan.inPlan[i] ? "Yes" : "No"}</b></div>
       <div class="r"><span>Funded in</span><b>${stab}</b></div>
       <div class="r"><span>Funding since 2017</span><b>${s.funded17 ? "Yes" : "No"}</b></div>
-      ${s.pf != null ? `<div class="r"><span>Exploratory ${st.h}-year weight</span><b>${pct(1 - Math.pow(1 - s.pf, st.h))}</b></div><div class="mute">Annual and multi-year risk unvalidated; constant annual risk assumed.</div>` : ""}
+      ${s.pf != null ? `<div class="r"><span>${st.v === "fixed" ? "Fixed At-Risk share" : `Exploratory ${st.h}-year weight`}</span><b>${pct(st.v === "fixed" ? st.a : 1 - Math.pow(1 - s.pf, st.h))}</b></div><div class="mute">Annual and multi-year risk unvalidated; constant annual risk assumed for forecast weights.</div>` : ""}
       ${gis && gis.z[s.id] !== undefined ? `<div class="r"><span>Hotspot score (25 km)</span><b>${gis.z[s.id].toFixed(1)}</b></div>` : ""}
       ${routeLine(i)}
       ${s.analytes ? `<div class="mute">Issue: ${esc(s.analytes)}</div>` : ""}`;
@@ -214,24 +225,27 @@
     drawRoutes(); drawCounties();
     dots.forEach((m, i) => { if (m) m.setStyle({ fillColor: colorFor(i), fillOpacity: opacityFor(i) }); });
     polyLayers.forEach((l, i) => l.setStyle({ color: colorFor(i), fillColor: colorFor(i), fillOpacity: plan.inPlan[i] ? 0.45 : 0.15, weight: plan.inPlan[i] ? 1.6 : 0.8 }));
+    map.eachLayer(layer => { if (layer.isPopupOpen && layer.isPopupOpen()) layer.getPopup().update(); });
+    $("#colorSel").value = st.color;
+    document.querySelectorAll("[data-color]").forEach(b => { b.classList.toggle("on", b.dataset.color === st.color); b.setAttribute("aria-pressed", String(b.dataset.color === st.color)); });
     const leg = {
       plan: [[css("--plan"), "Funded in this plan"], [css("--fail"), "Failing, not funded"], [css("--risk"), "At-Risk, not funded"]],
       status: [[css("--fail"), "Failing"], [css("--risk"), "At-Risk"]],
       stab: [["hsl(200,20%,82%)", "Rarely funded in stress tests"], ["hsl(200,90%,40%)", "Funded in nearly every scenario"]],
     }[st.color];
     $("#legend").innerHTML = leg.map(([c, t]) => `<div><span class="dot" style="background:${c}"></span>${t}</div>`).join("")
-      + (st.color === "stab" && !plan.stabOK ? `<div class="mute">Stress tests cover $100M–$2B</div>` : "") + `<div class="mute">Dot size = people served</div>`;
+      + (st.color === "stab" && !plan.stabOK ? `<div class="mute">Stored stability unavailable for these controls; run cost scenarios.</div>` : "") + `<div class="mute">Dot size = people served</div>`;
     if (on3d && window.Xylem3D) Xylem3D.setData(data3d());
   }
 
   // ---------- 3D map (default) and 2D map ----------
   let on3d = true;
-  const data3d = () => ({ systems, inPlan: plan.inPlan, viaRoute, RT, routeLines, counties: countyGeo, polys, idx, popup, esc, fmtN, colorMode: () => st.color, colorCss: colorFor, onSelect: (i) => showDetail(i),
+  const data3d = () => ({ systems, infrastructure, drawRoutes: st.routes, inPlan: plan.inPlan, viaRoute, RT, routeLines, onMapStatus: mapStatus, onMapFailure: (message) => { mapStatus(message); setView("2d"); }, counties: countyGeo, polys, idx, popup, esc, fmtN, colorMode: () => st.color, colorCss: colorFor, onSelect: (i) => showDetail(i),
     budget: { pos: () => budgetToPos(st.b), label: () => fmtM(st.b * 1e6), set: (p) => { st.b = posToBudget(p); $("#budget").value = p; update(); } },
     summary: () => ({ budget: fmtM(st.b * 1e6), systems: fmtN(plan.chosen.length), people: fmtN(plan.people) }) });
   function setView(v) {
     on3d = v === "3d";
-    document.querySelectorAll("[data-view]").forEach((b) => b.classList.toggle("on", b.dataset.view === v));
+    document.querySelectorAll("[data-view]").forEach((b) => { b.classList.toggle("on", b.dataset.view === v); b.setAttribute("aria-pressed", String(b.dataset.view === v)); });
     $("#map").hidden = on3d; $("#map3d").hidden = !on3d; $("#legend").hidden = on3d;
     if (on3d) { Xylem3D.setData(data3d()); Xylem3D.show(); } else map.invalidateSize();
   }
@@ -240,18 +254,23 @@
   // ---------- cost scenarios: how often is each system selected when its cost estimate is wrong? ----------
   let scen = null;
   function rng(seed) { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const scenarioKey = () => [st.b, st.l, st.h, st.v, st.a, st.r, st.c, st.m].join();
+  let scenarioGeneration = 0;
   async function runScenarios() {
     const btn = $("#runScen"), out = $("#scenOut"), K = 40, rand = rng(11), hits = new Uint16Array(N);
-    btn.disabled = true; run();
+    btn.disabled = true; commitUpdate();
+    const key = scenarioKey(), generation = ++scenarioGeneration, budget = st.b * 1e6, reserve = st.r, fixedCosts = costs.slice();
     const wRisk = (i) => failing[i] ? 1 : st.v === "fc" ? 1 - Math.pow(1 - (systems[i].pf == null ? AT_RISK_RATE : systems[i].pf), st.h) : st.a;
     const ben = pops.map((p, i) => p * wRisk(i) * (1 + st.l * eq[i]));
     for (let k = 0; k < K; k++) {
       const gauss = () => Math.sqrt(-2 * Math.log(1 - rand())) * Math.cos(2 * Math.PI * rand());
-      const c = costs.map((v) => v * Math.exp(0.35 * gauss()));          // 0.5x to 2x range is about two standard deviations
-      XylemOpt.optimize(c, ben, conns, st.b * 1e6, st.r).forEach((i) => hits[i]++);
+      if (generation !== scenarioGeneration) { btn.disabled = false; return; }
+      const c = fixedCosts.map((v) => v * Math.exp(0.35 * gauss()));          // 0.5x to 2x range is about two standard deviations
+      XylemOpt.optimize(c, ben, conns, budget, reserve).forEach((i) => hits[i]++);
       out.textContent = `Running… ${k + 1} of ${K}`; await new Promise((r) => setTimeout(r, 0));
     }
-    scen = { hits, K, key: [st.b, st.l, st.h, st.v, st.a, st.r, st.c, st.m].join() };
+    if (generation !== scenarioGeneration || key !== scenarioKey()) { btn.disabled = false; return; }
+    scen = { hits, K, key };
     const solid = plan.chosen.filter((i) => hits[i] >= K * 0.8).length;
     out.textContent = `${solid} of ${plan.chosen.length} funded systems were chosen in at least 80% of ${K} scenarios. Open a system to see its count.`;
     btn.disabled = false; if (sel3 >= 0) showDetail(sel3);
@@ -262,14 +281,14 @@
   let sel3 = -1;
   function showDetail(i) {
     sel3 = i; const d = $("#detail"); if (i < 0) { d.hidden = true; return; }
-    const s = systems[i], fresh = scen && scen.key === [st.b, st.l, st.h, st.v, st.a, st.r, st.c, st.m].join();
+    const s = systems[i], fresh = scen && scen.key === scenarioKey();
     d.hidden = false;
     d.innerHTML = `<button class="x" aria-label="Close" id="detailX">×</button><span class="eyebrow">${esc(s.id)} · ${esc(s.county)} County</span><h3>${esc(s.name)}</h3>
       <div class="mute">${s.failing ? "Failing" : "At-Risk"} · ${fmtN(s.pop)} people served · ${fmtN(s.conn)} connections · ${esc(s.dac)}</div>
       <div class="grid"><div><span class="l">In this plan</span><b>${plan.inPlan[i] ? "Selected" : "Not selected"}</b></div>
       <div><span class="l">Estimated cost</span><b>${fmtM(s.cost)}</b></div><div><span class="l">Illustrative cost range</span><b>${fmtM(s.lo)}–${fmtM(s.hi)}</b></div>
       <div><span class="l">Weighted priority score</span><b>${fmtN(plan.ben[i])}</b></div>
-      ${s.pv != null ? `<div><span class="l">New health violation, next 12 months</span><b>${pct(s.pv, 0)}</b></div>` : ""}
+      ${s.pv != null ? `<div><span class="l">Diagnostic violation estimate (unvalidated)</span><b>${pct(s.pv, 0)}</b></div>` : ""}
       <div><span class="l">Selected when costs vary</span><b>${fresh ? `${scen.hits[i]} of ${scen.K} scenarios` : plan.stabOK ? pct(s.p[plan.stabK]) + " of stress tests" : "run the scenarios"}</b></div></div>
       <div style="margin-top:10px">${routeLine(i)}</div>${s.analytes ? `<div class="mute">Issue: ${esc(s.analytes)}</div>` : ""}`;
     $("#detailX").onclick = () => showDetail(-1);
@@ -279,12 +298,12 @@
   function kpis() {
     const gain = plan.basePeople ? plan.people / plan.basePeople : 0;
     const k = [
-      `<div class="kpi hero"><div class="l">Modeled people reached</div><div class="v">${fmtN(plan.people)}</div><div class="s">${gain >= 1.005 ? `<span class="up">${gain.toFixed(1)}×</span> a status-first plan (${fmtN(plan.basePeople)})` : "same as status-first plan"}</div></div>`,
+      `<div class="kpi hero"><div class="l">Modeled people reached</div><div class="v">${fmtN(plan.people)}</div><div class="s">${gain >= 1.005 || gain < 0.995 ? `<span class="up">${gain.toFixed(2)}×</span> status-first reach (${fmtN(plan.basePeople)})` : `about the same reach as status-first (${fmtN(plan.basePeople)})`}</div></div>`,
       `<div class="kpi"><div class="l">Systems funded</div><div class="v">${fmtN(plan.chosen.length)}</div><div class="s">of ${fmtN(N)} · ${plan.small} with ≤500 connections</div></div>`,
       `<div class="kpi"><div class="l">Spent of budget</div><div class="v">${fmtM(plan.spent)}</div><div class="s">budget ${fmtM(st.b * 1e6)} · $${fmtN(plan.spent / Math.max(1, plan.people))}/person</div></div>`,
       `<div class="kpi"><div class="l">In disadvantaged areas</div><div class="v">${pct(plan.dac / Math.max(1, plan.people))}</div><div class="s">of people reached (DAC or SDAC)</div></div>`,
       `<div class="kpi"><div class="l">Failing, left unfunded</div><div class="v">${fmtN(plan.leftFailing.length)}</div><div class="s">${fmtN(plan.leftPeople)} people</div></div>`,
-      `<div class="kpi"><div class="l">Plan robustness</div><div class="v">${plan.robust === null ? "n/a" : pct(plan.robust)}</div><div class="s">${plan.robust === null ? (st.c ? "stress tests use average costs, so n/a with routes on" : "stress tests cover $100M–$2B") : `funded systems that win in ≥50% of ${summary.n_scenarios} stress tests`}</div></div>`,
+      `<div class="kpi"><div class="l">Plan robustness</div><div class="v">${plan.robust === null ? "n/a" : pct(plan.robust)}</div><div class="s">${plan.robust === null ? "stored stability unavailable for these controls; run cost scenarios" : `funded systems that win in ≥50% of ${summary.n_scenarios} stress tests`}</div></div>`,
     ];
     $("#kpis").innerHTML = k.join("");
   }
@@ -295,10 +314,11 @@
     const wrap = document.createElement("div");
     function draw() {
       const sorted = rows.slice().sort((a, b) => { const x = a[key], y = b[key]; return (typeof x === "string" ? x.localeCompare(y) : x - y) * dir; });
-      wrap.innerHTML = `<div class="scroll"><table><thead><tr>${cols.map((c) => `<th class="${c.num ? "num" : ""}" data-k="${c.k}">${c.h}${key === c.k ? (dir > 0 ? " ▲" : " ▼") : ""}</th>`).join("")}</tr></thead>
-        <tbody>${sorted.slice(0, 400).map((r) => `<tr>${cols.map((c) => `<td class="${c.num ? "num" : ""}">${c.f ? c.f(r) : esc(r[c.k])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+      wrap.innerHTML = `<div class="scroll"><table><thead><tr>${cols.map((c) => `<th class="${c.num ? "num" : ""}" aria-sort="${key === c.k ? (dir > 0 ? "ascending" : "descending") : "none"}"><button type="button" data-k="${c.k}">${c.h}${key === c.k ? (dir > 0 ? " ▲" : " ▼") : ""}</button></th>`).join("")}</tr></thead>
+        <tbody>${sorted.slice(0, 400).map((r) => `<tr>${cols.map((c) => `<td class="${c.num ? "num" : ""}">${c.k === "name" && r.id ? `<button type="button" class="system-link" data-system="${esc(r.id)}">${esc(r.name)}</button>` : c.f ? c.f(r) : esc(r[c.k])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
         ${sorted.length > 400 ? `<p class="fine" style="color:var(--mute)">Showing first 400 of ${fmtN(sorted.length)}.</p>` : ""}`;
-      wrap.querySelectorAll("th").forEach((th) => th.addEventListener("click", () => { const k = th.dataset.k; if (k === key) dir = -dir; else { key = k; dir = -1; } draw(); }));
+      wrap.querySelectorAll("th button").forEach((button) => button.addEventListener("click", () => { const k = button.dataset.k; if (k === key) dir = -dir; else { key = k; dir = -1; } draw(); wrap.querySelector(`[data-k="${k}"]`).focus(); }));
+      wrap.querySelectorAll("[data-system]").forEach(button => button.addEventListener("click", () => { showDetail(idx.get(button.dataset.system)); $("#detail").scrollIntoView({block:"nearest"}); }));
     }
     draw(); return wrap;
   }
@@ -308,7 +328,7 @@
   function tabPlan() {
     const rows = plan.chosen.map((i) => ({ ...systems[i], cpp: systems[i].cost / systems[i].pop, stab: plan.stabOK ? systems[i].p[plan.stabK] : -1 }));
     const el = document.createElement("div");
-    el.innerHTML = `<p class="mute" style="margin-bottom:8px">${fmtN(rows.length)} systems, ${fmtM(plan.spent)} of ${fmtM(st.b * 1e6)}. Stability is the share of ${summary.n_scenarios} stress-test scenarios (cost errors and weights varied) in which the system is still funded${plan.stabOK ? ` at about $${plan.stabBudget}M` : "; not computed at this budget"}.</p>`;
+    el.innerHTML = `<p class="mute" style="margin-bottom:8px">${fmtN(rows.length)} systems, ${fmtM(plan.spent)} of ${fmtM(st.b * 1e6)}. Stability is the share of ${summary.n_scenarios} stress-test scenarios (cost errors and weights varied) in which the system is still funded${plan.stabOK ? ` at about $${plan.stabBudget}M` : "; unavailable for these controls"}.</p>`;
     el.appendChild(table([
       { k: "name", h: "System" }, { k: "county", h: "County" }, { k: "failing", h: "Status", f: tagS },
       { k: "pop", h: "People", num: 1, f: (r) => fmtN(r.pop) }, { k: "cost", h: "Cost", num: 1, f: (r) => fmtM(r.cost) },
@@ -353,10 +373,10 @@
     const el = document.createElement("div"); el.className = "prose";
     el.innerHTML = `
       <h3>What the optimizer does</h3>
-      <p>For a budget B it chooses the set of Failing and At-Risk systems that maximizes total <i>benefit</i> subject to total modelled cost ≤ B. Benefit = people served × status weight (Failing 1, At-Risk as set) × (1 + equity weight × equity index). The problem is a 0/1 knapsack solved exactly by dynamic programming (costs rounded up to $250k units, so a plan never overspends). The same code runs in Python (reference) and in your browser; a test checks they pick identical systems.</p>
+      <p>For a budget B it chooses the set of Failing and At-Risk systems that maximizes the weighted population objective subject to total modelled cost ≤ B. Weighted objective = people served × status weight (Failing 1, At-Risk as set) × (1 + equity weight × equity index). With no reserve, dynamic programming solves the 0/1 knapsack exactly after costs round up to $250k units, so a plan never overspends. A small-system reserve runs two sequential knapsacks: first small systems within the reserved amount, then remaining systems within the remaining budget. This is a priority rule, not proof of a globally optimal reserve-constrained plan. The same code runs in Python (reference) and in your browser; a test checks they pick identical systems.</p>
       <h3>Where the costs come from</h3>
-      <p>The State Water Board publishes no per-system remediation cost as data. It publishes average long-term cost per service connection by system size and status (2024 Cost Assessment, Table 7) and total cost by county (Table 9). We apply Table 7 to each system's connection count, then scale so the statewide total equals the state's $${fmtN(c.official_total_musd)}M. Costs are <b>modelled</b>, not quotes. The shown range is the state's own 0.5×–2× convention.</p>
-      <div class="note ${c.spearman_county > 0.8 ? "good" : ""}"><b>Calibration test against the state's county totals (58 counties).</b> Rank correlation ${c.spearman_county}, Pearson ${c.pearson_county}. The county-level typical error is large: median absolute error ${c.median_abs_pct_error_county_ge10M}% for counties with ≥$10M, log-ratio spread ${c.log_ratio_sd_county}. The raw model came out ${(c.raw_total_musd / c.official_total_musd).toFixed(2)}× the state total (${fmtN(c.raw_total_musd)}M vs ${fmtN(c.official_total_musd)}M) before scaling. This is why every system carries a stability score instead of a single claimed answer.</div>
+      <p>The preserved inputs contain state average long-term cost per service connection by system size and status (2024 Cost Assessment, Table 7) and total cost by county (Table 9). We apply Table 7 to each system's connection count, then scale so the statewide total equals the state's $${fmtN(c.official_total_musd)}M. Costs are <b>modelled</b>, not quotes. The shown range is the state's own 0.5×–2× convention.</p>
+      <div class="note ${c.spearman_county > 0.8 ? "good" : ""}"><b>Calibration test against the state's county totals (58 counties).</b> Rank correlation ${c.spearman_county}, Pearson ${c.pearson_county}. The county-level typical error is large: median absolute error ${c.median_abs_pct_error_county_ge10M}% for counties with ≥$10M, log-ratio spread ${c.log_ratio_sd_county}. The raw model came out ${(c.raw_total_musd / c.official_total_musd).toFixed(2)}× the state total (${fmtN(c.raw_total_musd)}M vs ${fmtN(c.official_total_musd)}M) before scaling. Stored stability is available only for compatible controls; run current cost scenarios otherwise.</div>
       ${routesData ? (() => { const rs = routesData.summary, f = rs.by_status.Failing, a = rs.by_status["At-Risk"]; return `
       <h3>Infrastructure routing (consolidation)</h3>
       <p>Following the state's physical-consolidation method, a Failing system with 1,000 or fewer connections (At-Risk: 500 or fewer) is connected to the largest healthy community system within 3 miles that has more than 500 connections. Pipeline is costed at $220 per foot plus $6,200 per connection for service lines, $5,437 per connection in fees, 15% administration, CEQA ($25k adjacent, $100k route), 20% contingency, 10% planning, 15% engineering and 3.1% inflation. A route is viable if it passes the state's funding test ($96,000 per connection, or $7.2M total for systems of 75 connections or fewer).</p>
@@ -379,12 +399,12 @@
         return `
       <h3>Model comparison</h3>
       <p><b>How models were compared.</b> Stage 1 has about ${fmtN(s1.n_rows)} system-years, so it supports a real search: ${s1.candidates.length} candidates (tuned gradient boosting, random forests, extra trees, regularised logistic regression, and an ensemble) were tuned on forward-chaining validation (train on earlier years, validate on 2021, 2022, 2023). The test years 2024 and 2025 were scored afterwards and played no part in choosing. Chosen: <b>${esc(s1.chosen.replace(/_/g, " "))}</b>.</p>
-      <div class="scroll"><table><thead><tr><th>Stage 1 candidate (top 10 by validation)</th><th class="num">Validation AUC</th><th class="num">Validation avg precision</th><th class="num">Test AUC</th><th class="num">Test avg precision</th></tr></thead><tbody>
+      <div class="scroll"><table><thead><tr><th>Stage 1 candidate (top 10 by validation)</th><th class="num">Validation AUC</th><th class="num">Validation avg precision</th><th class="num">Diagnostic AUC</th><th class="num">Diagnostic avg precision</th></tr></thead><tbody>
         ${top1.map((c) => `<tr><td>${esc(c.name.replace(/_/g, " "))}${c.name === s1.chosen ? " ✓" : ""}</td><td class="num">${f4(c.val.auc)}</td><td class="num">${f4(c.val.ap)}</td><td class="num">${f4(c.test.auc)}</td><td class="num">${f4(c.test.ap)}</td></tr>`).join("")}
         <tr><td><i>Baseline: count of past health violations</i></td><td class="num">–</td><td class="num">–</td><td class="num">${f4(Object.values(s1.baseline_violation_count_test_auc).reduce((x, y) => x + y, 0) / 2)}</td><td class="num">–</td></tr></tbody></table></div>
       <p><b>Calibration:</b> the ensemble's raw scores differ from observed levels (test mean prediction ${pct(s1.calibration["2025"].mean_pred_raw, 1)} vs observed ${pct(s1.calibration["2025"].observed_rate, 1)}), because several members are class-weighted. An isotonic map fitted on the 2021 to 2023 validation years only cuts the Brier score from ${s1.calibration["2025"].brier_raw} to ${s1.calibration["2025"].brier_calibrated} on 2025 (mean prediction ${pct(s1.calibration["2025"].mean_pred_calibrated, 1)}). It is applied to the violation estimate shown for each system. These folds also select configurations, so calibration evidence is not nested.</p>
       <p><b>Stage 2 (a system becomes Failing).</b> Only ${forecast.metrics.train_positives} training onsets, so models were compared by repeated 5-fold cross-validation on the 2024 to 2025 transition, then scored diagnostically on the already-examined 2025 to 2026 snapshots. Within-year cross-validation does not establish transfer between years. Stage-1 forecasts for four violation types (health-based, any, monitoring and reporting, MCL) feed a small stacked logistic model alongside the trees. Chosen: <b>${esc(s2.chosen.replace(/_/g, " "))}</b>.</p>
-      <div class="scroll"><table><thead><tr><th>Stage 2 candidate (top 10 by cross-validation)</th><th class="num">CV AUC</th><th class="num">Test AUC</th><th class="num">Test avg precision</th></tr></thead><tbody>
+      <div class="scroll"><table><thead><tr><th>Stage 2 candidate (top 10 by cross-validation)</th><th class="num">CV AUC</th><th class="num">Diagnostic AUC</th><th class="num">Diagnostic avg precision</th></tr></thead><tbody>
         ${top2.map((c) => `<tr><td>${esc(c.name.replace(/_/g, " "))}</td><td class="num">${f4(c.cv.auc)}</td><td class="num">${f4(c.test.auc)}</td><td class="num">${f4(c.test.ap)}</td></tr>`).join("")}
         <tr><td><b>Ensemble of the best of each family</b></td><td class="num">${f4(s2.ensemble.cv.auc)}</td><td class="num">${f4(s2.ensemble.test.auc)}</td><td class="num">${f4(s2.ensemble.test.ap)}</td></tr>
         ${s2.baselines.map((b) => `<tr><td><i>Baseline: ${esc(b.name.replace(/_/g, " "))}</i></td><td class="num">${f4(b.cv.auc)}</td><td class="num">${f4(b.test.auc)}</td><td class="num">${f4(b.test.ap)}</td></tr>`).join("")}</tbody></table></div>
@@ -404,7 +424,7 @@
       ${m.sources ? `<details class="grp"><summary>All ${m.sources.length} downloaded sources</summary><ul>${m.sources.map((s) => `<li><b>${esc(s.name)}</b> (${esc(s.owner || "")}): ${esc(s.desc || "")}${s.ok ? "" : " <i>(download failed)</i>"}</li>`).join("")}</ul></details>` : ""}`; })() : ""}
       ${gis ? (() => { const t = gis.stats; return `
       <h3>Spatial analysis (GIS)</h3>
-      <p><b>Clustering.</b> Failing systems are spatially clustered: Moran's I = ${t.morans_i_failing} (random would be about 0), permutation p = ${t.morans_p_permutation_999}, ${t.radius_km} km neighbourhoods, ${fmtN(t.n_systems)} systems. The clustering is statistically clear but weak. <b>Hotspots.</b> Getis-Ord Gi* on people served by Failing or At-Risk systems flags ${t.hotspots_p05} systems at p&lt;0.05 and ${t.hotspots_p01} at p&lt;0.01 (rings on the map; not corrected for multiple testing). <b>Hubs.</b> ${t.hubs_with_3plus} healthy systems could each absorb three or more at-risk neighbours; see the Hubs tab.</p>`; })() : ""}
+      <p><b>Clustering.</b> Failing systems are spatially clustered: Moran's I = ${t.morans_i_failing} (random would be about 0), permutation p = ${t.morans_p_permutation_999}, ${t.radius_km} km neighbourhoods, ${fmtN(t.n_systems)} systems. The clustering is statistically clear but weak. <b>Hotspots.</b> Getis-Ord Gi* on people served by Failing or At-Risk systems flags ${t.hotspots_p05} systems at p&lt;0.05 and ${t.hotspots_p01} at p&lt;0.01 (rings on the map; not corrected for multiple testing). <b>Hubs.</b> ${t.hubs_with_3plus} healthy systems are modeled as potential receivers for three or more at-risk neighbours; capacity is unverified and; see the Hubs tab.</p>`; })() : ""}
       <h3>Stress test</h3>
       <p>${summary.n_scenarios} scenarios. In each, costs are multiplied by a county-level error drawn from the observed county errors above and a per-system lognormal error (σ ${summary.sigma_system}), and the equity weight (0–2) and the forecast horizon (1–10 years) are redrawn. The optimizer is re-run at $100M, $250M, $500M, $1B and $2B. Stability is the share of scenarios in which a system is funded, not a probability of successful remediation. Stored scenarios use no small-system reserve, routes off and a cost multiplier of 1.</p>
       <h3>Optimizer versus a status-first process</h3>
@@ -432,12 +452,12 @@
       </ul>
       <h3>Prior work, and what is different here</h3>
       <ul>
-        <li><a href="https://www.waterboards.ca.gov/drinking_water/certlic/drinkingwater/saferdashboard.html">State Water Board SAFER Dashboard</a>: shows status and risk. No budget, no cost-per-person, no optimization.</li>
-        <li><a href="https://waterboards.ca.gov/drinking_water/certlic/drinkingwater/needs.html">State Needs Assessment and Cost Assessment</a>: estimates statewide and county totals. Does not publish per-system costs as data or rank by reach per dollar.</li>
-        <li><a href="https://pacinst.org/publication/drinking-water-cost-assessment-gap-analysis/">Pacific Institute et al., Cost Assessment and Gap Analysis</a>: costs and funding gaps. Not an interactive allocation tool.</li>
-        <li><a href="https://phys.org/news/2022-07-framework-prioritizing-investment.amp">Wayne State and University of Michigan prioritization framework (2022)</a>: a decision framework for prioritizing water systems, not California-specific and without a budget optimizer.</li>
+        <li><a href="https://www.waterboards.ca.gov/drinking_water/certlic/drinkingwater/saferdashboard.html">State Water Board SAFER Dashboard</a>: reference for status and risk information.</li>
+        <li><a href="https://waterboards.ca.gov/drinking_water/certlic/drinkingwater/needs.html">State Needs Assessment and Cost Assessment</a>: reference for the cost tables used here.</li>
+        <li><a href="https://pacinst.org/publication/drinking-water-cost-assessment-gap-analysis/">Pacific Institute et al., Cost Assessment and Gap Analysis</a>: background on costs and funding gaps.</li>
+        <li><a href="https://phys.org/news/2022-07-framework-prioritizing-investment.amp">Wayne State and University of Michigan prioritization framework (2022)</a>: an inherited reference lead, not a verified current comparison.</li>
       </ul>
-      <div class="note good"><b>What Xylem adds:</b> an exact budget-constrained optimizer over the state's own data; a per-system cost model calibrated and tested against the state's county totals; an uncertainty layer so a funder sees how stable each choice is; and an explicit view of who the optimizer leaves out. We searched for a tool combining these and did not find one; two searches are not proof of absence.</div>`;
+      <div class="note good"><b>What Xylem adds:</b> a budget allocation prototype using rounded modeled costs and explicit priority rules, sensitivity checks, and a view of systems left out. These references are not an exhaustive current review; no unique or first-of-kind claim is established.</div>`;
     return el;
   }
 
@@ -470,12 +490,17 @@
     return el;
   }
   const TABS = { plan: tabPlan, spot: tabSpot, hubs: tabHubs, left: tabLeft, county: tabCounty, method: tabMethod, gaps: tabGaps };
-  function drawTab() { const b = $("#tabbody"); b.innerHTML = ""; b.appendChild(TABS[st.tab]()); }
+  function drawTab() {
+    const b = $("#tabbody"); b.innerHTML = ""; b.appendChild(TABS[st.tab]());
+    document.querySelectorAll("[data-tab]").forEach(button => { const selected = button.dataset.tab === st.tab; button.classList.toggle("on", selected); button.setAttribute("aria-selected", String(selected)); button.tabIndex = selected ? 0 : -1; if (selected) b.setAttribute("aria-label", button.textContent); });
+  }
 
   // ---------- wiring ----------
   function syncLabels() {
+    document.querySelectorAll("[data-val]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.val === st.v)));
+    for (const [id, text] of Object.entries({budget: fmtM(st.b * 1e6), lam: st.l.toFixed(1), res: pct(st.r), mul: st.m.toFixed(2) + " times", hor: st.h + " years (exploratory)", arw: pct(st.a)})) $("#" + id).setAttribute("aria-valuetext", text);
     $("#budgetLabel").textContent = fmtM(st.b * 1e6);
-    $("#budgetHint").textContent = `Range $${BMIN}M to ${fmtM(totalCost)} (everything)`;
+    $("#budgetHint").textContent = `Range $${BMIN}M to ${fmtM(totalCost)} (maximum preset)`;
     $("#lamLabel").textContent = st.l.toFixed(1); $("#horLabel").textContent = st.h + " yr"; $("#arwLabel").textContent = pct(st.a);
     $("#horWrap").hidden = st.v !== "fc"; $("#arwWrap").hidden = st.v === "fc";
     document.querySelectorAll("[data-val]").forEach((x) => x.classList.toggle("on", x.dataset.val === st.v)); $("#resLabel").textContent = (st.r ? "+" : "") + pct(st.r); $("#mulLabel").textContent = st.m.toFixed(2) + "×";
@@ -485,7 +510,11 @@
     history.replaceState(null, "", "#" + p.toString());
   }
   let timer = null;
-  function update() { syncLabels(); clearTimeout(timer); timer = setTimeout(() => { run(); kpis(); restyle(); drawTab(); writeHash(); }, 60); }
+  function commitUpdate() { clearTimeout(timer); timer = null; run(); kpis(); restyle(); drawTab(); writeHash(); if (sel3 >= 0) showDetail(sel3); }
+  function update() {
+    scenarioGeneration++; scen = null; $("#scenOut").textContent = "Controls changed. Run cost scenarios for this plan.";
+    syncLabels(); clearTimeout(timer); timer = setTimeout(commitUpdate, 60);
+  }
 
   $("#budget").value = budgetToPos(st.b);
   $("#lam").value = st.l; $("#arw").value = st.a; $("#res").value = st.r; $("#mul").value = st.m;
@@ -500,7 +529,14 @@
   document.querySelectorAll("[data-color]").forEach((b) => b.addEventListener("click", () => {
     st.color = b.dataset.color; document.querySelectorAll("[data-color]").forEach((x) => x.classList.toggle("on", x === b)); restyle(); }));
   document.querySelectorAll("[data-tab]").forEach((b) => b.addEventListener("click", () => {
+    if (timer !== null) commitUpdate();
     st.tab = b.dataset.tab; document.querySelectorAll("[data-tab]").forEach((x) => x.classList.toggle("on", x === b)); drawTab(); }));
+  $(".tabs").addEventListener("keydown", e => {
+    const tabs = [...document.querySelectorAll("[data-tab]")], current = tabs.indexOf(document.activeElement);
+    if (current < 0 || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+    e.preventDefault(); const next = e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : (current + (e.key === "ArrowRight" ? 1 : -1) + tabs.length) % tabs.length;
+    tabs[next].click(); tabs[next].focus();
+  });
   $("#poly").addEventListener("change", (e) => { st.poly = e.target.checked; if (st.poly) polyGroup.addTo(map); else map.removeLayer(polyGroup); });
   $("#hor").value = st.h;
   $("#hor").addEventListener("input", (e) => { st.h = +e.target.value; update(); });
@@ -512,23 +548,23 @@
   $("#hub").addEventListener("change", (e) => { st.hubs = e.target.checked; if (st.hubs) hubGroup.addTo(map); else map.removeLayer(hubGroup); });
   $("#export").addEventListener("click", () => {
     // Flush pending control changes so the display and CSV describe one plan.
-    clearTimeout(timer); run(); kpis(); restyle(); drawTab(); writeHash();
+    commitUpdate();
     const q = (x) => `"${String(x == null ? "" : x).replace(/"/g, '""')}"`;
     const head = ["water_system_id", "name", "county", "status", "people", "connections", "cost_usd", "cost_per_person", "solution", "snapshot_probability", "allocation_weight", "forecast_source", "stability_pct", "economic_status", "hotspot_z"];
     const rows = plan.chosen.map((i) => { const s = systems[i];
-      return [s.id, s.name, s.county, s.failing ? "Failing" : "At-Risk", s.pop, s.conn, Math.round(s.cost), Math.round(s.cost / s.pop),
+      return [s.id, s.name, s.county, s.failing ? "Failing" : "At-Risk", s.pop, s.conn, s.cost, Math.round(s.cost / s.pop),
         viaRoute[i] ? `Consolidate into ${RT[s.id].receiver_name}` : "Modelled average",
         s.pf == null ? "" : s.pf, s.failing ? 1 : st.v === "fc" ? 1 - Math.pow(1 - s.pf, st.h) : st.a, s.forecast_source, plan.stabOK ? Math.round(s.p[plan.stabK] * 100) : "", s.dac, gis && gis.z[s.id] !== undefined ? gis.z[s.id] : ""].map(q).join(","); });
-    const blob = new Blob([`# Snapshot ${snapshot.id}; diagnostic snapshot estimates; annual failure probabilities and constant-annual-risk horizon conversion unvalidated.\n# Xylem placement plan: budget ${fmtM(st.b * 1e6)}, equity ${st.l}, ${st.v === "fc" ? "forecast horizon " + st.h + " yr" : "fixed At-Risk share " + pct(st.a)}, small-system reserve ${pct(st.r)}, routes ${st.c}, cost multiplier ${st.m}; stability uses stored no-reserve/no-route scenarios\n`, head.join(",") + "\n" + rows.join("\n")], { type: "text/csv" });
+    const blob = new Blob([`# Budget_USD ${st.b * 1e6}; selected_systems ${plan.chosen.length}; modeled_people ${plan.people}; modeled_cost_usd ${plan.spent}; scenario ${new URLSearchParams({b:st.b,l:st.l,h:st.h,v:st.v,a:st.a,r:st.r,c:st.c,m:st.m})}; stability_budget_musd ${plan.stabOK ? plan.stabBudget : "unavailable"}\n# Snapshot ${snapshot.id}; diagnostic snapshot estimates; annual failure probabilities and constant-annual-risk horizon conversion unvalidated.\n# Xylem placement plan: budget ${fmtM(st.b * 1e6)}, equity ${st.l}, ${st.v === "fc" ? "forecast horizon " + st.h + " yr" : "fixed At-Risk share " + pct(st.a)}, small-system reserve ${pct(st.r)}, routes ${st.c}, cost multiplier ${st.m}; stability ${plan.stabOK ? "stored at " + plan.stabBudget + "M, no reserve/routes, multiplier 1" : "unavailable for these controls"}; reach is modeled population, not measured intervention benefit; costs modeled; routes approximate\n`, head.join(",") + "\n" + rows.join("\n")], { type: "text/csv" });
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "xylem-placement-plan.csv"; a.click(); URL.revokeObjectURL(a.href);
   });
   $("#cons").checked = !!st.c;
   $("#cons").addEventListener("change", (e) => { st.c = e.target.checked ? 1 : 0; update(); });
-  $("#routes").addEventListener("change", (e) => { st.routes = e.target.checked; drawRoutes(); });
+  $("#routes").addEventListener("change", (e) => { st.routes = e.target.checked; restyle(); });
   $("#reset").addEventListener("click", () => {
     Object.assign(st, DEF); $("#mul").value = st.m; $("#hor").value = st.h; $("#cons").checked = false; $("#budget").value = budgetToPos(st.b); $("#lam").value = st.l; $("#arw").value = st.a; $("#res").value = st.r; update(); });
   $("#copy").addEventListener("click", async () => {
-    writeHash(); try { await navigator.clipboard.writeText(location.href); $("#copyMsg").textContent = "Link copied. It reproduces this scenario."; }
+    commitUpdate(); try { await navigator.clipboard.writeText(location.href); $("#copyMsg").textContent = "Link copied. It reproduces this scenario."; }
     catch (e) { $("#copyMsg").textContent = "Copy the address bar to share this scenario."; }
     setTimeout(() => ($("#copyMsg").textContent = ""), 3000); });
 
@@ -557,7 +593,8 @@
 
   polyGroup.addTo(map);
   syncLabels(); run(); kpis(); restyle(); drawTab();
-  Xylem3D.mount($("#map3d"), data3d());
+  setView("3d");
+  Xylem3D.mount($("#map3d"), data3d()).catch(error => { mapStatus("3D map unavailable. Switched to the 2D map; allocations and CSV remain available."); setView("2d"); console.warn(error); });
   window.__xylem = { st, map, routeGroup, viaRoute, get plan() { return plan; }, systems, summary };
 })().catch(error => {
   document.querySelector("#snap").textContent = "Snapshot could not be loaded: " + error.message;

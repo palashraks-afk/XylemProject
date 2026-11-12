@@ -1,0 +1,22 @@
+{
+  "XylemEvaluation": {
+    "status": true,
+    "tracked_diff": true,
+    "untracked_hashes": true
+  },
+  "XylemProject": {
+    "status": true,
+    "tracked_diff": true,
+    "untracked_hashes": true
+  },
+  "preview": {
+    "head": "7e3b6d9a6b38e6cfed2fea1ee1a102caeb9dd008",
+    "status": "",
+    "raw_hashes_verified": 335
+  },
+  "validation": {
+    "head": "946881dd3f8ad1635598d51401b3e2a2246170ca",
+    "status": "",
+    "raw_hashes_verified": 335
+  }
+}

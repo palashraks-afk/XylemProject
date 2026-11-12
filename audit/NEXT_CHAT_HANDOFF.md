@@ -1,3 +1,5 @@
+> Release QA completion: the California v1 candidate is complete in the isolated `XylemRelease` checkout. Start with [RELEASE_REVIEW.md](RELEASE_REVIEW.md), [DEMO_REVIEW.md](DEMO_REVIEW.md), [../SETUP.md](../SETUP.md), and [PUSH_HANDOFF.md](PUSH_HANDOFF.md). The user has now explicitly authorized committing and pushing this candidate to `main`. This does not authorize a PR, deployment, publication or outreach. Pages remains manual-only. The older handoff below is historical.
+
 > Local integration completion: the two tasks below are completed in this isolated preview checkout. See [APP_REFRESH_REPORT.md](APP_REFRESH_REPORT.md) for current paths, hashes, checks and reproduction, and [allocation-comparison/README.md](allocation-comparison/README.md) for the 55-plan comparison. The original handoff below records the pre-refresh state; its statements about stale app data are historical. The user subsequently authorized committing and pushing this completed work. PR creation, deployment and other publication still require separate authorization; Pages remains manual-only.
 
 # Handoff: finish Xylem app integration and claims cleanup

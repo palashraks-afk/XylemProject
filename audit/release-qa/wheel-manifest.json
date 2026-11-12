@@ -1,0 +1,156 @@
+[
+  {
+    "file": "certifi-2026.10.23-py3-none-any.whl",
+    "name": "certifi",
+    "version": "2026.10.23",
+    "bytes": 135082,
+    "sha256": "e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1"
+  },
+  {
+    "file": "cloudpickle-3.1.2-py3-none-any.whl",
+    "name": "cloudpickle",
+    "version": "3.1.2",
+    "bytes": 22228,
+    "sha256": "9acb47f6afd73f60dc1df93bb801b472f05ff42fa6c84167d25cb206be1fbf4a"
+  },
+  {
+    "file": "colorama-0.4.6-py2.py3-none-any.whl",
+    "name": "colorama",
+    "version": "0.4.6",
+    "bytes": 25335,
+    "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
+  },
+  {
+    "file": "et_xmlfile-2.0.0-py3-none-any.whl",
+    "name": "et_xmlfile",
+    "version": "2.0.0",
+    "bytes": 18059,
+    "sha256": "7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa"
+  },
+  {
+    "file": "iniconfig-2.3.1-py3-none-any.whl",
+    "name": "iniconfig",
+    "version": "2.3.1",
+    "bytes": 7552,
+    "sha256": "9121e2c1fdb355232495be3194c8dfe87ccc2d5dee45947b78e68f499790d7a7"
+  },
+  {
+    "file": "joblib-1.6.0-py3-none-any.whl",
+    "name": "joblib",
+    "version": "1.6.0",
+    "bytes": 306115,
+    "sha256": "3dbbf9f6e4b592a2357b854608e980fe6390d131d7a82f011a377ef2ebef7aba"
+  },
+  {
+    "file": "narwhals-2.28.0-py3-none-any.whl",
+    "name": "narwhals",
+    "version": "2.28.0",
+    "bytes": 490591,
+    "sha256": "1f69d6385ec30e2fa6e1fdeb37c562ecabd0f713f6f3e3b58a668c5c9df9567f"
+  },
+  {
+    "file": "numpy-2.3.5-cp312-cp312-win_amd64.whl",
+    "name": "numpy",
+    "version": "2.3.5",
+    "bytes": 12782922,
+    "sha256": "86945f2ee6d10cdfd67bcb4069c1662dd711f7e2a4343db5cecec06b87cf31aa"
+  },
+  {
+    "file": "openpyxl-3.1.5-py2.py3-none-any.whl",
+    "name": "openpyxl",
+    "version": "3.1.5",
+    "bytes": 250910,
+    "sha256": "5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2"
+  },
+  {
+    "file": "packaging-26.3-py3-none-any.whl",
+    "name": "packaging",
+    "version": "26.3",
+    "bytes": 129956,
+    "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"
+  },
+  {
+    "file": "pandas-3.0.1-cp312-cp312-win_amd64.whl",
+    "name": "pandas",
+    "version": "3.0.1",
+    "bytes": 9741627,
+    "sha256": "536232a5fe26dd989bd633e7a0c450705fdc86a207fec7254a55e9a22950fe43"
+  },
+  {
+    "file": "pillow-13.0.0-cp312-cp312-win_amd64.whl",
+    "name": "pillow",
+    "version": "13.0.0",
+    "bytes": 7272166,
+    "sha256": "ff3fe9eb621fbb9db4c4be33ab946f6bac5f98ab50ca8d3260503653656c961b"
+  },
+  {
+    "file": "pluggy-1.7.0-py3-none-any.whl",
+    "name": "pluggy",
+    "version": "1.7.0",
+    "bytes": 27082,
+    "sha256": "7dd7b0d8832ba3cb632c306926ded123429211b83641b35dc5c41ad2d34f9bec"
+  },
+  {
+    "file": "pygments-2.21.0-py3-none-any.whl",
+    "name": "Pygments",
+    "version": "2.21.0",
+    "bytes": 1250147,
+    "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9"
+  },
+  {
+    "file": "pyproj-3.8.0-cp312-cp312-win_amd64.whl",
+    "name": "pyproj",
+    "version": "3.8.0",
+    "bytes": 6714045,
+    "sha256": "0556ce011e1530aea2084a12e39dc9c6ccd25a16c1db5457f39bf83161e7c301"
+  },
+  {
+    "file": "pytest-9.2.0-py3-none-any.whl",
+    "name": "pytest",
+    "version": "9.2.0",
+    "bytes": 411776,
+    "sha256": "07acdcf88ec174f907dc01af70bf52d49b014bbab03faeeade31c96b18c2e588"
+  },
+  {
+    "file": "python_dateutil-4.0.0-py3-none-any.whl",
+    "name": "python-dateutil",
+    "version": "4.0.0",
+    "bytes": 92853,
+    "sha256": "a5e246f79eb80475e691bf93862cead98decd8a498cf53ba0516fcdc0f50dc1c"
+  },
+  {
+    "file": "scikit_learn-1.9.1-cp312-cp312-win_amd64.whl",
+    "name": "scikit-learn",
+    "version": "1.9.1",
+    "bytes": 8262238,
+    "sha256": "4b59abb30618121cc46b45972d6bf53a7128b4df4cd346c6ca6f4d5f9031e49c"
+  },
+  {
+    "file": "scipy-1.18.1-cp312-cp312-win_amd64.whl",
+    "name": "scipy",
+    "version": "1.18.1",
+    "bytes": 36658278,
+    "sha256": "5e4d44984abc0020154ea81b247adeddcc3ac5527b975ff798bd1ba0adc513c2"
+  },
+  {
+    "file": "shapely-2.2.0-cp312-cp312-win_amd64.whl",
+    "name": "shapely",
+    "version": "2.2.0",
+    "bytes": 1791280,
+    "sha256": "90895df6542ae039fc6557dec6194e3509e883fbd6f5788e3c3e7a38fe46b257"
+  },
+  {
+    "file": "threadpoolctl-3.8.0-py3-none-any.whl",
+    "name": "threadpoolctl",
+    "version": "3.8.0",
+    "bytes": 32091,
+    "sha256": "f1b49c82704d50f13ffae019c727b0fa4f6791a58f48f06a09c45face1be66da"
+  },
+  {
+    "file": "tzdata-2026.6-py2.py3-none-any.whl",
+    "name": "tzdata",
+    "version": "2026.6",
+    "bytes": 348210,
+    "sha256": "0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec"
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "generated_utc": "2026-11-12T07:21:05.989777+00:00",
+  "base_commit": "7e3b6d9a6b38e6cfed2fea1ee1a102caeb9dd008",
+  "branch": "release/california-v1-qa",
+  "model_pipeline_data_workflow_unchanged": true,
+  "evaluated_hashes_verified": 367,
+  "raw_files_verified": 335,
+  "snapshot_id": "806032f64da14561b81c55e72179ec22f299774fa97b9b5f08c4742909f9c0bd",
+  "browser_checks": {
+    "unique_checks": 40,
+    "passed": 40,
+    "unresolved_failures": 0
+  },
+  "independent_csv_reproductions": 40,
+  "python_tests": "121 passed; audit/release-qa/tests-final.log",
+  "optimizer_parity_cases": 110,
+  "delivery_files": 370,
+  "delivery_manifest_sha256": "d80e0591d5e94340ecd311eb19b6e0ef6c0ff4ff28cd2c37d39946740b77aad3",
+  "review_archive": "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\xylem-california-v1-push-final.zip",
+  "review_archive_bytes": 34264648,
+  "review_archive_sha256": "0e678c1dc7c25d82fcd27a974dae6f176a1b6e45d7ffdc26a086cc3a5cb20963",
+  "review_archive_note": "Code, docs, saved results and QA evidence; no Git database, virtual environments or ignored large raw inputs. Full setup should use a Git clone plus the separate preserved-input ZIP/wheelhouse.",
+  "input_archive": {
+    "archive": "..\\preserved-inputs.zip",
+    "files": 335,
+    "bytes": 148701354,
+    "sha256": "234aef98d32fdb157de07b8771c8c50a63cca9d8223790a79af91ce45aab68d7"
+  },
+  "remote_actions": "none; no push, PR, deployment, publication or outreach",
+  "unverified": [
+    "full clean model-training rerun",
+    "physical phones, Safari/Firefox and screen readers",
+    "practitioner usefulness",
+    "validated annual or multi-year failure probabilities"
+  ]
+}

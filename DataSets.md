@@ -7,7 +7,7 @@
 | 2024 Cost Assessment | Same page (`2024costassessment.pdf`) | Tables 7 and 9 transcribed to `data/cost_tables.json` |
 | Water system service-area boundaries | [State Water Board REST layer](https://gispublic.waterboards.ca.gov/portalserver/rest/services/Drinking_Water/California_Drinking_Water_System_Area_Boundaries/MapServer) | Map polygons, simplified |
 
-The state does not publish per-system remediation costs as data. See `README.md` for how costs are modelled.
+Per-system project quotes are not part of the preserved inputs. See `README.md` for how costs are modelled.
 
 Prior-year files (2024, 2025 risk and affordability workbooks, same page) feed the failure forecast. `consol.pdf` is the state's physical-consolidation methodology, the source of the routing unit costs. County outlines: [plotly/datasets](https://github.com/plotly/datasets) (US Census cartographic boundaries). The three large risk workbooks are not committed; `pipeline/fetch_data.py` downloads them.
 
@@ -45,7 +45,7 @@ Historical forecast use follows `pipeline/HISTORICAL_FEATURES.md`: retain dated 
 
 OpenStreetMap infrastructure (`pipeline/fetch_infrastructure.py`): canals, aqueducts, treatment plants and water towers, ODbL. Terrain: AWS Terrain Tiles (SRTM, GMTED). Imagery on the 3D map: Esri World Imagery and Sentinel-2 cloudless by EOX. Buildings: OpenStreetMap via OpenFreeMap.
 
-Not found: no published dataset of actual drinking-water project costs, so the cost model is still calibrated only to the state's 2024 Cost Assessment tables.
+No actual project-cost dataset is included in this preserved snapshot; the cost model uses the state's 2024 Cost Assessment tables. This does not establish that no such data exists elsewhere.
 
 ## Controlled reproduction
 

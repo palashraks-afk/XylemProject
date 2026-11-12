@@ -1,0 +1,1135 @@
+{
+  "started": "2026-11-12T06:59:26.453Z",
+  "checks": [
+    {
+      "name": "chrome default 100M CSV/display",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 100,
+          "l": 1,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0,
+          "c": 0,
+          "m": 1,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 20,
+        "people": 171738,
+        "cost": 97767799,
+        "small": 9,
+        "stabilityAvailable": true
+      }
+    },
+    {
+      "name": "chrome default 250M CSV/display",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 250,
+          "l": 1,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0,
+          "c": 0,
+          "m": 1,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 51,
+        "people": 310205,
+        "cost": 243243460,
+        "small": 24,
+        "stabilityAvailable": true
+      }
+    },
+    {
+      "name": "chrome default 500M CSV/display",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 500,
+          "l": 1,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0,
+          "c": 0,
+          "m": 1,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 97,
+        "people": 476663,
+        "cost": 487919470,
+        "small": 48,
+        "stabilityAvailable": true
+      }
+    },
+    {
+      "name": "chrome default 1000M CSV/display",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 1000,
+          "l": 1,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0,
+          "c": 0,
+          "m": 1,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 196,
+        "people": 941150,
+        "cost": 976592934,
+        "small": 128,
+        "stabilityAvailable": true
+      }
+    },
+    {
+      "name": "chrome default 2000M CSV/display",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 2000,
+          "l": 1,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0,
+          "c": 0,
+          "m": 1,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 409,
+        "people": 1600548,
+        "cost": 1950137982,
+        "small": 301,
+        "stabilityAvailable": true
+      }
+    },
+    {
+      "name": "chrome minimum and maximum budgets",
+      "status": "PASS",
+      "evidence": {
+        "low": {
+          "controls": {
+            "b": 25,
+            "l": 1,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 8,
+          "people": 58705,
+          "cost": 24126616,
+          "small": 5,
+          "stabilityAvailable": false
+        },
+        "high": {
+          "controls": {
+            "b": 5385,
+            "l": 1,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 1043,
+          "people": 1929926,
+          "cost": 5250709894,
+          "small": 915,
+          "stabilityAvailable": false
+        }
+      }
+    },
+    {
+      "name": "chrome equity reserve routing cost fixed combinations",
+      "status": "PASS",
+      "evidence": [
+        {
+          "controls": {
+            "b": 500,
+            "l": 2,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0.3,
+            "c": 1,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 114,
+          "people": 394101,
+          "cost": 485850493,
+          "small": 72,
+          "stabilityAvailable": false
+        },
+        {
+          "controls": {
+            "b": 500,
+            "l": 3,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0.6,
+            "c": 1,
+            "m": 2,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 89,
+          "people": 214907,
+          "cost": 490100572,
+          "small": 78,
+          "stabilityAvailable": false
+        },
+        {
+          "controls": {
+            "b": 500,
+            "l": 0,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 0.55,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 172,
+          "people": 743189,
+          "cost": 478241750.24999976,
+          "small": 112,
+          "stabilityAvailable": false
+        },
+        {
+          "controls": {
+            "b": 500,
+            "l": 1,
+            "h": 5,
+            "v": "fixed",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 54,
+          "people": 966559,
+          "cost": 493070597,
+          "small": 17,
+          "stabilityAvailable": false
+        },
+        {
+          "controls": {
+            "b": 25,
+            "l": 1,
+            "h": 5,
+            "v": "fixed",
+            "a": 1,
+            "r": 0.6,
+            "c": 1,
+            "m": 0.5,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 32,
+          "people": 85926,
+          "cost": 20105065.5,
+          "small": 30,
+          "stabilityAvailable": false
+        },
+        {
+          "controls": {
+            "b": 2000,
+            "l": 2,
+            "h": 10,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 415,
+          "people": 1651792,
+          "cost": 1949556932,
+          "small": 300,
+          "stabilityAvailable": true
+        }
+      ]
+    },
+    {
+      "name": "chrome rapid control changes then immediate export",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 500,
+          "l": 3,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0.3,
+          "c": 0,
+          "m": 0.55,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 162,
+        "people": 824357,
+        "cost": 479676231.0999997,
+        "small": 98,
+        "stabilityAvailable": false
+      }
+    },
+    {
+      "name": "chrome cost scenarios complete and cancel on changed controls",
+      "status": "PASS",
+      "evidence": {
+        "complete": "3 of 8 funded systems were chosen in at least 80% of 40 scenarios. Open a system to see its count.",
+        "cancelled": "Controls changed. Run cost scenarios for this plan."
+      }
+    },
+    {
+      "name": "chrome selected detail refresh and fixed-share popup",
+      "status": "FAIL",
+      "error": "AssertionError [ERR_ASSERTION]: Expected \"actual\" to be strictly unequal to:\n\n'×\\n' +\n  'CA0105009 · ALAMEDA COUNTY\\n' +\n  'Mountain House School\\n' +\n  'At-Risk · 50 people served · 1 connections · Miss/Indet\\n' +\n  'In this plan\\n' +\n  'Not selected\\n' +\n  'Estimated cost\\n' +\n  '$0.2M\\n' +\n  'Illustrative cost range\\n' +\n  '$0.1M–$0.3M\\n' +\n  'Weighted priority score\\n' +\n  '12\\n' +\n  'Diagnostic violation estimate (unvalidated)\\n' +\n  '0%\\n' +\n  'Selected when costs vary\\n' +\n  '0% of stress tests\\n' +\n  'Consolidate intoCity Of Mountain House\\n' +\n  'Route1.53 mi · $3.6M ($3,602,251/conn)\\n' +\n  \"Meets the state's funding viability test\"\n\n    at C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\tests\\release_browser.cjs:76:149\n    at async check (C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\tests\\release_browser.cjs:13:49)\n    at async C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\tests\\release_browser.cjs:72:3"
+    },
+    {
+      "name": "chrome keyboard controls tabs sort and inspect",
+      "status": "PASS",
+      "evidence": {
+        "rangeName": "Funding budget",
+        "valueText": "$535M",
+        "focus": {
+          "outline": "solid",
+          "width": "3px"
+        }
+      }
+    },
+    {
+      "name": "chrome map colors synchronize and routes agree",
+      "status": "PASS",
+      "evidence": {
+        "on": {
+          "two": 1,
+          "three": 1
+        },
+        "off": {
+          "two": 0,
+          "three": 0
+        }
+      }
+    },
+    {
+      "name": "chrome invalid shared controls normalize",
+      "status": "PASS",
+      "evidence": {
+        "b": 500,
+        "l": 0,
+        "h": 5,
+        "v": "fc",
+        "a": 0.1,
+        "r": 0.6,
+        "c": 0,
+        "m": 1,
+        "color": "plan",
+        "poly": true,
+        "tab": "plan",
+        "routes": true,
+        "shade": "none",
+        "hot": false,
+        "hubs": false
+      }
+    },
+    {
+      "name": "chrome desktop screenshot and map load",
+      "status": "PASS",
+      "evidence": {
+        "canvas": 1,
+        "status": "",
+        "allocationFeatures": 1062,
+        "allBackgroundRequestsIdle": true
+      }
+    },
+    {
+      "name": "chrome mobile 390px and 320px layout and export",
+      "status": "PASS",
+      "evidence": [
+        {
+          "width": 390,
+          "scrollWidth": 390
+        },
+        {
+          "width": 320,
+          "scrollWidth": 320
+        },
+        {
+          "controls": {
+            "b": 100,
+            "l": 2,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0.3,
+            "c": 1,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 47,
+          "people": 152124,
+          "cost": 94010649,
+          "small": 39,
+          "stabilityAvailable": false
+        }
+      ]
+    },
+    {
+      "name": "chrome uncaught browser errors",
+      "status": "PASS",
+      "evidence": {
+        "errors": [],
+        "failedRequests": []
+      }
+    },
+    {
+      "name": "msedge default 100M CSV/display",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 100,
+          "l": 1,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0,
+          "c": 0,
+          "m": 1,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 20,
+        "people": 171738,
+        "cost": 97767799,
+        "small": 9,
+        "stabilityAvailable": true
+      }
+    },
+    {
+      "name": "msedge default 250M CSV/display",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 250,
+          "l": 1,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0,
+          "c": 0,
+          "m": 1,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 51,
+        "people": 310205,
+        "cost": 243243460,
+        "small": 24,
+        "stabilityAvailable": true
+      }
+    },
+    {
+      "name": "msedge default 500M CSV/display",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 500,
+          "l": 1,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0,
+          "c": 0,
+          "m": 1,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 97,
+        "people": 476663,
+        "cost": 487919470,
+        "small": 48,
+        "stabilityAvailable": true
+      }
+    },
+    {
+      "name": "msedge default 1000M CSV/display",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 1000,
+          "l": 1,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0,
+          "c": 0,
+          "m": 1,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 196,
+        "people": 941150,
+        "cost": 976592934,
+        "small": 128,
+        "stabilityAvailable": true
+      }
+    },
+    {
+      "name": "msedge default 2000M CSV/display",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 2000,
+          "l": 1,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0,
+          "c": 0,
+          "m": 1,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 409,
+        "people": 1600548,
+        "cost": 1950137982,
+        "small": 301,
+        "stabilityAvailable": true
+      }
+    },
+    {
+      "name": "msedge minimum and maximum budgets",
+      "status": "PASS",
+      "evidence": {
+        "low": {
+          "controls": {
+            "b": 25,
+            "l": 1,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 8,
+          "people": 58705,
+          "cost": 24126616,
+          "small": 5,
+          "stabilityAvailable": false
+        },
+        "high": {
+          "controls": {
+            "b": 5385,
+            "l": 1,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 1043,
+          "people": 1929926,
+          "cost": 5250709894,
+          "small": 915,
+          "stabilityAvailable": false
+        }
+      }
+    },
+    {
+      "name": "msedge equity reserve routing cost fixed combinations",
+      "status": "PASS",
+      "evidence": [
+        {
+          "controls": {
+            "b": 500,
+            "l": 2,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0.3,
+            "c": 1,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 114,
+          "people": 394101,
+          "cost": 485850493,
+          "small": 72,
+          "stabilityAvailable": false
+        },
+        {
+          "controls": {
+            "b": 500,
+            "l": 3,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0.6,
+            "c": 1,
+            "m": 2,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 89,
+          "people": 214907,
+          "cost": 490100572,
+          "small": 78,
+          "stabilityAvailable": false
+        },
+        {
+          "controls": {
+            "b": 500,
+            "l": 0,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 0.55,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 172,
+          "people": 743189,
+          "cost": 478241750.24999976,
+          "small": 112,
+          "stabilityAvailable": false
+        },
+        {
+          "controls": {
+            "b": 500,
+            "l": 1,
+            "h": 5,
+            "v": "fixed",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 54,
+          "people": 966559,
+          "cost": 493070597,
+          "small": 17,
+          "stabilityAvailable": false
+        },
+        {
+          "controls": {
+            "b": 25,
+            "l": 1,
+            "h": 5,
+            "v": "fixed",
+            "a": 1,
+            "r": 0.6,
+            "c": 1,
+            "m": 0.5,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 32,
+          "people": 85926,
+          "cost": 20105065.5,
+          "small": 30,
+          "stabilityAvailable": false
+        },
+        {
+          "controls": {
+            "b": 2000,
+            "l": 2,
+            "h": 10,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 415,
+          "people": 1651792,
+          "cost": 1949556932,
+          "small": 300,
+          "stabilityAvailable": true
+        }
+      ]
+    },
+    {
+      "name": "msedge rapid control changes then immediate export",
+      "status": "PASS",
+      "evidence": {
+        "controls": {
+          "b": 500,
+          "l": 3,
+          "h": 5,
+          "v": "fc",
+          "a": 0.5,
+          "r": 0.3,
+          "c": 0,
+          "m": 0.55,
+          "color": "plan",
+          "poly": true,
+          "tab": "plan",
+          "routes": true,
+          "shade": "none",
+          "hot": false,
+          "hubs": false
+        },
+        "systems": 162,
+        "people": 824357,
+        "cost": 479676231.0999997,
+        "small": 98,
+        "stabilityAvailable": false
+      }
+    },
+    {
+      "name": "msedge cost scenarios complete and cancel on changed controls",
+      "status": "PASS",
+      "evidence": {
+        "complete": "3 of 8 funded systems were chosen in at least 80% of 40 scenarios. Open a system to see its count.",
+        "cancelled": "Controls changed. Run cost scenarios for this plan."
+      }
+    },
+    {
+      "name": "msedge selected detail refresh and fixed-share popup",
+      "status": "PASS",
+      "evidence": {
+        "id": "CA0105009",
+        "before": "×\nCA0105009 · ALAMEDA COUNTY\nMountain House School\nAt-Risk · 50 people served · 1 connections · Miss/Indet\nIn this plan\nNot selected\nEstimated cost\n$0.2M\nIllustrative cost range\n$0.1M–$0.3M\nWeighted priority score\n12\nDiagnostic violation estimate (unvalidated)\n0%\nSelected when costs vary\n0% of stress tests\nConsolidate intoCity Of Mountain House\nRoute1.53 mi · $3.6M ($3,602,251/conn)\nMeets the state's funding viability test",
+        "after": "×\nCA0105009 · ALAMEDA COUNTY\nMountain House School\nAt-Risk · 50 people served · 1 connections · Miss/Indet\nIn this plan\nNot selected\nEstimated cost\n$0.3M\nIllustrative cost range\n$0.2M–$0.7M\nWeighted priority score\n12\nDiagnostic violation estimate (unvalidated)\n0%\nSelected when costs vary\nrun the scenarios\nConsolidate intoCity Of Mountain House\nRoute1.53 mi · $3.6M ($3,602,251/conn)\nMeets the state's funding viability test",
+        "popup": "Mountain House School\nAlameda County · At-Risk · Miss/Indet\nPeople served\n50\nConnections\n1\nModelled cost\n$0.3M ($0.2M–$0.7M)\nCost per person\n$6,885\nIn plan\nNo\nFunded in\nunavailable for these controls\nFunding since 2017\nYes\nFixed At-Risk share\n50%\nAnnual and multi-year risk unvalidated; constant annual risk assumed for forecast weights.\nHotspot score (25 km)\n-0.8\nConsolidate into\nCity Of Mountain House\nRoute\n1.53 mi · $3.6M ($3,602,251/conn)\nMeets the state's funding viability test"
+      }
+    },
+    {
+      "name": "msedge keyboard controls tabs sort and inspect",
+      "status": "PASS",
+      "evidence": {
+        "rangeName": "Funding budget",
+        "valueText": "$535M",
+        "focus": {
+          "outline": "solid",
+          "width": "3px"
+        }
+      }
+    },
+    {
+      "name": "msedge map colors synchronize and routes agree",
+      "status": "PASS",
+      "evidence": {
+        "on": {
+          "two": 1,
+          "three": 1
+        },
+        "off": {
+          "two": 0,
+          "three": 0
+        }
+      }
+    },
+    {
+      "name": "msedge invalid shared controls normalize",
+      "status": "PASS",
+      "evidence": {
+        "b": 500,
+        "l": 0,
+        "h": 5,
+        "v": "fc",
+        "a": 0.1,
+        "r": 0.6,
+        "c": 0,
+        "m": 1,
+        "color": "plan",
+        "poly": true,
+        "tab": "plan",
+        "routes": true,
+        "shade": "none",
+        "hot": false,
+        "hubs": false
+      }
+    },
+    {
+      "name": "msedge desktop screenshot and map load",
+      "status": "PASS",
+      "evidence": {
+        "canvas": 1,
+        "status": "",
+        "allocationFeatures": 1062,
+        "allBackgroundRequestsIdle": true
+      }
+    },
+    {
+      "name": "msedge mobile 390px and 320px layout and export",
+      "status": "PASS",
+      "evidence": [
+        {
+          "width": 390,
+          "scrollWidth": 390
+        },
+        {
+          "width": 320,
+          "scrollWidth": 320
+        },
+        {
+          "controls": {
+            "b": 100,
+            "l": 2,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0.3,
+            "c": 1,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 47,
+          "people": 152124,
+          "cost": 94010649,
+          "small": 39,
+          "stabilityAvailable": false
+        }
+      ]
+    },
+    {
+      "name": "msedge uncaught browser errors",
+      "status": "PASS",
+      "evidence": {
+        "errors": [],
+        "failedRequests": []
+      }
+    },
+    {
+      "name": "failure all-external-offline",
+      "status": "PASS",
+      "evidence": {
+        "status": "2D basemap unavailable. Saved system boundaries, allocations and CSV export remain available.",
+        "csv": {
+          "controls": {
+            "b": 500,
+            "l": 1,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 97,
+          "people": 476663,
+          "cost": 487919470,
+          "small": 48,
+          "stabilityAvailable": true
+        }
+      }
+    },
+    {
+      "name": "failure style-failure",
+      "status": "PASS",
+      "evidence": {
+        "status": "3D map style unavailable. Switched to 2D; allocations and CSV remain available.",
+        "csv": {
+          "controls": {
+            "b": 500,
+            "l": 1,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 97,
+          "people": 476663,
+          "cost": 487919470,
+          "small": 48,
+          "stabilityAvailable": true
+        }
+      }
+    },
+    {
+      "name": "failure missing-3d-library",
+      "status": "PASS",
+      "evidence": {
+        "status": "3D map library unavailable. The 2D map, allocations and CSV remain available.",
+        "csv": {
+          "controls": {
+            "b": 500,
+            "l": 1,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 97,
+          "people": 476663,
+          "cost": 487919470,
+          "small": 48,
+          "stabilityAvailable": true
+        }
+      }
+    },
+    {
+      "name": "failure webgl-unavailable",
+      "status": "PASS",
+      "evidence": {
+        "status": "3D graphics unavailable. Switched to 2D; allocations and CSV remain available.",
+        "csv": {
+          "controls": {
+            "b": 500,
+            "l": 1,
+            "h": 5,
+            "v": "fc",
+            "a": 0.5,
+            "r": 0,
+            "c": 0,
+            "m": 1,
+            "color": "plan",
+            "poly": true,
+            "tab": "plan",
+            "routes": true,
+            "shade": "none",
+            "hot": false,
+            "hubs": false
+          },
+          "systems": 97,
+          "people": 476663,
+          "cost": 487919470,
+          "small": 48,
+          "stabilityAvailable": true
+        }
+      }
+    },
+    {
+      "name": "failure mixed-snapshot",
+      "status": "PASS",
+      "evidence": {
+        "text": "Snapshot could not be loaded: Snapshot hash mismatch: systems.json"
+      }
+    }
+  ],
+  "browsers": [
+    {
+      "channel": "chrome",
+      "version": "157.0.8103.78"
+    },
+    {
+      "channel": "msedge",
+      "version": "119.0.2151.72"
+    }
+  ],
+  "limitations": [
+    "Mobile viewport/touch emulation only; physical iOS/Safari and screen readers not tested."
+  ],
+  "finished": "2026-11-12T07:01:57.693Z",
+  "summary": {
+    "passed": 36,
+    "failed": 1
+  }
+}

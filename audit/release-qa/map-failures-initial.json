@@ -1,0 +1,27 @@
+[
+  {
+    "mode": "stalled-style",
+    "status": "PASS",
+    "message": "3D map style unavailable. Switched to 2D; allocations and CSV remain available.",
+    "elapsedMs": 13064,
+    "state": {
+      "systems": 97,
+      "people": 476663
+    }
+  },
+  {
+    "mode": "stalled-tiles",
+    "status": "PASS",
+    "message": "3D map tiles are taking too long. Switched to 2D; allocations and CSV remain available.",
+    "elapsedMs": 21113,
+    "state": {
+      "systems": 97,
+      "people": 476663
+    }
+  },
+  {
+    "mode": "imagery-failure",
+    "status": "FAIL",
+    "error": "page.waitForFunction: Timeout 30000ms exceeded.\n    at C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\tests\\release_map_failures.cjs:17:20"
+  }
+]

@@ -197,4 +197,14 @@ def test_saved_result_hashes_match_supplied_inputs_code_and_prediction_exports()
     root = Path(__file__).resolve().parents[1]
     result = json.loads((root/'data/planner_evaluation.json').read_text(encoding='utf-8'))
     for path, expected in {**result['input_and_code_hashes'], **result['output_hashes']}.items():
-        assert hashlib.sha256((root/path).read_bytes()).hexdigest() == expected, path
+        checked_path = root/path
+        if path == 'app/app.js':
+            # This non-model presentation source changed after the frozen diagnostic.
+            # Check BOTH the original evaluated bytes and the current release bytes.
+            receipt = json.loads((root/'audit/release-qa/presentation-provenance.json').read_text())
+            assert receipt['path'] == path
+            assert receipt['archived_path'] == 'audit/release-baseline/app.js'
+            assert receipt['archived_sha256'] == expected
+            assert hashlib.sha256(checked_path.read_bytes()).hexdigest() == receipt['current_sha256']
+            checked_path = root/receipt['archived_path']
+        assert hashlib.sha256(checked_path.read_bytes()).hexdigest() == expected, path

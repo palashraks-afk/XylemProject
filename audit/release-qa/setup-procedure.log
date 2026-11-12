@@ -1,0 +1,70 @@
+Looking in links: c:\Users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\certifi-2026.10.23-py3-none-any.whl (from -r requirements-reproduction.txt (line 2))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\cloudpickle-3.1.2-py3-none-any.whl (from -r requirements-reproduction.txt (line 3))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\colorama-0.4.6-py2.py3-none-any.whl (from -r requirements-reproduction.txt (line 4))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\et_xmlfile-2.0.0-py3-none-any.whl (from -r requirements-reproduction.txt (line 5))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\iniconfig-2.3.1-py3-none-any.whl (from -r requirements-reproduction.txt (line 6))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\joblib-1.6.0-py3-none-any.whl (from -r requirements-reproduction.txt (line 7))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\narwhals-2.28.0-py3-none-any.whl (from -r requirements-reproduction.txt (line 8))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\numpy-2.3.5-cp312-cp312-win_amd64.whl (from -r requirements-reproduction.txt (line 9))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\openpyxl-3.1.5-py2.py3-none-any.whl (from -r requirements-reproduction.txt (line 10))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\packaging-26.3-py3-none-any.whl (from -r requirements-reproduction.txt (line 11))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\pandas-3.0.1-cp312-cp312-win_amd64.whl (from -r requirements-reproduction.txt (line 12))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\pillow-13.0.0-cp312-cp312-win_amd64.whl (from -r requirements-reproduction.txt (line 13))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\pluggy-1.7.0-py3-none-any.whl (from -r requirements-reproduction.txt (line 14))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\pygments-2.21.0-py3-none-any.whl (from -r requirements-reproduction.txt (line 15))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\pyproj-3.8.0-cp312-cp312-win_amd64.whl (from -r requirements-reproduction.txt (line 16))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\pytest-9.2.0-py3-none-any.whl (from -r requirements-reproduction.txt (line 17))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\python_dateutil-4.0.0-py3-none-any.whl (from -r requirements-reproduction.txt (line 18))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\scikit_learn-1.9.1-cp312-cp312-win_amd64.whl (from -r requirements-reproduction.txt (line 19))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\scipy-1.18.1-cp312-cp312-win_amd64.whl (from -r requirements-reproduction.txt (line 20))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\shapely-2.2.0-cp312-cp312-win_amd64.whl (from -r requirements-reproduction.txt (line 21))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\threadpoolctl-3.8.0-py3-none-any.whl (from -r requirements-reproduction.txt (line 22))
+Processing c:\users\sai71\.codex\visualizations\2026\11\12\01a1ce77-724c-75d3-8916-457d3d586b04\release-work\wheelhouse\tzdata-2026.6-py2.py3-none-any.whl (from -r requirements-reproduction.txt (line 23))
+Installing collected packages: tzdata, threadpoolctl, Pygments, pluggy, pillow, packaging, numpy, narwhals, iniconfig, et_xmlfile, colorama, cloudpickle, certifi, shapely, scipy, python-dateutil, pytest, pyproj, openpyxl, joblib, scikit-learn, pandas
+Successfully installed Pygments-2.21.0 certifi-2026.10.23 cloudpickle-3.1.2 colorama-0.4.6 et_xmlfile-2.0.0 iniconfig-2.3.1 joblib-1.6.0 narwhals-2.28.0 numpy-2.3.5 openpyxl-3.1.5 packaging-26.3 pandas-3.0.1 pillow-13.0.0 pluggy-1.7.0 pyproj-3.8.0 pytest-9.2.0 python-dateutil-4.0.0 scikit-learn-1.9.1 scipy-1.18.1 shapely-2.2.0 threadpoolctl-3.8.0 tzdata-2026.6
+No broken requirements found.
+{
+  "destination": "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease",
+  "verified_files": 335
+}
+{
+  "snapshot_id": "806032f64da14561b81c55e72179ec22f299774fa97b9b5f08c4742909f9c0bd",
+  "data_files": 10,
+  "vendor_files": 6,
+  "result": "PASS"
+}
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "executable": "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\.venv\\Scripts\\python.exe",
+  "prefix": "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\.venv",
+  "base_prefix": "C:\\Users\\sai71\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python",
+  "sys_path": [
+    "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\pipeline",
+    "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\tools",
+    "C:\\Users\\sai71\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.zip",
+    "C:\\Users\\sai71\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\DLLs",
+    "C:\\Users\\sai71\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib",
+    "C:\\Users\\sai71\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python",
+    "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\.venv",
+    "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\.venv\\Lib\\site-packages"
+  ],
+  "versions": {
+    "numpy": "2.3.5",
+    "pandas": "3.0.1",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "openpyxl": "3.1.5"
+  },
+  "feature_fingerprint": "adadd344e5b8b679e3249220903e05306a5ea8db194eb0961521c61b34edffff",
+  "historical_panel_rows": 31740,
+  "historical_panel_columns": 49,
+  "artifact_guards": "PASS",
+  "model_fit": "not rerun; frozen results reused"
+}
+........................................................................ [ 59%]
+.................................................                        [100%]
+121 passed in 13.62s
+{"matched":110}
+Verified frozen results and feature generation. Full model training was not rerun.
+Serve app: .venv/Scripts/python.exe -m http.server 8885 --bind 127.0.0.1 --directory app

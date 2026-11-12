@@ -1,22 +1,16 @@
-# Prior work and what is new
+# Contribution and prior-work limits
 
-Searched 2026-11-02 (web search; two to four queries, so absence of a match is not proof). Closest existing work first.
+Xylem combines a California allocation model, visible priority controls, saved geographic context, sensitivity checks and inspectable CSV exports. This release does not establish a unique, first-of-kind or scientifically superior method. The previous small web search dated 2026-11-02 was not an exhaustive literature/product review; its negative feature claims about other tools should not be repeated as verified current facts.
 
-| Work | What it does | What it does not do |
-|---|---|---|
-| [State Water Board SAFER Dashboard](https://www.waterboards.ca.gov/drinking_water/certlic/drinkingwater/saferdashboard.html) | Shows Failing / At-Risk status and risk-assessment results | No budget, no cost per person, no optimization |
-| [State Needs Assessment and Cost Assessment](https://waterboards.ca.gov/drinking_water/certlic/drinkingwater/needs.html) | Estimates statewide and county costs of solutions | Per-system costs are not published as data; no ranking by reach per dollar |
-| [Pacific Institute et al., Cost Assessment and Gap Analysis](https://pacinst.org/publication/drinking-water-cost-assessment-gap-analysis/) | Costs and funding gaps for the SAFER program | Report, not an interactive allocation tool |
-| [Wayne State / University of Michigan framework, 2022](https://phys.org/news/2022-07-framework-prioritizing-investment.amp) | Decision framework combining water quality with community attributes | Not California-specific; no budget-constrained optimizer |
-| [UCLA Prop 1 equity report](https://www.ioes.ucla.edu/wp-content/uploads/Press-Release-on-UCLA-Prop-1-Implementation-and-Equity-Report.pdf) | Evaluates whether bond funding reached disadvantaged communities | After-the-fact evaluation, not planning |
+The demonstrated contribution is the inspectable combination:
 
-## What Xylem adds
+1. Budget decisions under modeled population × status weight × equity priorities. Without a reserve, dynamic programming is exact after rounding costs upward to $250,000 units. Reserve mode uses two sequential optimizations and has no global-optimality claim.
+2. Per-system estimates derived from state cost averages and statewide scaling, with county discrepancies disclosed. These are not actual project quotes or independently validated system costs.
+3. Stored 200-scenario selection frequencies and interactive 40-cost-scenario checks. These describe sensitivity to assumptions, not a probability of intervention success.
+4. A view of Failing systems left unfunded, along with exportable membership, effective costs and the chosen weights.
 
-1. An exact budget-constrained optimizer over the state's own data, so a funder can ask "what does $X buy".
-2. A per-system cost model built from the state's published averages and tested against its county totals, with the error reported.
-3. A stability layer: how often each system is still funded when costs and weights vary.
-4. An explicit "who is left out" view, so the cost-effectiveness trade-off is not hidden.
+The state data, cost averages, equity indicators and boundaries are external inputs. Knapsack optimization and the model families are established methods. The saved snapshot comparisons are diagnostic; they do not establish prospective forecast performance or measured intervention benefit. California is the only implemented geography.
 
-## What is not new
+Inherited reference leads include the [SAFER Dashboard](https://www.waterboards.ca.gov/drinking_water/certlic/drinkingwater/saferdashboard.html), [State Needs Assessment](https://waterboards.ca.gov/drinking_water/certlic/drinkingwater/needs.html), and [Pacific Institute Cost Assessment and Gap Analysis](https://pacinst.org/publication/drinking-water-cost-assessment-gap-analysis/). They are context, not a refreshed competitive feature matrix. A publication claiming novelty needs a separate current review of official tools, optimization literature and practitioner workflows.
 
-The SAFER status data, the cost averages, the equity indicators and the service-area boundaries all come from the State Water Board. The knapsack formulation is standard. The contribution is the combination and the honest uncertainty, not any single ingredient.
+See [release evidence](audit/RELEASE_REVIEW.md), [the demo](audit/DEMO_REVIEW.md) and [forecast limitations](PLANNER_EVALUATION.md).

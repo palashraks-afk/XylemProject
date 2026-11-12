@@ -1,0 +1,29 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "executable": "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\independent-env\\Scripts\\python.exe",
+  "prefix": "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\independent-env",
+  "base_prefix": "C:\\Users\\sai71\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python",
+  "sys_path": [
+    "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\pipeline",
+    "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\XylemRelease\\tools",
+    "C:\\Users\\sai71\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python312.zip",
+    "C:\\Users\\sai71\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\DLLs",
+    "C:\\Users\\sai71\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\Lib",
+    "C:\\Users\\sai71\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python",
+    "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\independent-env",
+    "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ce77-724c-75d3-8916-457d3d586b04\\release-work\\independent-env\\Lib\\site-packages"
+  ],
+  "versions": {
+    "numpy": "2.3.5",
+    "pandas": "3.0.1",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "openpyxl": "3.1.5"
+  },
+  "feature_fingerprint": "adadd344e5b8b679e3249220903e05306a5ea8db194eb0961521c61b34edffff",
+  "historical_panel_rows": 31740,
+  "historical_panel_columns": 49,
+  "artifact_guards": "PASS",
+  "model_fit": "not rerun; frozen results reused",
+  "independent_panel_matches_preserved_cache_exactly": true
+}

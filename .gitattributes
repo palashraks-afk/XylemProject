@@ -25,3 +25,9 @@
 /audit/** -text whitespace=cr-at-eol
 # Archived diffs are verbatim evidence, including their original whitespace.
 /audit/prior/*.patch -whitespace
+
+# Preserve exact bytes for the release setup and vendored-library manifests.
+/app/vendor/** -text whitespace=cr-at-eol
+/tools/** -text whitespace=cr-at-eol
+/setup.ps1 -text whitespace=cr-at-eol
+/requirements-reproduction.txt -text whitespace=cr-at-eol

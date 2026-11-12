@@ -1,0 +1,8 @@
+{
+  "matched_rgb_tiles": 304,
+  "original_pillow": "13.0.0",
+  "independent_pillow": "13.0.0",
+  "original_wheel_sha256": "0f1c69883f86ba2015c9fb4edc29ba6d6ab919e501e2f01841a0195e52cdf924",
+  "independent_wheel_sha256": "ff3fe9eb621fbb9db4c4be33ab946f6bac5f98ab50ca8d3260503653656c961b",
+  "note": "Different wheel builds; all preserved terrain RGB pixels and the rebuilt historical feature panel match exactly."
+}

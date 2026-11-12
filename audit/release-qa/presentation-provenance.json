@@ -1,0 +1,7 @@
+{
+  "reason": "Presentation-only release fixes. Frozen diagnostic results and every model/scoring input retain their original bytes. The original evaluated app source remains hash-checked; the active UI is additionally checked below. No diagnostic result was fitted or selected again.",
+  "path": "app/app.js",
+  "archived_path": "audit/release-baseline/app.js",
+  "archived_sha256": "f8fd829fc3bb4d057ccb39ca0d4c8a167133e6e60a2b4d7f43717ff52753c4ca",
+  "current_sha256": "e09012687b481f64ab897a9caf05a83eb721f27c3512828ddacf20a9f87dfc60"
+}

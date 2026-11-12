@@ -2,6 +2,10 @@
 
 **A California water-funding planning prototype. Choose a budget and equity rules to explore which Failing and At-Risk systems an allocation model selects.** Reach and costs are modeled; selected systems' populations are not measured intervention benefit.
 
+## Release candidate review
+
+Start with [SETUP.md](SETUP.md) for the verified static preview and independent environment procedure, [release review](audit/RELEASE_REVIEW.md) for QA evidence and blockers, and [demonstration](audit/DEMO_REVIEW.md) for the walkthrough and practitioner checklist. The user subsequently authorized committing and pushing this reviewed candidate; see [push handoff](audit/PUSH_HANDOFF.md). Deployment remains manual and requires separate authorization.
+
 ## Local preview and reproduction
 
 The local app data is refreshed under `historical-event-time-v2`. The old app bytes are preserved in `audit/app-before/`; [allocation comparison](audit/allocation-comparison/README.md) retains 55 old/new plans, complete selected-ID sets, membership changes, costs and scenario stability. [Refresh report](audit/APP_REFRESH_REPORT.md) records hashes, environment, checks and the local preview.
@@ -29,7 +33,7 @@ GitHub Pages is manual-only (`workflow_dispatch`). After local review, the user 
 
 ## How the planner works
 
-- **Objective:** sum of population × status weight × (1 + equity weight × equity index). Failing systems count in full. At-Risk systems use exploratory snapshot weights or a manual fixed share. The optimizer maximizes this weighted objective, not unweighted reach. Dynamic programming is exact after costs are rounded up to $250,000 units; Python and browser implementations are checked for parity.
+- **Objective:** sum of population × status weight × (1 + equity weight × equity index). Failing systems count in full. At-Risk systems use exploratory snapshot weights or a manual fixed share. The optimizer maximizes this weighted objective, not unweighted reach. Without a reserve, dynamic programming is exact after costs round up to $250,000 units. A reserve uses sequential small-system and remaining-budget optimizations; this is a priority rule, not a globally optimal reserve constraint. Python and browser implementations are checked for parity.
 - **Forecast:** five selected model families feed `planner_probabilities`. Member predictions are normalized over the full scoring population before outcome or At-Risk filtering, then passed through the frozen training-only map. Rank scores are distinct from these snapshot estimates. Current export refits base models on both assessment transitions; transfer of the frozen map to that refit is unvalidated. Missing At-Risk forecasts use the 2024→2025 training status rate, never the diagnostic outcome rate.
 - **Horizon:** `1-(1-p)^h` is an exploratory funding weight assuming constant annual risk. Annual failure probabilities and the multi-year conversion remain unvalidated. The horizon does not represent measured prevention benefit.
 - **Costs and equity:** modeled costs use 2024 Cost Assessment per-connection averages scaled to the $5.386B state total. Equity averages available DAC, environmental burden, affordability, poverty, social vulnerability and drinking-water indicators. Full-precision inputs are shared by Python and browser plans.

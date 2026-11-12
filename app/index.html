@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Xylem: California Water Funding Optimizer</title>
 <meta name="description" content="A placement map for water funding. Set a budget and an equity rule; explore modeled California allocations under weighted population and equity priorities, with uncertainty shown.">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css">
+<link rel="stylesheet" href="vendor/leaflet.css">
+<link rel="stylesheet" href="vendor/maplibre-gl.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="top">
   <div class="brand">
     <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 2.5c3.6 4.3 6 7.4 6 10.6A6 6 0 0 1 6 13.1C6 9.9 8.4 6.8 12 2.5z" fill="currentColor"/></svg>
-    <div><h1>Xylem</h1><p>A placement map for water funding: set a budget, see where it should go.</p></div>
+    <div><h1>Xylem</h1><p>A placement map for water funding: explore modeled California choices.</p></div>
   </div>
   <div class="snap" id="snap"></div>
 </header>
@@ -22,30 +22,30 @@
   <aside class="panel controls" aria-label="Scenario controls">
     <h2>Scenario</h2>
     <p class="hint">Forecast weights are diagnostic snapshot estimates. Annual failure probabilities and multi-year conversions remain unvalidated. Reach is modeled, not measured intervention benefit.</p>
-    <label class="ctl">
+    <div class="ctl">
       <span class="ctl-h">Funding budget <b id="budgetLabel"></b></span>
-      <input type="range" id="budget" min="0" max="100" step="1">
+      <input aria-label="Funding budget" type="range" id="budget" min="0" max="100" step="1">
       <span class="hint" id="budgetHint"></span>
       <div class="chips" aria-label="Budget presets">
-        <button type="button" data-preset="100">$100M</button><button type="button" data-preset="250">$250M</button><button type="button" data-preset="500">$500M</button><button type="button" data-preset="1000">$1B</button><button type="button" data-preset="2000">$2B</button><button type="button" data-preset="0">All</button>
+        <button type="button" data-preset="100">$100M</button><button type="button" data-preset="250">$250M</button><button type="button" data-preset="500">$500M</button><button type="button" data-preset="1000">$1B</button><button type="button" data-preset="2000">$2B</button><button type="button" data-preset="0">Max</button>
       </div>
-    </label>
-    <label class="ctl">
+    </div>
+    <div class="ctl">
       <span class="ctl-h">Equity priority <b id="lamLabel"></b></span>
-      <input type="range" id="lam" min="0" max="3" step="0.1">
+      <input aria-label="Equity priority" type="range" id="lam" min="0" max="3" step="0.1">
       <span class="hint">Give more weight to disadvantaged communities, affordability, poverty, and environmental burden. 0 removes the equity multiplier; status weights still apply.</span>
-    </label>
-    <label class="ctl">
+    </div>
+    <div class="ctl">
       <span class="ctl-h">Small-system priority <b id="resLabel"></b></span>
-      <input type="range" id="res" min="0" max="0.6" step="0.05">
+      <input aria-label="Small-system budget reserve" type="range" id="res" min="0" max="0.6" step="0.05">
       <span class="hint">Share of the budget held for systems with 500 connections or fewer, which a pure people-reached rule tends to skip.</span>
-    </label>
-    <label class="ctl">
+    </div>
+    <div class="ctl">
       <span class="ctl-h">Cost assumption <b id="mulLabel"></b></span>
-      <input type="range" id="mul" min="0.5" max="2" step="0.05">
+      <input aria-label="Cost assumption" type="range" id="mul" min="0.5" max="2" step="0.05">
       <span class="hint">Explore lower or higher remediation costs. These are planning estimates, not project quotes.</span>
       <div class="chips"><button type="button" id="eqZero">Equal population priority</button><button type="button" id="eqHigh">Emphasize equity</button></div>
-    </label>
+    </div>
     <div class="ctl test">
       <span class="eyebrow">Test the assumptions</span>
       <span class="hint">How often is each system selected when its estimated cost changes?</span>
@@ -61,12 +61,12 @@
       </div>
       <label id="horWrap" class="sub">
         <span class="ctl-h">Look-ahead <b id="horLabel"></b></span>
-        <input type="range" id="hor" min="1" max="10" step="1">
+        <input aria-label="Exploratory look-ahead" type="range" id="hor" min="1" max="10" step="1">
         <span class="hint">Exploratory weight: 1 − (1 − p)^h. Annual risk and this constant-annual-risk horizon conversion are unvalidated. Failing systems count in full.</span>
       </label>
       <label id="arwWrap" class="sub" hidden>
         <span class="ctl-h">At-Risk counts as <b id="arwLabel"></b> of Failing</span>
-        <input type="range" id="arw" min="0.1" max="1" step="0.05">
+        <input aria-label="Fixed At-Risk share" type="range" id="arw" min="0.1" max="1" step="0.05">
         <span class="hint">A manual discount. At-Risk is a risk score, not a confirmed violation.</span>
       </label>
     </details>
@@ -110,6 +110,7 @@
       <select id="spot" aria-label="County spotlight"><option value="">All California</option></select>
       <select id="colorSel" aria-label="Map colouring"><option value="plan">Funding plan</option><option value="status">Status</option><option value="stab">Stability</option></select>
     </div>
+    <p id="mapStatus" class="map-status" role="status" hidden></p>
     <div class="mapwrap">
       <div class="vt" role="group" aria-label="Map view"><button type="button" data-view="3d" class="on">3D terrain</button><button type="button" data-view="2d">2D map</button></div>
       <div id="map" hidden role="application" aria-label="Map of failing and at-risk water systems"></div>
@@ -117,7 +118,7 @@
       <div class="legend" id="legend" hidden></div>
     </div>
     <div id="detail" class="detail" hidden></div>
-    <div class="tabs" role="tablist">
+    <div class="tabs" role="tablist" aria-label="Plan information">
       <button role="tab" data-tab="plan" class="on">Funded plan</button>
       <button role="tab" data-tab="spot">Local view</button>
       <button role="tab" data-tab="hubs">Hubs</button>
@@ -126,13 +127,13 @@
       <button role="tab" data-tab="method">Method and tests</button>
       <button role="tab" data-tab="gaps">Gaps and prior work</button>
     </div>
-    <div id="tabbody" class="tabbody"></div>
+    <div id="tabbody" class="tabbody" role="tabpanel" aria-label="Funded plan"></div>
   </section>
 </main>
 <footer class="foot">Data: California State Water Resources Control Board (SAFER Risk Assessment 2024 to 2026, Affordability Assessment, 2024 Cost Assessment, service-area boundaries). Costs are modelled estimates, not quotes. <a href="https://github.com/palashraks-afk/XylemProject">Source</a></footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
+<script src="vendor/leaflet.js"></script>
+<script src="vendor/maplibre-gl.js"></script>
 <script src="optimizer.js"></script>
 <script src="map3d.js"></script>
 <script src="app.js"></script>

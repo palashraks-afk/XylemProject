@@ -1,0 +1,87 @@
+{
+  "cases": [
+    {
+      "name": "budget-decision",
+      "controls": {
+        "b": 500,
+        "l": 1,
+        "h": 5,
+        "v": "fc",
+        "a": 0.5,
+        "r": 0,
+        "c": 0,
+        "m": 1,
+        "color": "plan",
+        "poly": true,
+        "tab": "plan",
+        "routes": true,
+        "shade": "none",
+        "hot": false,
+        "hubs": false
+      },
+      "systems": 97,
+      "people": 476663,
+      "cost": 487919470,
+      "small": 48,
+      "dac": 368352,
+      "robust": 0.9587628865979382
+    },
+    {
+      "name": "small-system-tradeoff",
+      "controls": {
+        "b": 500,
+        "l": 1,
+        "h": 5,
+        "v": "fc",
+        "a": 0.5,
+        "r": 0.3,
+        "c": 0,
+        "m": 1,
+        "color": "plan",
+        "poly": true,
+        "tab": "plan",
+        "routes": true,
+        "shade": "none",
+        "hot": false,
+        "hubs": false
+      },
+      "systems": 112,
+      "people": 393742,
+      "cost": 486059328,
+      "small": 70,
+      "dac": 293966,
+      "robust": null
+    },
+    {
+      "name": "approximate-routes",
+      "controls": {
+        "b": 500,
+        "l": 2,
+        "h": 5,
+        "v": "fc",
+        "a": 0.5,
+        "r": 0.3,
+        "c": 1,
+        "m": 1,
+        "color": "plan",
+        "poly": true,
+        "tab": "plan",
+        "routes": true,
+        "shade": "none",
+        "hot": false,
+        "hubs": false
+      },
+      "systems": 114,
+      "people": 394101,
+      "cost": 485850493,
+      "small": 72,
+      "dac": 293554,
+      "robust": null
+    }
+  ],
+  "stability": {
+    "system": "CA0400014",
+    "summary": "81 of 97 funded systems were chosen in at least 80% of 40 scenarios. Open a system to see its count.",
+    "detail": "×\nCA0400014 · BUTTE COUNTY\nLake Madrone Water District\nFailing · 297 people served · 5 connections · DAC\nIn this plan\nSelected\nEstimated cost\n$0.5M\nIllustrative cost range\n$0.2M–$1.0M\nWeighted priority score\n446\nSelected when costs vary\n38 of 40 scenarios\nConsolidation: no receiving system within 3 miles"
+  }
+}
