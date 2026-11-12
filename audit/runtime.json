@@ -1,0 +1,11 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "executable": "C:\\Users\\sai71\\XylemEvaluation\\.venv\\Scripts\\python.exe",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "thread_limits": {
+    "OMP_NUM_THREADS": "2",
+    "OPENBLAS_NUM_THREADS": "2"
+  },
+  "full_environment": "environment-full.txt",
+  "note": "Bundled Pillow 13.0.0 was installed from a local runtime wheel; retain the existing environment if this build is unavailable from the package index."
+}

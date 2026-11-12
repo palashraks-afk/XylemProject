@@ -1,0 +1,270 @@
+{
+  "provenance": {
+    "feature_policy": "historical-event-time-v2",
+    "input_fingerprint": "c266901b0ef5e17c898b07fd8200c40899c8116861e45f87d39caf5421a33aaa",
+    "selection_sha256": "750b4992273ddc65ddbb709f5101f70ae59d04ca657c34f760b2b135bdc6648c",
+    "code_sha256": {
+      "ml.py": "ffc9b2e1f53a1455d905fdc25854ab5313acb5e425c817717d7ec2da06e5bdb8",
+      "planner_forecast.py": "b686cbba67c08b5a582cfe7ec95119ac17aa4f38998da34c70cc90ce9fc23554",
+      "calibrate_planner.py": "37fc05ed472ec977e9f4ad3146691e382771c3856b592fdcd99479d5bb7edb28"
+    }
+  },
+  "training_transition": [
+    2024,
+    2025
+  ],
+  "training_n": 2633,
+  "training_events": 68,
+  "target": "Assessment snapshot transition; annual failure calibration unverified",
+  "normalization_n": 2666,
+  "seed": 71,
+  "method": "logit_ridge",
+  "calibrator": {
+    "method": "logit_ridge",
+    "intercept": 2.1277405779605547,
+    "slope": 1.7441467362428626
+  },
+  "selection_rule": "Lowest mean outer-fold log loss; prefer identity, then intercept, then logit_ridge within 0.001 of minimum. No test-year inputs.",
+  "folds": {
+    "outer": 5,
+    "inner": 4,
+    "shuffle": true
+  },
+  "candidate_mean_log_loss": {
+    "identity": 0.09111903492236317,
+    "intercept": 0.09114624672213753,
+    "logit_ridge": 0.08607544109524778
+  },
+  "fold_scores": [
+    {
+      "identity": {
+        "log_loss": 0.0900222762214178,
+        "brier": 0.02297014265654649,
+        "mean_predicted": 0.025733965844402275,
+        "observed_rate": 0.026565464895635674
+      },
+      "intercept": {
+        "log_loss": 0.0900393357820722,
+        "brier": 0.02299622541682421,
+        "mean_predicted": 0.02533899951804656,
+        "observed_rate": 0.026565464895635674
+      },
+      "logit_ridge": {
+        "log_loss": 0.0833776710609956,
+        "brier": 0.022313098853940037,
+        "mean_predicted": 0.0255814151640987,
+        "observed_rate": 0.026565464895635674
+      }
+    },
+    {
+      "identity": {
+        "log_loss": 0.09531672402086973,
+        "brier": 0.023206832258064518,
+        "mean_predicted": 0.027689943074003798,
+        "observed_rate": 0.026565464895635674
+      },
+      "intercept": {
+        "log_loss": 0.09537554846700616,
+        "brier": 0.02316325757330019,
+        "mean_predicted": 0.028654855206114927,
+        "observed_rate": 0.026565464895635674
+      },
+      "logit_ridge": {
+        "log_loss": 0.09119574523576396,
+        "brier": 0.021959384108514616,
+        "mean_predicted": 0.030569083276175395,
+        "observed_rate": 0.026565464895635674
+      }
+    },
+    {
+      "identity": {
+        "log_loss": 0.0950795202207282,
+        "brier": 0.023050256470588237,
+        "mean_predicted": 0.024571157495256166,
+        "observed_rate": 0.026565464895635674
+      },
+      "intercept": {
+        "log_loss": 0.0950985161070452,
+        "brier": 0.02306473673947423,
+        "mean_predicted": 0.024363453048397078,
+        "observed_rate": 0.026565464895635674
+      },
+      "logit_ridge": {
+        "log_loss": 0.0917561624580354,
+        "brier": 0.021390774532484412,
+        "mean_predicted": 0.023911571734611083,
+        "observed_rate": 0.026565464895635674
+      }
+    },
+    {
+      "identity": {
+        "log_loss": 0.08966682780510447,
+        "brier": 0.021398348022813686,
+        "mean_predicted": 0.02647680608365019,
+        "observed_rate": 0.024714828897338403
+      },
+      "intercept": {
+        "log_loss": 0.08970463952199559,
+        "brier": 0.021376561560665704,
+        "mean_predicted": 0.02694804477366883,
+        "observed_rate": 0.024714828897338403
+      },
+      "logit_ridge": {
+        "log_loss": 0.08710737257201513,
+        "brier": 0.020079323689832323,
+        "mean_predicted": 0.028974840276467514,
+        "observed_rate": 0.024714828897338403
+      }
+    },
+    {
+      "identity": {
+        "log_loss": 0.08550982634369565,
+        "brier": 0.021423250399239542,
+        "mean_predicted": 0.024603992395437264,
+        "observed_rate": 0.024714828897338403
+      },
+      "intercept": {
+        "log_loss": 0.08551319373256851,
+        "brier": 0.021444054825699548,
+        "mean_predicted": 0.024305636659647703,
+        "observed_rate": 0.024714828897338403
+      },
+      "logit_ridge": {
+        "log_loss": 0.07694025414942887,
+        "brier": 0.02021564768727687,
+        "mean_predicted": 0.02276706339271981,
+        "observed_rate": 0.024714828897338403
+      }
+    }
+  ],
+  "fold_maps": [
+    {
+      "fold": 0,
+      "fit_n": 2106,
+      "fit_events": 54,
+      "validation_n": 527,
+      "validation_events": 14,
+      "maps": {
+        "identity": {
+          "method": "identity",
+          "slope": 1.0,
+          "intercept": 0.0
+        },
+        "intercept": {
+          "method": "intercept",
+          "intercept": -0.016571374561198005,
+          "slope": 1.0
+        },
+        "logit_ridge": {
+          "method": "logit_ridge",
+          "intercept": 1.7043779179346834,
+          "slope": 1.5864696377886107
+        }
+      }
+    },
+    {
+      "fold": 1,
+      "fit_n": 2106,
+      "fit_events": 54,
+      "validation_n": 527,
+      "validation_events": 14,
+      "maps": {
+        "identity": {
+          "method": "identity",
+          "slope": 1.0,
+          "intercept": 0.0
+        },
+        "intercept": {
+          "method": "intercept",
+          "intercept": 0.03666539751945036,
+          "slope": 1.0
+        },
+        "logit_ridge": {
+          "method": "logit_ridge",
+          "intercept": 1.8875087729975406,
+          "slope": 1.6238004517203986
+        }
+      }
+    },
+    {
+      "fold": 2,
+      "fit_n": 2106,
+      "fit_events": 54,
+      "validation_n": 527,
+      "validation_events": 14,
+      "maps": {
+        "identity": {
+          "method": "identity",
+          "slope": 1.0,
+          "intercept": 0.0
+        },
+        "intercept": {
+          "method": "intercept",
+          "intercept": -0.009052998880717002,
+          "slope": 1.0
+        },
+        "logit_ridge": {
+          "method": "logit_ridge",
+          "intercept": 2.071570149146602,
+          "slope": 1.7329855917151427
+        }
+      }
+    },
+    {
+      "fold": 3,
+      "fit_n": 2107,
+      "fit_events": 55,
+      "validation_n": 526,
+      "validation_events": 13,
+      "maps": {
+        "identity": {
+          "method": "identity",
+          "slope": 1.0,
+          "intercept": 0.0
+        },
+        "intercept": {
+          "method": "intercept",
+          "intercept": 0.018934737337842816,
+          "slope": 1.0
+        },
+        "logit_ridge": {
+          "method": "logit_ridge",
+          "intercept": 2.5125592376720487,
+          "slope": 1.8732482076725794
+        }
+      }
+    },
+    {
+      "fold": 4,
+      "fit_n": 2107,
+      "fit_events": 55,
+      "validation_n": 526,
+      "validation_events": 13,
+      "maps": {
+        "identity": {
+          "method": "identity",
+          "slope": 1.0,
+          "intercept": 0.0
+        },
+        "intercept": {
+          "method": "intercept",
+          "intercept": -0.012936509960853191,
+          "slope": 1.0
+        },
+        "logit_ridge": {
+          "method": "logit_ridge",
+          "intercept": 2.2118096665004905,
+          "slope": 1.77384292163113
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Within one training transition; not forward-year validation.",
+    "Base configurations selected using the entire training transition; model selection is not nested.",
+    "Few training onsets; no subgroup-specific calibration or isotonic fitting.",
+    "Assessment status reference dates and July stage-1 cutoffs differ; some outcomes precede nominal prediction cutoffs. Annual failure calibration is unverified.",
+    "Five-year conversion 1-(1-p)^5 assumes constant annual risk and is not validated.",
+    "Full scoring covariates determine member normalization, including systems with unknown outcomes."
+  ]
+}

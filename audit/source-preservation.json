@@ -1,0 +1,25 @@
+{
+  "XylemEvaluation": {
+    "branch": "evaluate/at-risk-planner",
+    "status_unchanged": true,
+    "tracked_diff_unchanged": true,
+    "current_untracked_hashes": {
+      "PLANNER_EVALUATION.md": "6bb37a896818722874652840a37feeaf8487338b2ff8000b944fdd11513b1b82",
+      "data/planner_evaluation.json": "6ebf741ee34de9ed00694b60e91588e29b99afe5fc3c5d0ef2473a89afa0c3fc",
+      "data/planner_test_predictions.csv": "0e175ae1b4a6ba6e72808b35e2f5ab29ae8fbfba28372770b30116bf397278db",
+      "pipeline/evaluate_planner.py": "9e6448032e558a02d6a49bbf79613fec4ba07b59811761cd3386b7e54399a55f",
+      "pipeline/planner_forecast.py": "6657d1a555f10956a48116ee0b5e64757ea0abac18efd9a74062877689958020",
+      "tests/test_planner_evaluation.py": "0ae74685de7ee6fc77b747ec0d1524a62bcad447814166a235440004ba05a4ff"
+    }
+  },
+  "XylemProject": {
+    "branch": "fix/historical-model-inputs",
+    "status_unchanged": true,
+    "tracked_diff_unchanged": true,
+    "current_untracked_hashes": {
+      "pipeline/HISTORICAL_FEATURES.md": "3d79b333efdabc5612ec48fe3cb0eaa7725f6afa278ffca6bae810e6f4b1ab46",
+      "pipeline/feature_policy.py": "0c6379573db5fddf9fff3b0b0671283c1b786ca178739169ab881e7f51ccd619",
+      "tests/test_temporal_features.py": "43833caebc67ce54fe51de35fff022f9d3ef2afa0abee9f4db518a87bb0701e7"
+    }
+  }
+}

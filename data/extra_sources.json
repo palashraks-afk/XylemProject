@@ -1,5 +1,5 @@
 {
- "fetched": "2026-11-03",
+ "fetched": "2026-11-11",
  "sources": [
   {
    "name": "sdwis_violation",
@@ -95,7 +95,7 @@
    "url": "https://publish.data.ca.gov/dataset/d3d441c4-2c9e-4bd6-8e85-77214e728959/resource/5ba2426e-744a-46e7-8632-961dbeec0112/download/audit_data_wl.csv",
    "file": "water_loss_audits.csv",
    "ok": true,
-   "bytes": 277635
+   "bytes": 277472
   },
   {
    "name": "small_system_shortage",
@@ -122,7 +122,7 @@
    "url": "https://data.cnra.ca.gov/dataset/2cf184d1-2d34-46cc-8bb0-1dec86b6caf6/resource/e1fd9f48-a613-4567-8042-3d2e064d77c8/download/householdwatersupplyshortagereportingsystemdata.csv",
    "file": "dry_wells.csv",
    "ok": true,
-   "bytes": 1558150
+   "bytes": 1560671
   },
   {
    "name": "sgma_priority",
@@ -181,7 +181,7 @@
    "name": "noaa_pcpncy",
    "desc": "County monthly precipitation",
    "owner": "NOAA NCEI nClimDiv",
-   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-pcpncy-v1.0.0-20261006",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-pcpncy-v1.0.0-20261105",
    "file": "noaa_pcpncy.txt",
    "ok": true
   },
@@ -189,7 +189,7 @@
    "name": "noaa_pdsicy",
    "desc": "County monthly Palmer Drought Severity Index",
    "owner": "NOAA NCEI nClimDiv",
-   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-pdsicy-v1.0.0-20261006",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-pdsicy-v1.0.0-20261105",
    "file": "noaa_pdsicy.txt",
    "ok": true
   },
@@ -197,7 +197,7 @@
    "name": "noaa_tmpccy",
    "desc": "County monthly mean temperature",
    "owner": "NOAA NCEI nClimDiv",
-   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-tmpccy-v1.0.0-20261006",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-tmpccy-v1.0.0-20261105",
    "file": "noaa_tmpccy.txt",
    "ok": true
   },
@@ -208,7 +208,7 @@
    "url": "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters/FeatureServer/0/query",
    "file": "nifc_fires.json",
    "ok": true,
-   "rows": 2651
+   "rows": 2657
   }
  ]
 }

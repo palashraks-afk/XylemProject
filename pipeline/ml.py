@@ -1,6 +1,6 @@
 """Failure forecast: which not-yet-Failing systems become Failing by the next annual snapshot?
 
-Strictly temporal evaluation. Train on 2024 -> 2025 transitions, test on 2025 -> 2026. Baselines are what a
+Diagnostic evaluation with nominal temporal splits; annual assessment and publication dates are qualified. Train on 2024 -> 2025 transitions, test on 2025 -> 2026. Baselines are what a
 reviewer would already use: the system's SAFER status, its total risk score, and whether it was ever on the Failing list.
 A final model trained on both transitions scores the 2026 systems for the app.
 """
@@ -12,8 +12,12 @@ import numpy as np
 import pandas as pd
 
 import model_zoo
+from feature_policy import FEATURE_POLICY, fingerprint, file_hash
 import violation_model as vm
 from model_selection import STACK, CORE
+from planner_forecast import planner_probabilities
+from calibrate_planner import load_calibration
+from evaluate_planner import evaluate_predictions
 from scipy.stats import rankdata
 from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.impute import SimpleImputer
@@ -60,10 +64,15 @@ def features(year):
     return d
 
 
+def current_status():
+    """Saved current registry, for current export eligibility and legacy diagnostics."""
+    d = pd.read_csv(RAW / "SAFER_RA.csv", encoding="utf-8-sig", low_memory=False)
+    d = d.drop_duplicates("WATER_SYSTEM_NUMBER").set_index("WATER_SYSTEM_NUMBER")
+    return d.FINAL_SAFER_STATUS, d.SERVICE_AREA_ECONOMIC_STATUS
+
+
 def status(year):
-    if year == 2026:
-        d = pd.read_csv(RAW / "SAFER_RA.csv", encoding="utf-8-sig", low_memory=False)
-        return d.set_index("WATER_SYSTEM_NUMBER").FINAL_SAFER_STATUS, d.set_index("WATER_SYSTEM_NUMBER").SERVICE_AREA_ECONOMIC_STATUS
+    """Year-labelled archived assessment, never a later live status fallback."""
     f = RAW / f"{year}affordability.xlsx"
     a = pd.read_excel(f, sheet_name="Affordability Assessment")
     col = [c for c in a.columns if "SAFER" in str(c)][0]
@@ -72,14 +81,17 @@ def status(year):
 
 
 _COORDS = None
+_COORDS_HASH = None
 
 
 def coords():
-    global _COORDS
-    if _COORDS is None:
+    global _COORDS, _COORDS_HASH
+    source_hash = file_hash(RAW / "SAFER_RA.csv")
+    if _COORDS is None or _COORDS_HASH != source_hash:
         d = pd.read_csv(RAW / "SAFER_RA.csv", encoding="utf-8-sig", low_memory=False).set_index("WATER_SYSTEM_NUMBER")
         d = d[(d.LONGITUDE_MEASURE != 0) & d.LATITUDE_MEASURE.notna()]
         _COORDS = d[["LATITUDE_MEASURE", "LONGITUDE_MEASURE"]]
+        _COORDS_HASH = source_hash
     return _COORDS
 
 
@@ -100,20 +112,32 @@ def add_spatial(x, s_year):
     return x
 
 
-def panel(y0, y1):
-    """Systems not Failing in y0 with a known y1 status; label = Failing in y1."""
-    x = features(y0)
-    s0, dac0 = status(y0)
-    s1, _ = status(y1)
-    x = x.set_index("PWSID")
+def scoring_features(year, current=False):
+    """All eligible non-Failing systems, without requiring a future outcome.
+
+    Shared by live scoring and the backtest's cohort-normalization denominator.
+    """
+    x = features(year).set_index("PWSID")
+    s0, dac0 = current_status() if current else status(year)
     if SPATIAL:
         x = add_spatial(x, s0)
     x["status0"] = s0.map(STATUS_ORD)
     x["dac"] = dac0.map({"SDAC": 2, "DAC": 1, "Non-DAC": 0})
     if STAGE1:
-        add_stage1(x, y0)
+        add_stage1(x, year)
+    return x[x.status0.notna() & (x.status0 < 3)].copy()
+
+
+def panel(y0, y1, outcome_snapshot="assessment"):
+    """Eligible baseline systems with a known next-snapshot failure outcome."""
+    x = scoring_features(y0)
+    if outcome_snapshot not in ("assessment", "current"):
+        raise ValueError("Unknown outcome snapshot")
+    s1, _ = current_status() if outcome_snapshot == "current" else status(y1)
     x["s1"] = s1
-    x = x[x.status0.notna() & (x.status0 < 3) & x.s1.isin(list(STATUS_ORD))]
+    # The 2026 assessment collapses non-Failing/non-At-Risk categories to Other.
+    # It is a known negative outcome, not an ordinal baseline status.
+    x = x[x.s1.isin([*STATUS_ORD, "Other"])].copy()
     x["y"] = (x.s1 == "Failing").astype(int)
     return x
 
@@ -124,9 +148,11 @@ _STAGE1 = {}
 
 
 def stage1(year, target="hbv"):
-    if (year, target) not in _STAGE1:
-        _STAGE1[(year, target)] = vm.predict_for_cycle(year, target=target)[0]
-    return _STAGE1[(year, target)]
+    key = (year, target, fingerprint(model=True), file_hash(model_zoo.SELECTION))
+    if key not in _STAGE1:
+        _STAGE1.clear() if len(_STAGE1) > 32 else None
+        _STAGE1[key] = vm.predict_for_cycle(year, target=target)[0]
+    return _STAGE1[key]
 
 
 STAGE1_COLS = (("hbv", "p_hbv"), ("any", "p_any"), ("monrep", "p_monrep"), ("mcl", "p_mcl"))
@@ -186,11 +212,18 @@ def recall_at(y, p, frac):
     return round(float(y[np.argsort(-p)[:k]].sum() / max(1, y.sum())), 3)
 
 
-def evaluate(train, test):
+def evaluate(train, test, planner_bootstrap=400, scoring_cohort=None, calibrator=None):
     Xtr, ytr = Xy(train)
     Xte, yte = Xy(test)
     cols = Xtr.columns
     Xte = Xte[cols]
+    scoring_cohort = test if scoring_cohort is None else scoring_cohort
+    if not scoring_cohort.index.is_unique or not test.index.is_unique:
+        raise ValueError("Scoring and test system IDs must be unique")
+    positions = scoring_cohort.index.get_indexer(test.index)
+    if (positions < 0).any():
+        raise ValueError("Every evaluated system must belong to the scoring cohort")
+    Xscore = scoring_cohort[cols]
     res = {"train_n": int(len(ytr)), "train_positives": int(ytr.sum()), "test_n": int(len(yte)), "test_positives": int(yte.sum()),
            "test_base_rate": round(float(yte.mean()), 4)}
     base = {
@@ -203,9 +236,10 @@ def evaluate(train, test):
     out = {}
     for name, p in base.items():
         out[name] = {"auc": round(float(roc_auc_score(yte, p)), 3), "auc_ci95": boot_auc(yte, p), "recall_top10pct": recall_at(yte, p, 0.10)}
-    probs = {}
+    probs, full_probs = {}, {}
     for name, m in models.items():
-        p = m.predict_proba(Xte)[:, 1]
+        full_probs[name] = m.predict_proba(Xscore)[:, 1]
+        p = full_probs[name][positions]
         probs[name] = p
         out[name] = {"auc": round(float(roc_auc_score(yte, p)), 3), "auc_ci95": boot_auc(yte, p),
                      "avg_precision": round(float(average_precision_score(yte, p)), 3), "recall_top10pct": recall_at(yte, p, 0.10),
@@ -215,6 +249,16 @@ def evaluate(train, test):
     probs["ensemble"] = pe
     out["ensemble"] = {"auc": round(float(roc_auc_score(yte, pe)), 3), "auc_ci95": boot_auc(yte, pe),
                        "avg_precision": round(float(average_precision_score(yte, pe)), 3), "recall_top10pct": recall_at(yte, pe, 0.10)}
+    # Keep the legacy rank ensemble for comparison, explicitly separate from
+    # the probability ensemble exported to the planner.
+    raw_planner = planner_probabilities(list(full_probs.values()), float(ytr.mean()))[positions]
+    planner = planner_probabilities(list(full_probs.values()), float(ytr.mean()), calibrator=calibrator)[positions]
+    if calibrator is not None:
+        probs["uncalibrated_planner_ensemble"] = raw_planner
+    probs["planner_ensemble"] = planner
+    res["planner_evaluation"] = evaluate_predictions(train, test, probs, n_boot=planner_bootstrap, normalization_n=len(scoring_cohort))
+    res["planner_evaluation"]["normalization_member_means"] = {name: float(p.mean()) for name, p in full_probs.items()}
+    out["planner_ensemble"] = res["planner_evaluation"]["cohorts"]["all_non_failing"]["models"]["planner_ensemble"]
     res["models"] = out
     qe = pd.qcut(pd.Series(pe).rank(method="first"), 5, labels=False)
     res["calibration_ensemble"] = [{"quintile": int(k) + 1, "n": int((qe == k).sum()), "observed_rate": round(float(yte[(qe == k).values].mean()), 4)} for k in range(5)]
@@ -227,9 +271,14 @@ def evaluate(train, test):
 
 
 def main():
+    model_zoo.selection()
+    calibration_artifact = load_calibration()
+    calibrator = calibration_artifact["calibrator"]
     tr = panel(2024, 2025)
     te = panel(2025, 2026)
-    res, models, probs = evaluate(tr, te)
+    res, models, probs = evaluate(tr, te, scoring_cohort=scoring_features(2025), calibrator=calibrator)
+    res["probability_calibration"] = calibration_artifact
+    res["feature_policy"] = FEATURE_POLICY
     global SPATIAL
     SPATIAL = False
     r0, _, _ = evaluate(panel(2024, 2025), panel(2025, 2026))
@@ -268,25 +317,12 @@ def main():
     Xb, yb = Xy(both)
     cols = Xb.columns
     finals = {k: v for k, v in ((n, fit_family(f, Xb, yb)) for n, f in FAMILIES.items()) if v is not None}
-    f26 = features(2026).set_index("PWSID")
-    s26, dac26 = status(2026)
-    if SPATIAL:
-        f26 = add_spatial(f26, s26)
-    f26["status0"] = s26.reindex(f26.index).map(STATUS_ORD)
-    f26["dac"] = dac26.reindex(f26.index).map({"SDAC": 2, "DAC": 1, "Non-DAC": 0})
-    if STAGE1:
-        add_stage1(f26, 2026)
-    cur = f26[f26.status0.notna() & (f26.status0 < 3)]
-    # each model's probabilities are rescaled to the observed onset rate, then averaged, so values read as probabilities
+    cur = scoring_features(2026, current=True)
+    # The identical trained probability map is used for diagnostic evaluation and export.
     rate = float(yb.mean())
-    parts = []
-    for m in finals.values():
-        q = m.predict_proba(cur[cols])[:, 1]
-        parts.append(q * rate / max(1e-9, float(np.mean(q))))
-    p = np.mean(parts, axis=0)
-    forecast = {pid: round(float(min(0.95, v)), 4) for pid, v in zip(cur.index, p)}
-    res["final_model_note"] = (f"Final model trained on {len(yb)} system-years ({int(yb.sum())} failing onsets), average of logistic, gradient "
-                               f"boosting and random forest, each rescaled so the mean forecast equals the observed onset rate ({rate:.3f}).")
+    p = planner_probabilities([m.predict_proba(cur[cols])[:, 1] for m in finals.values()], rate, calibrator=calibrator)
+    forecast = {pid: float(v) for pid, v in zip(cur.index, p)}
+    res["final_model_note"] = (f"Final model trained on {len(yb)} system-years ({int(yb.sum())} failing onsets), average of {', '.join(finals)}, each rescaled to the training onset rate ({rate:.3f}) before the frozen training-only probability calibration ({calibrator['method']}). Five-year conversion assumes constant annual risk.")
     OUT.mkdir(parents=True, exist_ok=True)
     p_viol = stage1(2026) if STAGE1 else pd.Series(dtype=float)
     (OUT / "forecast.json").write_text(json.dumps({"metrics": res, "p_fail": forecast, "p_violation": {k: round(float(v), 4) for k, v in p_viol.items() if k in forecast}}, separators=(",", ":")))

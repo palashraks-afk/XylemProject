@@ -1,0 +1,65 @@
+stage 1 selection
+cycle 2017 3174 positives 224
+cycle 2018 3174 positives 203
+cycle 2019 3174 positives 180
+cycle 2020 3174 positives 191
+cycle 2021 3174 positives 187
+cycle 2022 3174 positives 196
+cycle 2023 3174 positives 176
+cycle 2024 3174 positives 145
+cycle 2025 3174 positives 108
+cycle 2026 3174 positives 0
+  stage1 hgb_0                  val auc 0.8918  (3s)
+  stage1 hgb_1                  val auc 0.8826  (6s)
+  stage1 hgb_2                  val auc 0.8854  (10s)
+  stage1 hgb_3                  val auc 0.8880  (12s)
+  stage1 hgb_4                  val auc 0.8893  (16s)
+  stage1 hgb_5                  val auc 0.8924  (18s)
+  stage1 hgb_6                  val auc 0.8903  (21s)
+  stage1 hgb_7                  val auc 0.8793  (25s)
+  stage1 hgb_8                  val auc 0.8907  (28s)
+  stage1 hgb_9                  val auc 0.8920  (29s)
+  stage1 hgb_current            val auc 0.8919  (31s)
+  stage1 rf_leaf5_mf0.3         val auc 0.8809  (39s)
+  stage1 rf_leaf5_mfsqrt        val auc 0.8823  (44s)
+  stage1 rf_leaf15_mf0.3        val auc 0.8887  (51s)
+  stage1 rf_leaf15_mfsqrt       val auc 0.8886  (57s)
+  stage1 et_leaf5               val auc 0.8768  (63s)
+  stage1 et_leaf15              val auc 0.8881  (68s)
+  stage1 lr_C0.03               val auc 0.8888  (69s)
+  stage1 lr_C0.3                val auc 0.8892  (70s)
+chosen stage-1: ensemble_best_of_each_family ensemble (85s)
+stage 2 selection
+  stage2 lr_core_C0.3                       cv auc 0.8221  (0s)
+  stage2 lr_core_C0.03                      cv auc 0.8318  (0s)
+  stage2 stack_C0.03                        cv auc 0.8392  (1s)
+  stage2 stack_C0.1                         cv auc 0.8368  (1s)
+  stage2 stack_C1                           cv auc 0.8345  (1s)
+  stage2 lr_full_C0.01                      cv auc 0.8696  (1s)
+  stage2 lr_full_C0.03                      cv auc 0.8484  (2s)
+  stage2 lr_full_C0.1                       cv auc 0.8260  (2s)
+  stage2 lr_full_C0.3                       cv auc 0.8118  (2s)
+  stage2 hgb_d2_lr0.03_leaf20_l21.0         cv auc 0.8729  (4s)
+  stage2 hgb_d2_lr0.03_leaf20_l25.0         cv auc 0.8759  (6s)
+  stage2 hgb_d2_lr0.03_leaf40_l21.0         cv auc 0.8483  (8s)
+  stage2 hgb_d2_lr0.03_leaf40_l25.0         cv auc 0.8550  (9s)
+  stage2 hgb_d2_lr0.05_leaf20_l21.0         cv auc 0.8634  (11s)
+  stage2 hgb_d2_lr0.05_leaf20_l25.0         cv auc 0.8698  (12s)
+  stage2 hgb_d2_lr0.05_leaf40_l21.0         cv auc 0.8341  (14s)
+  stage2 hgb_d2_lr0.05_leaf40_l25.0         cv auc 0.8475  (16s)
+  stage2 hgb_d3_lr0.03_leaf20_l21.0         cv auc 0.8590  (18s)
+  stage2 hgb_d3_lr0.03_leaf20_l25.0         cv auc 0.8697  (20s)
+  stage2 hgb_d3_lr0.03_leaf40_l21.0         cv auc 0.8356  (22s)
+  stage2 hgb_d3_lr0.03_leaf40_l25.0         cv auc 0.8477  (24s)
+  stage2 hgb_d3_lr0.05_leaf20_l21.0         cv auc 0.8479  (27s)
+  stage2 hgb_d3_lr0.05_leaf20_l25.0         cv auc 0.8630  (29s)
+  stage2 hgb_d3_lr0.05_leaf40_l21.0         cv auc 0.8261  (31s)
+  stage2 hgb_d3_lr0.05_leaf40_l25.0         cv auc 0.8401  (33s)
+  stage2 rf_leaf10_mf0.3                    cv auc 0.8667  (45s)
+  stage2 rf_leaf10_mfsqrt                   cv auc 0.8657  (57s)
+  stage2 rf_leaf20_mf0.3                    cv auc 0.8543  (70s)
+  stage2 rf_leaf20_mfsqrt                   cv auc 0.8530  (82s)
+  stage2 et_leaf10                          cv auc 0.8793  (89s)
+  stage2 et_leaf20                          cv auc 0.8744  (96s)
+chosen stage-2: ensemble_best_of_each_family
+done in 220s

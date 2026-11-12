@@ -7,3 +7,6 @@ data/raw/2024risk.xlsx
 data/raw/us_counties.json
 .venv/
 data/raw/extra/
+
+# Local validation test fixtures (reports and run logs remain reviewable)
+audit/pytest-*/

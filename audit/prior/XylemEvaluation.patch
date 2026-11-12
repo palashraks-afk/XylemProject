@@ -1,0 +1,219 @@
+diff --git a/README.md b/README.md
+index 2c2e77c..71aff31 100644
+--- a/README.md
++++ b/README.md
+@@ -85,3 +85,11 @@ See [NOVELTY.md](NOVELTY.md) for prior work, [GRADING.md](GRADING.md) for the sc
+ - `tests/`: pytest suite and the Node parity script
+ - `data/raw/`: source files; `data/cost_tables.json`: the state's Tables 7 and 9, transcribed by hand and checked against its totals
+ - `DataSets.md`: data sources
++
++## Evaluation of the planner's actual forecast
++
++The headline forecast table above describes the saved **rank ensemble** from the earlier run. The funding planner exports a different calculation: an average of model probabilities, each rescaled to the training onset rate. These are now evaluated separately using one shared forecast function.
++
++Run `python pipeline/evaluate_planner.py --bootstrap 1000` after downloading the risk workbooks and extra datasets. It evaluates the full model within baseline At-Risk systems as well as all non-Failing systems, compares against the SAFER risk score and a training-only status-rate baseline, and checks annual probability calibration. It performs no test-year model selection or recalibration.
++
++See [PLANNER_EVALUATION.md](PLANNER_EVALUATION.md) for the results and qualifications. Exact inputs, hashes, settings and versions are in `data/planner_evaluation.json`; held-out predictions are in `data/planner_test_predictions.csv`. The command does not regenerate the app's saved forecasts or funding plans. The separate historical-input audit remains necessary before describing these results as prospective, leakage-free performance.
+diff --git a/data/extra_sources.json b/data/extra_sources.json
+index ff1ec5c..a05ceee 100644
+--- a/data/extra_sources.json
++++ b/data/extra_sources.json
+@@ -1,5 +1,5 @@
+ {
+- "fetched": "2026-11-03",
++ "fetched": "2026-11-11",
+  "sources": [
+   {
+    "name": "sdwis_violation",
+@@ -95,7 +95,7 @@
+    "url": "https://publish.data.ca.gov/dataset/d3d441c4-2c9e-4bd6-8e85-77214e728959/resource/5ba2426e-744a-46e7-8632-961dbeec0112/download/audit_data_wl.csv",
+    "file": "water_loss_audits.csv",
+    "ok": true,
+-   "bytes": 277635
++   "bytes": 277472
+   },
+   {
+    "name": "small_system_shortage",
+@@ -122,7 +122,7 @@
+    "url": "https://data.cnra.ca.gov/dataset/2cf184d1-2d34-46cc-8bb0-1dec86b6caf6/resource/e1fd9f48-a613-4567-8042-3d2e064d77c8/download/householdwatersupplyshortagereportingsystemdata.csv",
+    "file": "dry_wells.csv",
+    "ok": true,
+-   "bytes": 1558150
++   "bytes": 1560671
+   },
+   {
+    "name": "sgma_priority",
+@@ -181,7 +181,7 @@
+    "name": "noaa_pcpncy",
+    "desc": "County monthly precipitation",
+    "owner": "NOAA NCEI nClimDiv",
+-   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-pcpncy-v1.0.0-20261006",
++   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-pcpncy-v1.0.0-20261105",
+    "file": "noaa_pcpncy.txt",
+    "ok": true
+   },
+@@ -189,7 +189,7 @@
+    "name": "noaa_pdsicy",
+    "desc": "County monthly Palmer Drought Severity Index",
+    "owner": "NOAA NCEI nClimDiv",
+-   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-pdsicy-v1.0.0-20261006",
++   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-pdsicy-v1.0.0-20261105",
+    "file": "noaa_pdsicy.txt",
+    "ok": true
+   },
+@@ -197,7 +197,7 @@
+    "name": "noaa_tmpccy",
+    "desc": "County monthly mean temperature",
+    "owner": "NOAA NCEI nClimDiv",
+-   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-tmpccy-v1.0.0-20261006",
++   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/climdiv-tmpccy-v1.0.0-20261105",
+    "file": "noaa_tmpccy.txt",
+    "ok": true
+   },
+@@ -208,7 +208,7 @@
+    "url": "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters/FeatureServer/0/query",
+    "file": "nifc_fires.json",
+    "ok": true,
+-   "rows": 2651
++   "rows": 2657
+   }
+  ]
+ }
+\ No newline at end of file
+diff --git a/pipeline/ml.py b/pipeline/ml.py
+index 6c568e3..adcde9f 100644
+--- a/pipeline/ml.py
++++ b/pipeline/ml.py
+@@ -14,6 +14,8 @@ import pandas as pd
+ import model_zoo
+ import violation_model as vm
+ from model_selection import STACK, CORE
++from planner_forecast import planner_probabilities
++from evaluate_planner import evaluate_predictions
+ from scipy.stats import rankdata
+ from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
+ from sklearn.impute import SimpleImputer
+@@ -100,20 +102,28 @@ def add_spatial(x, s_year):
+     return x
+ 
+ 
+-def panel(y0, y1):
+-    """Systems not Failing in y0 with a known y1 status; label = Failing in y1."""
+-    x = features(y0)
+-    s0, dac0 = status(y0)
+-    s1, _ = status(y1)
+-    x = x.set_index("PWSID")
++def scoring_features(year):
++    """All eligible non-Failing systems, without requiring a future outcome.
++
++    Shared by live scoring and the backtest's cohort-normalization denominator.
++    """
++    x = features(year).set_index("PWSID")
++    s0, dac0 = status(year)
+     if SPATIAL:
+         x = add_spatial(x, s0)
+     x["status0"] = s0.map(STATUS_ORD)
+     x["dac"] = dac0.map({"SDAC": 2, "DAC": 1, "Non-DAC": 0})
+     if STAGE1:
+-        add_stage1(x, y0)
++        add_stage1(x, year)
++    return x[x.status0.notna() & (x.status0 < 3)].copy()
++
++
++def panel(y0, y1):
++    """Eligible baseline systems with a known next-snapshot failure outcome."""
++    x = scoring_features(y0)
++    s1, _ = status(y1)
+     x["s1"] = s1
+-    x = x[x.status0.notna() & (x.status0 < 3) & x.s1.isin(list(STATUS_ORD))]
++    x = x[x.s1.isin(list(STATUS_ORD))].copy()
+     x["y"] = (x.s1 == "Failing").astype(int)
+     return x
+ 
+@@ -186,11 +196,18 @@ def recall_at(y, p, frac):
+     return round(float(y[np.argsort(-p)[:k]].sum() / max(1, y.sum())), 3)
+ 
+ 
+-def evaluate(train, test):
++def evaluate(train, test, planner_bootstrap=400, scoring_cohort=None):
+     Xtr, ytr = Xy(train)
+     Xte, yte = Xy(test)
+     cols = Xtr.columns
+     Xte = Xte[cols]
++    scoring_cohort = test if scoring_cohort is None else scoring_cohort
++    if not scoring_cohort.index.is_unique or not test.index.is_unique:
++        raise ValueError("Scoring and test system IDs must be unique")
++    positions = scoring_cohort.index.get_indexer(test.index)
++    if (positions < 0).any():
++        raise ValueError("Every evaluated system must belong to the scoring cohort")
++    Xscore = scoring_cohort[cols]
+     res = {"train_n": int(len(ytr)), "train_positives": int(ytr.sum()), "test_n": int(len(yte)), "test_positives": int(yte.sum()),
+            "test_base_rate": round(float(yte.mean()), 4)}
+     base = {
+@@ -203,9 +220,10 @@ def evaluate(train, test):
+     out = {}
+     for name, p in base.items():
+         out[name] = {"auc": round(float(roc_auc_score(yte, p)), 3), "auc_ci95": boot_auc(yte, p), "recall_top10pct": recall_at(yte, p, 0.10)}
+-    probs = {}
++    probs, full_probs = {}, {}
+     for name, m in models.items():
+-        p = m.predict_proba(Xte)[:, 1]
++        full_probs[name] = m.predict_proba(Xscore)[:, 1]
++        p = full_probs[name][positions]
+         probs[name] = p
+         out[name] = {"auc": round(float(roc_auc_score(yte, p)), 3), "auc_ci95": boot_auc(yte, p),
+                      "avg_precision": round(float(average_precision_score(yte, p)), 3), "recall_top10pct": recall_at(yte, p, 0.10),
+@@ -215,6 +233,13 @@ def evaluate(train, test):
+     probs["ensemble"] = pe
+     out["ensemble"] = {"auc": round(float(roc_auc_score(yte, pe)), 3), "auc_ci95": boot_auc(yte, pe),
+                        "avg_precision": round(float(average_precision_score(yte, pe)), 3), "recall_top10pct": recall_at(yte, pe, 0.10)}
++    # Keep the legacy rank ensemble for comparison, explicitly separate from
++    # the probability ensemble exported to the planner.
++    planner = planner_probabilities(list(full_probs.values()), float(ytr.mean()))[positions]
++    probs["planner_ensemble"] = planner
++    res["planner_evaluation"] = evaluate_predictions(train, test, probs, n_boot=planner_bootstrap, normalization_n=len(scoring_cohort))
++    res["planner_evaluation"]["normalization_member_means"] = {name: float(p.mean()) for name, p in full_probs.items()}
++    out["planner_ensemble"] = res["planner_evaluation"]["cohorts"]["all_non_failing"]["models"]["planner_ensemble"]
+     res["models"] = out
+     qe = pd.qcut(pd.Series(pe).rank(method="first"), 5, labels=False)
+     res["calibration_ensemble"] = [{"quintile": int(k) + 1, "n": int((qe == k).sum()), "observed_rate": round(float(yte[(qe == k).values].mean()), 4)} for k in range(5)]
+@@ -229,7 +254,7 @@ def evaluate(train, test):
+ def main():
+     tr = panel(2024, 2025)
+     te = panel(2025, 2026)
+-    res, models, probs = evaluate(tr, te)
++    res, models, probs = evaluate(tr, te, scoring_cohort=scoring_features(2025))
+     global SPATIAL
+     SPATIAL = False
+     r0, _, _ = evaluate(panel(2024, 2025), panel(2025, 2026))
+@@ -268,25 +293,12 @@ def main():
+     Xb, yb = Xy(both)
+     cols = Xb.columns
+     finals = {k: v for k, v in ((n, fit_family(f, Xb, yb)) for n, f in FAMILIES.items()) if v is not None}
+-    f26 = features(2026).set_index("PWSID")
+-    s26, dac26 = status(2026)
+-    if SPATIAL:
+-        f26 = add_spatial(f26, s26)
+-    f26["status0"] = s26.reindex(f26.index).map(STATUS_ORD)
+-    f26["dac"] = dac26.reindex(f26.index).map({"SDAC": 2, "DAC": 1, "Non-DAC": 0})
+-    if STAGE1:
+-        add_stage1(f26, 2026)
+-    cur = f26[f26.status0.notna() & (f26.status0 < 3)]
+-    # each model's probabilities are rescaled to the observed onset rate, then averaged, so values read as probabilities
++    cur = scoring_features(2026)
++    # The identical probability rule is evaluated above; mean rescaling alone is not calibration.
+     rate = float(yb.mean())
+-    parts = []
+-    for m in finals.values():
+-        q = m.predict_proba(cur[cols])[:, 1]
+-        parts.append(q * rate / max(1e-9, float(np.mean(q))))
+-    p = np.mean(parts, axis=0)
+-    forecast = {pid: round(float(min(0.95, v)), 4) for pid, v in zip(cur.index, p)}
+-    res["final_model_note"] = (f"Final model trained on {len(yb)} system-years ({int(yb.sum())} failing onsets), average of logistic, gradient "
+-                               f"boosting and random forest, each rescaled so the mean forecast equals the observed onset rate ({rate:.3f}).")
++    p = planner_probabilities([m.predict_proba(cur[cols])[:, 1] for m in finals.values()], rate)
++    forecast = {pid: float(v) for pid, v in zip(cur.index, p)}
++    res["final_model_note"] = (f"Final model trained on {len(yb)} system-years ({int(yb.sum())} failing onsets), average of {', '.join(finals)}, each rescaled to the training onset rate ({rate:.3f}) before clipping and rounding.")
+     OUT.mkdir(parents=True, exist_ok=True)
+     p_viol = stage1(2026) if STAGE1 else pd.Series(dtype=float)
+     (OUT / "forecast.json").write_text(json.dumps({"metrics": res, "p_fail": forecast, "p_violation": {k: round(float(v), 4) for k, v in p_viol.items() if k in forecast}}, separators=(",", ":")))

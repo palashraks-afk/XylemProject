@@ -2,9 +2,11 @@
 
 Two kinds, kept apart on purpose:
   * as-of features are built only from records dated on or before a cutoff (violations, enforcement, school lead samples, dry-well
-    reports, wildfires, weather). The forecast uses these so it never sees the future.
-  * static features describe a system's setting (source type, facilities, tract demographics, groundwater basin, terrain, nearby
-    infrastructure). They are published before the periods we predict, or do not change with them.
+    reports, wildfires, weather). These provide an event-time reconstruction.
+  * snapshot features describe the current system and its setting. Most have no historical publication/version information,
+    so they are available for current descriptive analysis, but excluded from historical model inputs.
+Historical forecasts use dated event features, terrain as a fixed geographic proxy, and sizes from prior-year archived assessments.
+Event dates do not prove when a record was first published; a true publication-time backtest still needs archived source vintages.
 Each feature has a group name; the forecast's ablation drops one group at a time to measure what that source is worth.
 """
 import io
@@ -129,14 +131,15 @@ def enforcement_features(pw, cutoff):
 
 @lru_cache(maxsize=None)
 def school_lead_df():
-    s = pd.read_csv(X / "school_lead.csv", low_memory=False, usecols=["pws_id", "samp_date", "result", "action_level_exceedance"])
+    s = pd.read_csv(X / "school_lead.csv", low_memory=False, usecols=["pws_id", "samp_date", "samp_loaded", "result", "action_level_exceedance"])
     s["d"] = pd.to_datetime(s.samp_date.astype("Int64").astype(str), format="%Y%m%d", errors="coerce")
-    return s.dropna(subset=["pws_id", "d"])
+    s["loaded"] = pd.to_datetime(pd.to_numeric(s.samp_loaded, errors="coerce").astype("Int64").astype(str), format="%Y%m%d", errors="coerce")
+    return s.dropna(subset=["pws_id", "d", "loaded"])
 
 
 def school_lead_features(pw, cutoff):
     s = school_lead_df()
-    s = s[s.d <= pd.Timestamp(cutoff)]
+    s = s[(s.d <= pd.Timestamp(cutoff)) & (s.loaded <= pd.Timestamp(cutoff))]
     g = s.groupby("pws_id")
     out = pd.DataFrame(index=pw)
     out["school_lead_samples"] = g.size().reindex(pw).fillna(0).values
@@ -179,7 +182,7 @@ def fire_features(pw, cutoff):
     f = fires_df()
     c = pd.Timestamp(cutoff)
     f = f[(f.d <= c) & (f.d > c - pd.DateOffset(years=5))]
-    if c < pd.Timestamp("2023-01-01"):                # the perimeter dataset starts in late 2019: earlier windows are incomplete
+    if c < pd.Timestamp("2025-01-01"):                # the perimeter dataset starts in late 2019: earlier windows are incomplete
         f = f.iloc[0:0]
     s = systems().reindex(pw)
     ok = s.lat.notna().values
@@ -188,9 +191,6 @@ def fire_features(pw, cutoff):
     tree = balltree(f[["attr_InitialLatitude", "attr_InitialLongitude"]].values)
     for km in (15, 40):
         col = np.full(len(pw), np.nan); col[ok] = radius_count(tree, pts, km); out[f"fires_{km}km_5y"] = col
-    big = f[f.poly_GISAcres.fillna(0) >= 1000]
-    tb = balltree(big[["attr_InitialLatitude", "attr_InitialLongitude"]].values)
-    col = np.full(len(pw), np.nan); col[ok] = radius_count(tb, pts, 40); out["big_fires_40km_5y"] = col
     return tag(out, "wildfire")
 
 
@@ -202,6 +202,7 @@ def noaa(kind):
         if not m or m.group(1) != "04":
             continue
         vals = [float(x) for x in re.findall(r"-?\d+\.\d+|-?\d+", m.group(5))][:12]
+        vals = [np.nan if (x < 0 if kind == "pcpncy" else x <= -90) else x for x in vals]
         rows[(int(m.group(2)), int(m.group(4)))] = vals + [np.nan] * (12 - len(vals))
     return rows
 
@@ -230,8 +231,11 @@ def weather_features(pw, cutoff):
                         y, m = y - 1, 12
                 return np.array(seq)
             w12 = window(c.year, c.month - 1 if c.month > 1 else 12, 12) if c.month > 1 else window(c.year - 1, 12, 12)
-            w36 = window(c.year, c.month - 1, 36)
-            base = np.nanmean([np.nanmean(t.get((fp, y), [np.nan] * 12)) for y in range(1991, 2021)])
+            end = c - pd.DateOffset(months=1)
+            w36 = window(end.year, end.month, 36)
+            # A fixed 1991-2020 normal would expose later weather to pre-2021 cycles.
+            normal_end = min(2020, c.year - 1)
+            base = np.nanmean([np.nanmean(t.get((fp, y), [np.nan] * 12)) for y in range(1991, normal_end + 1)])
             vals12[fp] = (np.nanmean(w12), np.nanmin(w12), np.nanmean(w36), base)
         arr = cty.map(lambda f: vals12.get(int(f)) if pd.notna(f) else None)
         out[f"{name}_12m"] = [a[0] if a else np.nan for a in arr]
@@ -462,6 +466,37 @@ def asof_features(pw, cutoff):
     parts = [violation_features(pw, cutoff), enforcement_features(pw, cutoff), school_lead_features(pw, cutoff), dry_well_features(pw, cutoff),
              fire_features(pw, cutoff), weather_features(pw, cutoff)]
     return pd.concat(parts, axis=1)
+
+
+def historical_size_features(pw, cutoff):
+    """Use the latest prior-year assessment; never fill missing history with current sizes.
+
+    An assessment is conservatively eligible only in the following calendar year.
+    This annual-vintage convention is not a verified per-file publication timestamp.
+    """
+    c = pd.Timestamp(cutoff)
+    out = pd.DataFrame(np.nan, index=pd.Index(pw), columns=["lpop", "lconn"])
+    archives = [(int(p.name[:4]), p) for p in RAW.glob("*affordability.xlsx")
+                if re.fullmatch(r"\d{4}affordability\.xlsx", p.name) and int(p.name[:4]) < c.year]
+    if not archives:
+        return out
+    _, path = max(archives)
+    sizes = pd.read_excel(path, sheet_name="Affordability Assessment",
+                          usecols=["PWSID", "Population", "Number of Service Connections"])
+    sizes = sizes.drop_duplicates("PWSID").set_index("PWSID").reindex(out.index)
+    for source, col in (("Population", "lpop"), ("Number of Service Connections", "lconn")):
+        values = pd.to_numeric(sizes[source], errors="coerce")
+        out[col] = np.log1p(values.where(values >= 0))
+    return out
+
+
+def historical_features(pw, cutoff):
+    """Model-only path: no undated facility, lead/copper, demographic or infrastructure snapshots.
+
+    Contemporary coordinates/county are used solely as fixed location proxies for historical events and terrain.
+    """
+    pw = pd.Index(pw)
+    return pd.concat([asof_features(pw, cutoff), terrain_features(pw), historical_size_features(pw, cutoff)], axis=1)
 
 
 def build(pw, cutoff, with_static=True):

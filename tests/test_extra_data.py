@@ -82,7 +82,11 @@ def test_extra_data_improves_the_failure_forecast_on_the_held_out_year():
 def test_source_value_table_covers_the_sources_and_all_beats_size_only():
     sv = forecast()["metrics"]["source_value"]
     assert sv["all_sources"] > sv["size_only"] + 0.05
-    assert len(sv["drop_one"]) >= 15
+    if forecast()["metrics"].get("feature_policy") == "historical-event-time-v1":
+        assert set(sv["drop_one"]) == {"sdwis_violations", "sdwis_enforcement", "school_lead", "dry_wells",
+                                       "wildfire", "noaa_precip", "noaa_pdsi", "noaa_temp", "terrain_srtm"}
+    else:
+        assert len(sv["drop_one"]) >= 15
 
 
 def test_violation_probabilities_are_valid_and_attached_to_systems():
@@ -130,13 +134,19 @@ def test_stage1_calibration_fixes_inflated_ensemble_probabilities_on_the_test_ye
         assert c["brier_calibrated"] < c["brier_raw"], y
 
 
-def test_stage2_final_model_is_the_ensemble_and_beats_baselines_on_the_held_out_year():
+def test_stage2_final_model_follows_training_cv_and_reports_diagnostics():
     s2 = selection()["stage2"]
     assert s2["chosen"] == "ensemble_best_of_each_family" and len(s2["ensemble"]["members"]) >= 4
     base = {b["name"]: b for b in s2["baselines"]}
     assert s2["ensemble"]["test"]["auc"] > base["safer_status_alone"]["test"]["auc"] + 0.1
     assert s2["ensemble"]["test"]["auc"] >= base["p_hbv_alone"]["test"]["auc"]
-    assert max(c["cv"]["auc"] for c in s2["candidates"]) > s2["ensemble"]["test"]["auc"] + 0.05      # within-year CV is optimistic vs the held-out year
+    # A particular CV/test gap is an observed result, not a model contract.
+    # Check the actual selection rule rather than requiring test-year drift.
+    for family, chosen in s2["best_by_family"].items():
+        candidates = [c for c in s2["candidates"] if c["family"] == family]
+        selected = next(c for c in candidates if c["name"] == chosen["name"])
+        assert selected["cv"]["auc"] == max(c["cv"]["auc"] for c in candidates)
+        assert selected["config"] == chosen["config"]
 
 
 def test_final_forecast_metrics_improved_over_the_pre_data_model_with_interval_above_chance():

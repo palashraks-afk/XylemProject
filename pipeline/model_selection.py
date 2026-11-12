@@ -28,6 +28,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 import model_zoo
+from feature_policy import FEATURE_POLICY, fingerprint
 import violation_model as vm
 
 warnings.filterwarnings("ignore")
@@ -186,7 +187,7 @@ def select_stage2(tr, te, cols_full):
 
 def refit_calibrator():
     """Refit only the stage-1 calibration map for the chosen model (forward-chaining validation cycles), without repeating the whole search."""
-    sel = json.loads(OUT.read_text())
+    sel = model_zoo.selection()
     p = vm.panel()
     cols = vm.feature_cols(p)
     val, test = sel["stage1"]["folds"]["val"], sel["stage1"]["folds"]["test"]
@@ -217,13 +218,13 @@ def main():
     print("stage 1 selection", flush=True)
     s1, pred, iso = select_stage1()
     print("chosen stage-1:", s1["chosen"], s1["chosen_config"].get("family"), f"({time.time() - t0:.0f}s)", flush=True)
-    OUT.write_text(json.dumps({"stage1": s1}, indent=1, default=float))      # stage 2 is built on the stage-1 forecasts of the model just chosen
+    OUT.write_text(json.dumps({"feature_policy": FEATURE_POLICY, "input_fingerprint": fingerprint(model=True), "stage1": s1}, indent=1, default=float))      # stage 2 is built on the stage-1 forecasts of the model just chosen
     tr, te = ml.panel(2024, 2025), ml.panel(2025, 2026)
     cols_full = [c for c in ml.Xy(tr)[0].columns]
     print("stage 2 selection", flush=True)
     s2 = select_stage2(tr, te, cols_full)
     print("chosen stage-2:", s2["chosen"])
-    OUT.write_text(json.dumps({"stage1": s1, "stage2": s2}, indent=1, default=float))
+    OUT.write_text(json.dumps({"feature_policy": FEATURE_POLICY, "input_fingerprint": fingerprint(model=True), "stage1": s1, "stage2": s2}, indent=1, default=float))
     print(f"done in {time.time() - t0:.0f}s")
 
 

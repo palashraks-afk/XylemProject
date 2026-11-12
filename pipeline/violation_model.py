@@ -4,7 +4,9 @@ The SAFER "Failing" label has only a few dozen new cases a year, too few to lear
 labels, so this model learns from about 25,000 system-years instead. Its prediction becomes one input to the Failing-onset model in ml.py.
 
 Time discipline: cycle y has cutoff July 1 of year y and predicts violations that begin in the following 12 months. A model used for cycle y
-is trained only on cycles whose label window had closed by that cutoff (cycles before y), and every feature is dated on or before the cutoff.
+is trained only on cycles whose label window had closed by that cutoff (cycles before y). Historical features exclude undated mutable
+snapshots and current population/connection counts. Terrain and location remain fixed geographic proxies. Dates describe events, not
+first publication: retrospective source corrections and the current-system cohort are still limitations.
 """
 import warnings
 from functools import lru_cache
@@ -12,15 +14,15 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import roc_auc_score, average_precision_score
 
 import model_zoo
+from feature_policy import FEATURE_POLICY, fingerprint
 
 import extra_features as ef
 
 ROOT = Path(__file__).resolve().parents[1]
-CACHE = ROOT / "data" / "raw" / "extra" / "stage1_panel.pkl"
+CACHE = ROOT / "data" / "raw" / "extra" / "stage1_panel_event_time_v2.pkl"
 CYCLES = list(range(2017, 2027))                     # 2026 has no complete label window; it is only scored
 SEED = 7
 warnings.filterwarnings("ignore")
@@ -73,24 +75,30 @@ def labels_for(p, target):
 
 
 def panel():
+    signature = fingerprint()
     if CACHE.exists():
-        return pd.read_pickle(CACHE)
+        cached = pd.read_pickle(CACHE)
+        if cached.attrs.get("feature_policy") == FEATURE_POLICY and cached.attrs.get("cycles") == CYCLES and cached.attrs.get("input_fingerprint") == signature:
+            return cached
+    _LABELS.clear()
+    if hasattr(spine, "cache_clear"):
+        spine.cache_clear()
+    for loader in (ef.systems, ef.violations, ef.enforcement, ef.school_lead_df, ef.dry_wells_df, ef.fires_df, ef.noaa, ef.dem):
+        if hasattr(loader, "cache_clear"):
+            loader.cache_clear()
     sp = spine()
-    static = ef.static_features(sp.index)
     frames = []
     for y in CYCLES:
         c = pd.Timestamp(cutoff(y))
         pw = sp.index[(sp.deact.isna() | (sp.deact > c))]
-        a = ef.asof_features(pw, cutoff(y))
-        f = pd.concat([a, static.loc[pw]], axis=1)
-        f["lpop"] = np.log1p(sp.loc[pw, "POPULATION"].fillna(sp.loc[pw, "population_served_count"]))
-        f["lconn"] = np.log1p(sp.loc[pw, "SERVICE_CONNECTIONS"].fillna(sp.loc[pw, "service_connections_count"]))
+        f = ef.historical_features(pw, cutoff(y))
         f["cycle"] = y
         f["y"] = label(pw, y).values if y < 2026 else np.nan
         frames.append(f)
         print("cycle", y, len(f), "positives", int(np.nansum(f.y)), flush=True)
     p = pd.concat(frames)
     p.index.name = "PWSID"
+    p.attrs.update(feature_policy=FEATURE_POLICY, cycles=CYCLES, input_fingerprint=signature)
     CACHE.parent.mkdir(parents=True, exist_ok=True)
     p.to_pickle(CACHE)
     return p
@@ -101,13 +109,17 @@ def feature_cols(p):
 
 
 def model():
-    return HistGradientBoostingClassifier(max_depth=4, learning_rate=0.05, max_iter=250, min_samples_leaf=40, l2_regularization=2.0, random_state=SEED)
+    return model_zoo.make("hgb", max_depth=4, learning_rate=0.05, max_iter=250, min_samples_leaf=40, l2_regularization=2.0)
 
 
-def calibrate(pr):
-    """Map raw ensemble scores to probabilities with the isotonic map fitted on the forward-chaining validation cycles (model_selection.py)."""
-    cal = model_zoo.selection().get("stage1", {}).get("calibrator")
-    return np.interp(pr, cal["x"], cal["y"]) if cal else pr
+def calibrate(pr, cycle):
+    """Use a saved calibration map only after all its validation label windows have closed."""
+    s = model_zoo.selection().get("stage1", {})
+    cal = s.get("calibrator")
+    val = s.get("folds", {}).get("val", [])
+    if not cal or not val or cycle <= max(val):
+        return pr
+    return np.interp(pr, cal["x"], cal["y"])
 
 
 def predict_for_cycle(y, p=None, target="hbv", calibrate_output=True):
@@ -121,7 +133,7 @@ def predict_for_cycle(y, p=None, target="hbv", calibrate_output=True):
     members = [model_zoo.make(k, **cfg).fit(tr[cols], ytr) for k, cfg in model_zoo.stage1_members()]
     pr = np.mean([m.predict_proba(te[cols])[:, 1] for m in members], axis=0)
     if target == "hbv" and calibrate_output:
-        pr = calibrate(pr)
+        pr = calibrate(pr, y)
     return pd.Series(pr, index=te.index), members
 
 
@@ -144,7 +156,7 @@ def source_value(cycles=(2024, 2025)):
     p = panel()
     cols = feature_cols(p)
     if not ef.GROUPS:                                  # the cached panel does not carry the column -> source mapping; rebuild it on a few systems
-        ef.build(pd.Index(spine().index[:5]), cutoff(2025))
+        ef.historical_features(pd.Index(spine().index[:5]), cutoff(2025))
     groups = sorted(set(ef.GROUPS[c] for c in cols if c in ef.GROUPS))
 
     def auc_for(use):

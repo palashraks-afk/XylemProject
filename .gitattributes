@@ -1,0 +1,12 @@
+# Validation provenance records exact file bytes. Preserve hash-bound files
+# across Windows and Unix checkouts instead of normalizing line endings.
+/pipeline/*.py -text whitespace=cr-at-eol
+/app/app.js -text whitespace=cr-at-eol
+/app/data/infrastructure.json -text whitespace=cr-at-eol
+/data/raw/** -text whitespace=cr-at-eol
+/data/extra_sources.json -text whitespace=cr-at-eol
+/data/model_selection.json -text whitespace=cr-at-eol
+/data/planner_* -text whitespace=cr-at-eol
+/audit/** -text whitespace=cr-at-eol
+# Archived diffs are verbatim evidence, including their original whitespace.
+/audit/prior/*.patch -whitespace

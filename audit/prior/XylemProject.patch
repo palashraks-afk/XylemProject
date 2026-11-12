@@ -1,0 +1,317 @@
+diff --git a/pipeline/extra_features.py b/pipeline/extra_features.py
+index a19d91e..70fe0e9 100644
+--- a/pipeline/extra_features.py
++++ b/pipeline/extra_features.py
+@@ -2,9 +2,11 @@
+ 
+ Two kinds, kept apart on purpose:
+   * as-of features are built only from records dated on or before a cutoff (violations, enforcement, school lead samples, dry-well
+-    reports, wildfires, weather). The forecast uses these so it never sees the future.
+-  * static features describe a system's setting (source type, facilities, tract demographics, groundwater basin, terrain, nearby
+-    infrastructure). They are published before the periods we predict, or do not change with them.
++    reports, wildfires, weather). These provide an event-time reconstruction.
++  * snapshot features describe the current system and its setting. Most have no historical publication/version information,
++    so they are available for current descriptive analysis, but excluded from historical model inputs.
++Historical forecasts use dated event features, terrain as a fixed geographic proxy, and sizes from prior-year archived assessments.
++Event dates do not prove when a record was first published; a true publication-time backtest still needs archived source vintages.
+ Each feature has a group name; the forecast's ablation drops one group at a time to measure what that source is worth.
+ """
+ import io
+@@ -230,8 +232,11 @@ def weather_features(pw, cutoff):
+                         y, m = y - 1, 12
+                 return np.array(seq)
+             w12 = window(c.year, c.month - 1 if c.month > 1 else 12, 12) if c.month > 1 else window(c.year - 1, 12, 12)
+-            w36 = window(c.year, c.month - 1, 36)
+-            base = np.nanmean([np.nanmean(t.get((fp, y), [np.nan] * 12)) for y in range(1991, 2021)])
++            end = c - pd.DateOffset(months=1)
++            w36 = window(end.year, end.month, 36)
++            # A fixed 1991-2020 normal would expose later weather to pre-2021 cycles.
++            normal_end = min(2020, c.year - 1)
++            base = np.nanmean([np.nanmean(t.get((fp, y), [np.nan] * 12)) for y in range(1991, normal_end + 1)])
+             vals12[fp] = (np.nanmean(w12), np.nanmin(w12), np.nanmean(w36), base)
+         arr = cty.map(lambda f: vals12.get(int(f)) if pd.notna(f) else None)
+         out[f"{name}_12m"] = [a[0] if a else np.nan for a in arr]
+@@ -464,6 +469,37 @@ def asof_features(pw, cutoff):
+     return pd.concat(parts, axis=1)
+ 
+ 
++def historical_size_features(pw, cutoff):
++    """Use the latest prior-year assessment; never fill missing history with current sizes.
++
++    An assessment is conservatively eligible only in the following calendar year.
++    This annual-vintage convention is not a verified per-file publication timestamp.
++    """
++    c = pd.Timestamp(cutoff)
++    out = pd.DataFrame(np.nan, index=pd.Index(pw), columns=["lpop", "lconn"])
++    archives = [(int(p.name[:4]), p) for p in RAW.glob("*affordability.xlsx")
++                if re.fullmatch(r"\d{4}affordability\.xlsx", p.name) and int(p.name[:4]) < c.year]
++    if not archives:
++        return out
++    _, path = max(archives)
++    sizes = pd.read_excel(path, sheet_name="Affordability Assessment",
++                          usecols=["PWSID", "Population", "Number of Service Connections"])
++    sizes = sizes.drop_duplicates("PWSID").set_index("PWSID").reindex(out.index)
++    for source, col in (("Population", "lpop"), ("Number of Service Connections", "lconn")):
++        values = pd.to_numeric(sizes[source], errors="coerce")
++        out[col] = np.log1p(values.where(values >= 0))
++    return out
++
++
++def historical_features(pw, cutoff):
++    """Model-only path: no undated facility, lead/copper, demographic or infrastructure snapshots.
++
++    Contemporary coordinates/county are used solely as fixed location proxies for historical events and terrain.
++    """
++    pw = pd.Index(pw)
++    return pd.concat([asof_features(pw, cutoff), terrain_features(pw), historical_size_features(pw, cutoff)], axis=1)
++
++
+ def build(pw, cutoff, with_static=True):
+     a = asof_features(pw, cutoff)
+     return pd.concat([a, static_features(pw)], axis=1) if with_static else a
+diff --git a/pipeline/ml.py b/pipeline/ml.py
+index 6c568e3..59e9078 100644
+--- a/pipeline/ml.py
++++ b/pipeline/ml.py
+@@ -12,6 +12,7 @@ import numpy as np
+ import pandas as pd
+ 
+ import model_zoo
++from feature_policy import FEATURE_POLICY
+ import violation_model as vm
+ from model_selection import STACK, CORE
+ from scipy.stats import rankdata
+@@ -227,9 +228,11 @@ def evaluate(train, test):
+ 
+ 
+ def main():
++    model_zoo.selection()                         # fail early rather than reuse pre-policy calibration/tuning
+     tr = panel(2024, 2025)
+     te = panel(2025, 2026)
+     res, models, probs = evaluate(tr, te)
++    res["feature_policy"] = FEATURE_POLICY
+     global SPATIAL
+     SPATIAL = False
+     r0, _, _ = evaluate(panel(2024, 2025), panel(2025, 2026))
+diff --git a/pipeline/model_selection.py b/pipeline/model_selection.py
+index 27ffc60..0b1fdd3 100644
+--- a/pipeline/model_selection.py
++++ b/pipeline/model_selection.py
+@@ -28,6 +28,7 @@ from sklearn.pipeline import make_pipeline
+ from sklearn.preprocessing import StandardScaler
+ 
+ import model_zoo
++from feature_policy import FEATURE_POLICY
+ import violation_model as vm
+ 
+ warnings.filterwarnings("ignore")
+@@ -186,7 +187,7 @@ def select_stage2(tr, te, cols_full):
+ 
+ def refit_calibrator():
+     """Refit only the stage-1 calibration map for the chosen model (forward-chaining validation cycles), without repeating the whole search."""
+-    sel = json.loads(OUT.read_text())
++    sel = model_zoo.selection()
+     p = vm.panel()
+     cols = vm.feature_cols(p)
+     val, test = sel["stage1"]["folds"]["val"], sel["stage1"]["folds"]["test"]
+@@ -217,13 +218,13 @@ def main():
+     print("stage 1 selection", flush=True)
+     s1, pred, iso = select_stage1()
+     print("chosen stage-1:", s1["chosen"], s1["chosen_config"].get("family"), f"({time.time() - t0:.0f}s)", flush=True)
+-    OUT.write_text(json.dumps({"stage1": s1}, indent=1, default=float))      # stage 2 is built on the stage-1 forecasts of the model just chosen
++    OUT.write_text(json.dumps({"feature_policy": FEATURE_POLICY, "stage1": s1}, indent=1, default=float))      # stage 2 is built on the stage-1 forecasts of the model just chosen
+     tr, te = ml.panel(2024, 2025), ml.panel(2025, 2026)
+     cols_full = [c for c in ml.Xy(tr)[0].columns]
+     print("stage 2 selection", flush=True)
+     s2 = select_stage2(tr, te, cols_full)
+     print("chosen stage-2:", s2["chosen"])
+-    OUT.write_text(json.dumps({"stage1": s1, "stage2": s2}, indent=1, default=float))
++    OUT.write_text(json.dumps({"feature_policy": FEATURE_POLICY, "stage1": s1, "stage2": s2}, indent=1, default=float))
+     print(f"done in {time.time() - t0:.0f}s")
+ 
+ 
+diff --git a/pipeline/model_zoo.py b/pipeline/model_zoo.py
+index 249e96a..01b7531 100644
+--- a/pipeline/model_zoo.py
++++ b/pipeline/model_zoo.py
+@@ -2,8 +2,12 @@
+ import json
+ from pathlib import Path
+ 
++from feature_policy import FEATURE_POLICY
++
+ import numpy as np
+ from scipy.stats import rankdata
++from sklearn.base import BaseEstimator, TransformerMixin
++from sklearn.utils.validation import check_is_fitted
+ from sklearn.ensemble import ExtraTreesClassifier, HistGradientBoostingClassifier, RandomForestClassifier
+ from sklearn.impute import SimpleImputer
+ from sklearn.linear_model import LogisticRegression
+@@ -15,9 +19,30 @@ SELECTION = Path(__file__).resolve().parents[1] / "data" / "model_selection.json
+ rank01 = lambda p: rankdata(p) / len(p)  # noqa: E731
+ 
+ 
++class EmptyHistoryImputer(TransformerMixin, BaseEstimator):
++    """Keep all-missing training columns constant; preserve native NaNs in other columns.
++
++    Newly available values cannot influence a model that had no history for that feature.
++    This also avoids passing empty numeric bins to gradient boosting.
++    """
++    def fit(self, X, y=None):
++        values = np.asarray(X, dtype=float)
++        self.n_features_in_ = values.shape[1]
++        self.empty_columns_ = np.isnan(values).all(axis=0)
++        return self
++
++    def transform(self, X):
++        check_is_fitted(self, "empty_columns_")
++        values = np.asarray(X, dtype=float).copy()
++        if values.shape[1] != self.n_features_in_:
++            raise ValueError("Historical feature columns changed after fitting")
++        values[:, self.empty_columns_] = 0.0
++        return values
++
++
+ def make(kind, **kw):
+     if kind == "hgb":
+-        return HistGradientBoostingClassifier(random_state=SEED, **kw)
++        return make_pipeline(EmptyHistoryImputer(), HistGradientBoostingClassifier(random_state=SEED, **kw))
+     if kind == "rf":
+         return make_pipeline(SimpleImputer(strategy="median"), RandomForestClassifier(n_estimators=300, class_weight="balanced_subsample", random_state=SEED, n_jobs=-1, **kw))
+     if kind == "et":
+@@ -28,7 +53,13 @@ def make(kind, **kw):
+ 
+ 
+ def selection():
+-    return json.loads(SELECTION.read_text()) if SELECTION.exists() else {}
++    if not SELECTION.exists():
++        return {}
++    saved = json.loads(SELECTION.read_text())
++    if saved.get("feature_policy") != FEATURE_POLICY:
++        raise ValueError("Model selection/calibration predates the historical feature policy. "
++                         "Run python pipeline/model_selection.py before generating new forecasts.")
++    return saved
+ 
+ 
+ def stage1_members():
+diff --git a/pipeline/violation_model.py b/pipeline/violation_model.py
+index c89686e..d5083f0 100644
+--- a/pipeline/violation_model.py
++++ b/pipeline/violation_model.py
+@@ -4,7 +4,9 @@ The SAFER "Failing" label has only a few dozen new cases a year, too few to lear
+ labels, so this model learns from about 25,000 system-years instead. Its prediction becomes one input to the Failing-onset model in ml.py.
+ 
+ Time discipline: cycle y has cutoff July 1 of year y and predicts violations that begin in the following 12 months. A model used for cycle y
+-is trained only on cycles whose label window had closed by that cutoff (cycles before y), and every feature is dated on or before the cutoff.
++is trained only on cycles whose label window had closed by that cutoff (cycles before y). Historical features exclude undated mutable
++snapshots and current population/connection counts. Terrain and location remain fixed geographic proxies. Dates describe events, not
++first publication: retrospective source corrections and the current-system cohort are still limitations.
+ """
+ import warnings
+ from functools import lru_cache
+@@ -12,15 +14,15 @@ from pathlib import Path
+ 
+ import numpy as np
+ import pandas as pd
+-from sklearn.ensemble import HistGradientBoostingClassifier
+ from sklearn.metrics import roc_auc_score, average_precision_score
+ 
+ import model_zoo
++from feature_policy import FEATURE_POLICY
+ 
+ import extra_features as ef
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+-CACHE = ROOT / "data" / "raw" / "extra" / "stage1_panel.pkl"
++CACHE = ROOT / "data" / "raw" / "extra" / "stage1_panel_event_time_v1.pkl"
+ CYCLES = list(range(2017, 2027))                     # 2026 has no complete label window; it is only scored
+ SEED = 7
+ warnings.filterwarnings("ignore")
+@@ -74,23 +76,23 @@ def labels_for(p, target):
+ 
+ def panel():
+     if CACHE.exists():
+-        return pd.read_pickle(CACHE)
++        cached = pd.read_pickle(CACHE)
++        if cached.attrs.get("feature_policy") == FEATURE_POLICY and cached.attrs.get("cycles") == CYCLES:
++            return cached
++    _LABELS.clear()
+     sp = spine()
+-    static = ef.static_features(sp.index)
+     frames = []
+     for y in CYCLES:
+         c = pd.Timestamp(cutoff(y))
+         pw = sp.index[(sp.deact.isna() | (sp.deact > c))]
+-        a = ef.asof_features(pw, cutoff(y))
+-        f = pd.concat([a, static.loc[pw]], axis=1)
+-        f["lpop"] = np.log1p(sp.loc[pw, "POPULATION"].fillna(sp.loc[pw, "population_served_count"]))
+-        f["lconn"] = np.log1p(sp.loc[pw, "SERVICE_CONNECTIONS"].fillna(sp.loc[pw, "service_connections_count"]))
++        f = ef.historical_features(pw, cutoff(y))
+         f["cycle"] = y
+         f["y"] = label(pw, y).values if y < 2026 else np.nan
+         frames.append(f)
+         print("cycle", y, len(f), "positives", int(np.nansum(f.y)), flush=True)
+     p = pd.concat(frames)
+     p.index.name = "PWSID"
++    p.attrs.update(feature_policy=FEATURE_POLICY, cycles=CYCLES)
+     CACHE.parent.mkdir(parents=True, exist_ok=True)
+     p.to_pickle(CACHE)
+     return p
+@@ -101,13 +103,17 @@ def feature_cols(p):
+ 
+ 
+ def model():
+-    return HistGradientBoostingClassifier(max_depth=4, learning_rate=0.05, max_iter=250, min_samples_leaf=40, l2_regularization=2.0, random_state=SEED)
++    return model_zoo.make("hgb", max_depth=4, learning_rate=0.05, max_iter=250, min_samples_leaf=40, l2_regularization=2.0)
+ 
+ 
+-def calibrate(pr):
+-    """Map raw ensemble scores to probabilities with the isotonic map fitted on the forward-chaining validation cycles (model_selection.py)."""
+-    cal = model_zoo.selection().get("stage1", {}).get("calibrator")
+-    return np.interp(pr, cal["x"], cal["y"]) if cal else pr
++def calibrate(pr, cycle):
++    """Use a saved calibration map only after all its validation label windows have closed."""
++    s = model_zoo.selection().get("stage1", {})
++    cal = s.get("calibrator")
++    val = s.get("folds", {}).get("val", [])
++    if not cal or not val or cycle <= max(val):
++        return pr
++    return np.interp(pr, cal["x"], cal["y"])
+ 
+ 
+ def predict_for_cycle(y, p=None, target="hbv", calibrate_output=True):
+@@ -121,7 +127,7 @@ def predict_for_cycle(y, p=None, target="hbv", calibrate_output=True):
+     members = [model_zoo.make(k, **cfg).fit(tr[cols], ytr) for k, cfg in model_zoo.stage1_members()]
+     pr = np.mean([m.predict_proba(te[cols])[:, 1] for m in members], axis=0)
+     if target == "hbv" and calibrate_output:
+-        pr = calibrate(pr)
++        pr = calibrate(pr, y)
+     return pd.Series(pr, index=te.index), members
+ 
+ 
+@@ -144,7 +150,7 @@ def source_value(cycles=(2024, 2025)):
+     p = panel()
+     cols = feature_cols(p)
+     if not ef.GROUPS:                                  # the cached panel does not carry the column -> source mapping; rebuild it on a few systems
+-        ef.build(pd.Index(spine().index[:5]), cutoff(2025))
++        ef.historical_features(pd.Index(spine().index[:5]), cutoff(2025))
+     groups = sorted(set(ef.GROUPS[c] for c in cols if c in ef.GROUPS))
+ 
+     def auc_for(use):
+diff --git a/tests/test_extra_data.py b/tests/test_extra_data.py
+index dbe055e..bd627a5 100644
+--- a/tests/test_extra_data.py
++++ b/tests/test_extra_data.py
+@@ -82,7 +82,11 @@ def test_extra_data_improves_the_failure_forecast_on_the_held_out_year():
+ def test_source_value_table_covers_the_sources_and_all_beats_size_only():
+     sv = forecast()["metrics"]["source_value"]
+     assert sv["all_sources"] > sv["size_only"] + 0.05
+-    assert len(sv["drop_one"]) >= 15
++    if forecast()["metrics"].get("feature_policy") == "historical-event-time-v1":
++        assert set(sv["drop_one"]) == {"sdwis_violations", "sdwis_enforcement", "school_lead", "dry_wells",
++                                       "wildfire", "noaa_precip", "noaa_pdsi", "noaa_temp", "terrain_srtm"}
++    else:
++        assert len(sv["drop_one"]) >= 15
+ 
+ 
+ def test_violation_probabilities_are_valid_and_attached_to_systems():

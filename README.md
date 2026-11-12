@@ -85,3 +85,13 @@ See [NOVELTY.md](NOVELTY.md) for prior work, [GRADING.md](GRADING.md) for the sc
 - `tests/`: pytest suite and the Node parity script
 - `data/raw/`: source files; `data/cost_tables.json`: the state's Tables 7 and 9, transcribed by hand and checked against its totals
 - `DataSets.md`: data sources
+
+## Evaluation of the planner's actual forecast
+
+The saved app forecast and its headline rank metrics describe the prior snapshot. The local validation code evaluates both the rank ensemble and the planner probability ensemble, with historical feature corrections and a training-only probability-calibration path shared with forecast export.
+
+Run `python pipeline/model_selection.py`, `python pipeline/calibrate_planner.py`, then `python pipeline/evaluate_planner.py --bootstrap 1000`. The commands rebuild local model selection and calibration artifacts and evaluate all eligible non-Failing systems and baseline At-Risk systems. They do not regenerate the app forecast or funding plans.
+
+See [PLANNER_EVALUATION.md](PLANNER_EVALUATION.md), [the audit report](audit/VALIDATION_REPORT.md), and [historical input policy](pipeline/HISTORICAL_FEATURES.md). Results, reliability bins, Brier/log loss, comparable-population differences, input/code hashes and versions are in `data/planner_evaluation.json`. Training-only out-of-fold calibration evidence is in `data/planner_calibration.json` and `data/planner_calibration_oof.csv`.
+
+This is diagnostic evaluation after prior examination of the 2025-to-2026 outcomes. Assessment snapshot dates differ from the nominal July cutoffs, the supplied 2024 risk workbook has later modification metadata, and historical publication vintages are incomplete. Neither annual failure calibration nor the constant-risk five-year conversion is validated by these results.

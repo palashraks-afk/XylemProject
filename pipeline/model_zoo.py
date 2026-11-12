@@ -2,8 +2,12 @@
 import json
 from pathlib import Path
 
+from feature_policy import FEATURE_POLICY, fingerprint
+
 import numpy as np
 from scipy.stats import rankdata
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.utils.validation import check_is_fitted
 from sklearn.ensemble import ExtraTreesClassifier, HistGradientBoostingClassifier, RandomForestClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
@@ -15,9 +19,30 @@ SELECTION = Path(__file__).resolve().parents[1] / "data" / "model_selection.json
 rank01 = lambda p: rankdata(p) / len(p)  # noqa: E731
 
 
+class EmptyHistoryImputer(TransformerMixin, BaseEstimator):
+    """Keep all-missing training columns constant; preserve native NaNs in other columns.
+
+    Newly available values cannot influence a model that had no history for that feature.
+    This also avoids passing empty numeric bins to gradient boosting.
+    """
+    def fit(self, X, y=None):
+        values = np.asarray(X, dtype=float)
+        self.n_features_in_ = values.shape[1]
+        self.empty_columns_ = np.isnan(values).all(axis=0)
+        return self
+
+    def transform(self, X):
+        check_is_fitted(self, "empty_columns_")
+        values = np.asarray(X, dtype=float).copy()
+        if values.shape[1] != self.n_features_in_:
+            raise ValueError("Historical feature columns changed after fitting")
+        values[:, self.empty_columns_] = 0.0
+        return values
+
+
 def make(kind, **kw):
     if kind == "hgb":
-        return HistGradientBoostingClassifier(random_state=SEED, **kw)
+        return make_pipeline(EmptyHistoryImputer(), HistGradientBoostingClassifier(random_state=SEED, **kw))
     if kind == "rf":
         return make_pipeline(SimpleImputer(strategy="median"), RandomForestClassifier(n_estimators=300, class_weight="balanced_subsample", random_state=SEED, n_jobs=-1, **kw))
     if kind == "et":
@@ -28,7 +53,13 @@ def make(kind, **kw):
 
 
 def selection():
-    return json.loads(SELECTION.read_text()) if SELECTION.exists() else {}
+    if not SELECTION.exists():
+        raise ValueError("Missing model selection. Run python pipeline/model_selection.py")
+    saved = json.loads(SELECTION.read_text())
+    if saved.get("feature_policy") != FEATURE_POLICY or saved.get("input_fingerprint") != fingerprint(model=True):
+        raise ValueError("Model selection/calibration predates the historical feature policy. "
+                         "Run python pipeline/model_selection.py before generating new forecasts.")
+    return saved
 
 
 def stage1_members():
