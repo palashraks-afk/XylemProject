@@ -1,7 +1,8 @@
 {
-  "reason": "Presentation-only release fixes. Frozen diagnostic results and every model/scoring input retain their original bytes. The original evaluated app source remains hash-checked; the active UI is additionally checked below. No diagnostic result was fitted or selected again.",
+  "reason": "Presentation-only release fixes. Frozen diagnostic results and every model/scoring input retain their original bytes. The original evaluated app source remains hash-checked; the active UI is additionally checked below. No diagnostic result was fitted or selected again. California v1 accessibility repairs supersede the f0fa600 presentation only; original diagnostic and release evidence are preserved. See audit/ACCESSIBILITY_REPAIRS.md.",
   "path": "app/app.js",
   "archived_path": "audit/release-baseline/app.js",
   "archived_sha256": "f8fd829fc3bb4d057ccb39ca0d4c8a167133e6e60a2b4d7f43717ff52753c4ca",
-  "current_sha256": "e09012687b481f64ab897a9caf05a83eb721f27c3512828ddacf20a9f87dfc60"
+  "current_sha256": "581927a0541e4f408cf410ba709b2e607b7f62d64c15f822fea43f2b906e84c1",
+  "previous_current_sha256": "e09012687b481f64ab897a9caf05a83eb721f27c3512828ddacf20a9f87dfc60"
 }

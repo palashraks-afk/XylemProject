@@ -1,0 +1,464 @@
+{
+  "commit": "f0fa6006032f6b614276395c5628596a63b966fa",
+  "scope": "Browser automation, not physical phone or screen-reader speech testing",
+  "cases": [
+    {
+      "label": "chrome-default",
+      "axeVersion": "4.10.3",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 10
+        }
+      ],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 811
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "chrome-expanded",
+      "axeVersion": "4.10.3",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 10
+        }
+      ],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 811
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "chrome-method",
+      "axeVersion": "4.10.3",
+      "violations": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "nodes": 2
+        }
+      ],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 28
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "chrome-320px",
+      "axeVersion": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 879
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-default",
+      "axeVersion": "4.10.3",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 10
+        }
+      ],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 811
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-expanded",
+      "axeVersion": "4.10.3",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 10
+        }
+      ],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 811
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-method",
+      "axeVersion": "4.10.3",
+      "violations": [
+        {
+          "id": "scrollable-region-focusable",
+          "impact": "serious",
+          "nodes": 2
+        }
+      ],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 28
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-320px",
+      "axeVersion": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 876
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "channel": "chrome",
+      "version": "157.0.8103.78",
+      "initialTab": {
+        "selected": "true",
+        "controls": null
+      },
+      "rangeNext": "<button type=\"button\" data-preset=\"100\">$100M</button>",
+      "tabAfter": {
+        "active": "Local view",
+        "selected": "true",
+        "panel": "Local view"
+      },
+      "focusAfterClose": {
+        "tag": "BODY",
+        "id": "",
+        "text": "\n\n  \n    \n    XylemA placement map for water funding: explore modeled California"
+      },
+      "live": {
+        "kpis": {
+          "live": null,
+          "role": null
+        },
+        "scenarios": {
+          "live": null,
+          "role": null
+        },
+        "detail": {
+          "live": null,
+          "role": null
+        },
+        "skipLinks": [
+          {
+            "text": "+",
+            "href": "#"
+          },
+          {
+            "text": "−",
+            "href": "#"
+          }
+        ]
+      }
+    },
+    {
+      "channel": "chrome",
+      "reflowSimulation": 640,
+      "layout": {
+        "width": 640,
+        "scrollWidth": 640,
+        "smallTargets": [
+          {
+            "tag": "INPUT",
+            "id": "cons",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "routes",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "poly",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "hot",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "hub",
+            "text": "",
+            "width": 13,
+            "height": 13
+          }
+        ]
+      }
+    },
+    {
+      "channel": "chrome",
+      "reflowSimulation": 320,
+      "layout": {
+        "width": 320,
+        "scrollWidth": 320,
+        "smallTargets": [
+          {
+            "tag": "INPUT",
+            "id": "cons",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "routes",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "poly",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "hot",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "hub",
+            "text": "",
+            "width": 13,
+            "height": 13
+          }
+        ]
+      }
+    },
+    {
+      "channel": "msedge",
+      "version": "119.0.2151.72",
+      "initialTab": {
+        "selected": "true",
+        "controls": null
+      },
+      "rangeNext": "<button type=\"button\" data-preset=\"100\">$100M</button>",
+      "tabAfter": {
+        "active": "Local view",
+        "selected": "true",
+        "panel": "Local view"
+      },
+      "focusAfterClose": {
+        "tag": "BODY",
+        "id": "",
+        "text": "\n\n  \n    \n    XylemA placement map for water funding: explore modeled California"
+      },
+      "live": {
+        "kpis": {
+          "live": null,
+          "role": null
+        },
+        "scenarios": {
+          "live": null,
+          "role": null
+        },
+        "detail": {
+          "live": null,
+          "role": null
+        },
+        "skipLinks": [
+          {
+            "text": "+",
+            "href": "#"
+          },
+          {
+            "text": "−",
+            "href": "#"
+          }
+        ]
+      }
+    },
+    {
+      "channel": "msedge",
+      "reflowSimulation": 640,
+      "layout": {
+        "width": 640,
+        "scrollWidth": 640,
+        "smallTargets": [
+          {
+            "tag": "INPUT",
+            "id": "cons",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "routes",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "poly",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "hot",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "hub",
+            "text": "",
+            "width": 13,
+            "height": 13
+          }
+        ]
+      }
+    },
+    {
+      "channel": "msedge",
+      "reflowSimulation": 320,
+      "layout": {
+        "width": 320,
+        "scrollWidth": 320,
+        "smallTargets": [
+          {
+            "tag": "INPUT",
+            "id": "cons",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "routes",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "poly",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "hot",
+            "text": "",
+            "width": 13,
+            "height": 13
+          },
+          {
+            "tag": "INPUT",
+            "id": "hub",
+            "text": "",
+            "width": 13,
+            "height": 13
+          }
+        ]
+      }
+    }
+  ],
+  "started": "2026-11-12T07:27:58.139Z",
+  "finished": "2026-11-12T07:28:14.227Z"
+}

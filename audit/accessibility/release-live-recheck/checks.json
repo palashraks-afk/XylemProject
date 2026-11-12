@@ -1,0 +1,67 @@
+{
+  "started": "2026-11-12T07:48:30.949Z",
+  "checks": [
+    {
+      "name": "chrome map colors synchronize and routes agree",
+      "status": "PASS",
+      "evidence": {
+        "on": {
+          "two": 1,
+          "three": 1
+        },
+        "off": {
+          "two": 0,
+          "three": 0
+        }
+      }
+    },
+    {
+      "name": "chrome uncaught browser errors",
+      "status": "PASS",
+      "evidence": {
+        "errors": [],
+        "failedRequests": []
+      }
+    },
+    {
+      "name": "msedge map colors synchronize and routes agree",
+      "status": "PASS",
+      "evidence": {
+        "on": {
+          "two": 1,
+          "three": 1
+        },
+        "off": {
+          "two": 0,
+          "three": 0
+        }
+      }
+    },
+    {
+      "name": "msedge uncaught browser errors",
+      "status": "PASS",
+      "evidence": {
+        "errors": [],
+        "failedRequests": []
+      }
+    }
+  ],
+  "browsers": [
+    {
+      "channel": "chrome",
+      "version": "157.0.8103.78"
+    },
+    {
+      "channel": "msedge",
+      "version": "119.0.2151.72"
+    }
+  ],
+  "limitations": [
+    "Mobile viewport/touch emulation only; physical iOS/Safari and screen readers not tested."
+  ],
+  "finished": "2026-11-12T07:48:55.600Z",
+  "summary": {
+    "passed": 4,
+    "failed": 0
+  }
+}

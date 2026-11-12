@@ -7,6 +7,10 @@
   const pct = (x, d = 0) => (x * 100).toFixed(d) + "%";
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
+  const build = await fetch("build.json", {cache: "no-store"}).then(r => {
+    if (!r.ok) throw new Error("Missing presentation build receipt");
+    return r.json();
+  });
   const snapshot = await fetch("data/snapshot.json", {cache: "no-store"}).then(r => {
     if (!r.ok) throw new Error("Missing snapshot manifest; run pipeline/seal_snapshot.py");
     return r.json();
@@ -72,7 +76,7 @@
     if (p.has("v")) st.v = p.get("v") === "fixed" ? "fixed" : "fc";
   })();
 
-  $("#snap").textContent = `SAFER snapshot ${String(summary.snapshot).slice(0, 10)} · ${fmtN(summary.all_systems)} systems · ${fmtN(N)} Failing or At-Risk · ${fmtN(totalPeople)} people · forecast ${snapshot.id.slice(0, 12)}`;
+  $("#snap").textContent = `SAFER snapshot ${String(summary.snapshot).slice(0, 10)} · ${fmtN(summary.all_systems)} systems · ${fmtN(N)} Failing or At-Risk · ${fmtN(totalPeople)} people · forecast ${snapshot.id.slice(0, 12)} · UI build ${build.id.slice(0, 12)}`;
 
   // ---------- optimizer run ----------
   let plan = null;
@@ -240,7 +244,7 @@
 
   // ---------- 3D map (default) and 2D map ----------
   let on3d = true;
-  const data3d = () => ({ systems, infrastructure, drawRoutes: st.routes, inPlan: plan.inPlan, viaRoute, RT, routeLines, onMapStatus: mapStatus, onMapFailure: (message) => { mapStatus(message); setView("2d"); }, counties: countyGeo, polys, idx, popup, esc, fmtN, colorMode: () => st.color, colorCss: colorFor, onSelect: (i) => showDetail(i),
+  const data3d = () => ({ systems, infrastructure, drawRoutes: st.routes, inPlan: plan.inPlan, viaRoute, RT, routeLines, onMapStatus: mapStatus, onMapFailure: (message) => { mapStatus(message); setView("2d"); }, counties: countyGeo, polys, idx, popup, esc, fmtN, colorMode: () => st.color, colorCss: colorFor, onSelect: (i) => openDetail(i, $("#map3d canvas") || $("#find")),
     budget: { pos: () => budgetToPos(st.b), label: () => fmtM(st.b * 1e6), set: (p) => { st.b = posToBudget(p); $("#budget").value = p; update(); } },
     summary: () => ({ budget: fmtM(st.b * 1e6), systems: fmtN(plan.chosen.length), people: fmtN(plan.people) }) });
   function setView(v) {
@@ -258,32 +262,49 @@
   let scenarioGeneration = 0;
   async function runScenarios() {
     const btn = $("#runScen"), out = $("#scenOut"), K = 40, rand = rng(11), hits = new Uint16Array(N);
-    btn.disabled = true; commitUpdate();
+    if (btn.getAttribute("aria-disabled") === "true") return;
+    // Keep the trigger focusable while busy; native disabled drops keyboard focus.
+    btn.setAttribute("aria-disabled", "true"); commitUpdate(); clearAnnouncement(); $("#resultStatus").textContent = "";
     const key = scenarioKey(), generation = ++scenarioGeneration, budget = st.b * 1e6, reserve = st.r, fixedCosts = costs.slice();
     const wRisk = (i) => failing[i] ? 1 : st.v === "fc" ? 1 - Math.pow(1 - (systems[i].pf == null ? AT_RISK_RATE : systems[i].pf), st.h) : st.a;
     const ben = pops.map((p, i) => p * wRisk(i) * (1 + st.l * eq[i]));
     for (let k = 0; k < K; k++) {
       const gauss = () => Math.sqrt(-2 * Math.log(1 - rand())) * Math.cos(2 * Math.PI * rand());
-      if (generation !== scenarioGeneration) { btn.disabled = false; return; }
+      if (generation !== scenarioGeneration) { btn.setAttribute("aria-disabled", "false"); return; }
       const c = fixedCosts.map((v) => v * Math.exp(0.35 * gauss()));          // 0.5x to 2x range is about two standard deviations
       XylemOpt.optimize(c, ben, conns, budget, reserve).forEach((i) => hits[i]++);
       out.textContent = `Running… ${k + 1} of ${K}`; await new Promise((r) => setTimeout(r, 0));
     }
-    if (generation !== scenarioGeneration || key !== scenarioKey()) { btn.disabled = false; return; }
+    if (generation !== scenarioGeneration || key !== scenarioKey()) { btn.setAttribute("aria-disabled", "false"); return; }
     scen = { hits, K, key };
     const solid = plan.chosen.filter((i) => hits[i] >= K * 0.8).length;
     out.textContent = `${solid} of ${plan.chosen.length} funded systems were chosen in at least 80% of ${K} scenarios. Open a system to see its count.`;
-    btn.disabled = false; if (sel3 >= 0) showDetail(sel3);
+    btn.setAttribute("aria-disabled", "false"); if (sel3 >= 0) showDetail(sel3);
+    announce(`Cost scenarios complete. ${solid} of ${plan.chosen.length} funded systems were selected in at least 80% of 40 scenarios.`);
   }
   $("#runScen").addEventListener("click", runScenarios);
 
   // ---------- selected-system card ----------
-  let sel3 = -1;
+  let sel3 = -1, detailReturn = null;
+  function openDetail(i, origin) {
+    detailReturn = { node: origin, system: origin?.dataset.system };
+    showDetail(i);
+    $("#detailTitle").focus({preventScroll: true});
+    $("#detail").scrollIntoView({block: "nearest"});
+  }
+  function closeDetail() {
+    showDetail(-1);
+    const usable = node => node?.isConnected && node.getClientRects().length && !node.disabled;
+    const matching = detailReturn?.system && [...document.querySelectorAll("[data-system]")].find(b => b.dataset.system === detailReturn.system);
+    const target = usable(detailReturn?.node) ? detailReturn.node : usable(matching) ? matching : $("#find");
+    target.focus(); detailReturn = null;
+  }
   function showDetail(i) {
     sel3 = i; const d = $("#detail"); if (i < 0) { d.hidden = true; return; }
     const s = systems[i], fresh = scen && scen.key === scenarioKey();
+    const focusedId = d.contains(document.activeElement) ? document.activeElement.id : null;
     d.hidden = false;
-    d.innerHTML = `<button class="x" aria-label="Close" id="detailX">×</button><span class="eyebrow">${esc(s.id)} · ${esc(s.county)} County</span><h3>${esc(s.name)}</h3>
+    d.innerHTML = `<span class="eyebrow">${esc(s.id)} · ${esc(s.county)} County</span><h3 id="detailTitle" tabindex="-1">${esc(s.name)}</h3><button class="x" aria-label="Close" id="detailX">×</button>
       <div class="mute">${s.failing ? "Failing" : "At-Risk"} · ${fmtN(s.pop)} people served · ${fmtN(s.conn)} connections · ${esc(s.dac)}</div>
       <div class="grid"><div><span class="l">In this plan</span><b>${plan.inPlan[i] ? "Selected" : "Not selected"}</b></div>
       <div><span class="l">Estimated cost</span><b>${fmtM(s.cost)}</b></div><div><span class="l">Illustrative cost range</span><b>${fmtM(s.lo)}–${fmtM(s.hi)}</b></div>
@@ -291,7 +312,8 @@
       ${s.pv != null ? `<div><span class="l">Diagnostic violation estimate (unvalidated)</span><b>${pct(s.pv, 0)}</b></div>` : ""}
       <div><span class="l">Selected when costs vary</span><b>${fresh ? `${scen.hits[i]} of ${scen.K} scenarios` : plan.stabOK ? pct(s.p[plan.stabK]) + " of stress tests" : "run the scenarios"}</b></div></div>
       <div style="margin-top:10px">${routeLine(i)}</div>${s.analytes ? `<div class="mute">Issue: ${esc(s.analytes)}</div>` : ""}`;
-    $("#detailX").onclick = () => showDetail(-1);
+    $("#detailX").onclick = closeDetail;
+    if (focusedId) $("#" + focusedId)?.focus({preventScroll: true});
   }
 
   // ---------- KPIs ----------
@@ -318,7 +340,7 @@
         <tbody>${sorted.slice(0, 400).map((r) => `<tr>${cols.map((c) => `<td class="${c.num ? "num" : ""}">${c.k === "name" && r.id ? `<button type="button" class="system-link" data-system="${esc(r.id)}">${esc(r.name)}</button>` : c.f ? c.f(r) : esc(r[c.k])}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
         ${sorted.length > 400 ? `<p class="fine" style="color:var(--mute)">Showing first 400 of ${fmtN(sorted.length)}.</p>` : ""}`;
       wrap.querySelectorAll("th button").forEach((button) => button.addEventListener("click", () => { const k = button.dataset.k; if (k === key) dir = -dir; else { key = k; dir = -1; } draw(); wrap.querySelector(`[data-k="${k}"]`).focus(); }));
-      wrap.querySelectorAll("[data-system]").forEach(button => button.addEventListener("click", () => { showDetail(idx.get(button.dataset.system)); $("#detail").scrollIntoView({block:"nearest"}); }));
+      wrap.querySelectorAll("[data-system]").forEach(button => button.addEventListener("click", () => { openDetail(idx.get(button.dataset.system), button); }));
     }
     draw(); return wrap;
   }
@@ -491,9 +513,28 @@
   }
   const TABS = { plan: tabPlan, spot: tabSpot, hubs: tabHubs, left: tabLeft, county: tabCounty, method: tabMethod, gaps: tabGaps };
   function drawTab() {
+    const active = document.activeElement, panelFocused = $("#tabbody").contains(active);
+    const scrollIndex = [...$("#tabbody").querySelectorAll(".scroll")].indexOf(active);
     const b = $("#tabbody"); b.innerHTML = ""; b.appendChild(TABS[st.tab]());
-    document.querySelectorAll("[data-tab]").forEach(button => { const selected = button.dataset.tab === st.tab; button.classList.toggle("on", selected); button.setAttribute("aria-selected", String(selected)); button.tabIndex = selected ? 0 : -1; if (selected) b.setAttribute("aria-label", button.textContent); });
+    document.querySelectorAll("[data-tab]").forEach(button => {
+      const selected = button.dataset.tab === st.tab;
+      button.id = "tab-" + button.dataset.tab; button.setAttribute("aria-controls", "tabbody");
+      button.classList.toggle("on", selected); button.setAttribute("aria-selected", String(selected)); button.tabIndex = selected ? 0 : -1;
+      if (selected) { b.setAttribute("aria-label", button.textContent); b.setAttribute("aria-labelledby", button.id); }
+    });
+    b.querySelectorAll(".scroll").forEach(region => {
+      region.tabIndex = 0; region.setAttribute("role", "region");
+      region.setAttribute("aria-label", `${$("[data-tab].on").textContent}: ${region.querySelector("th").textContent.trim()} table`);
+    });
+    if (panelFocused) {
+      const replacement = active.dataset.system ? [...b.querySelectorAll("[data-system]")].find(node => node.dataset.system === active.dataset.system)
+        : active.dataset.k ? [...b.querySelectorAll("th button")].find(node => node.dataset.k === active.dataset.k)
+        : scrollIndex >= 0 ? b.querySelectorAll(".scroll")[scrollIndex] : b;
+      (replacement || b).focus({preventScroll: true});
+    }
   }
+
+  $(".skip-results").addEventListener("click", e => { e.preventDefault(); $("#tabbody").focus(); $("#tabbody").scrollIntoView({block: "start"}); });
 
   // ---------- wiring ----------
   function syncLabels() {
@@ -509,9 +550,27 @@
     const p = new URLSearchParams({ b: st.b, l: st.l, h: st.h, v: st.v, a: st.a, r: st.r, c: st.c, m: st.m });
     history.replaceState(null, "", "#" + p.toString());
   }
+  // One polite, atomic summary after a quiet interval. Never announce table redraws
+  // or the forty intermediate scenario iterations. Real speech needs human QA.
+  let announcementTimer = null, lastPlanKey = scenarioKey(), scenarioCancelled = false;
+  function clearAnnouncement() { clearTimeout(announcementTimer); }
+  function announce(message) {
+    clearAnnouncement();
+    announcementTimer = setTimeout(() => {
+      if ($("#resultStatus").textContent !== message) $("#resultStatus").textContent = message;
+    }, 350);
+  }
+  function planSummary() {
+    const detail = sel3 < 0 ? "" : ` ${systems[sel3].name}: ${plan.inPlan[sel3] ? "selected" : "not selected"}, modeled cost ${fmtM(systems[sel3].cost)}.`;
+    return `${scenarioCancelled ? "Cost scenarios cancelled. " : ""}Plan updated. Budget ${fmtM(st.b * 1e6)}; ${fmtN(plan.chosen.length)} systems funded; ${fmtN(plan.people)} modeled people reached.${detail}`;
+  }
   let timer = null;
-  function commitUpdate() { clearTimeout(timer); timer = null; run(); kpis(); restyle(); drawTab(); writeHash(); if (sel3 >= 0) showDetail(sel3); }
+  function commitUpdate() {
+    clearTimeout(timer); timer = null; run(); kpis(); restyle(); drawTab(); writeHash(); if (sel3 >= 0) showDetail(sel3);
+    if (lastPlanKey !== scenarioKey()) { lastPlanKey = scenarioKey(); announce(planSummary()); scenarioCancelled = false; }
+  }
   function update() {
+    clearAnnouncement(); scenarioCancelled ||= $("#runScen").getAttribute("aria-disabled") === "true";
     scenarioGeneration++; scen = null; $("#scenOut").textContent = "Controls changed. Run cost scenarios for this plan.";
     syncLabels(); clearTimeout(timer); timer = setTimeout(commitUpdate, 60);
   }
@@ -555,7 +614,7 @@
       return [s.id, s.name, s.county, s.failing ? "Failing" : "At-Risk", s.pop, s.conn, s.cost, Math.round(s.cost / s.pop),
         viaRoute[i] ? `Consolidate into ${RT[s.id].receiver_name}` : "Modelled average",
         s.pf == null ? "" : s.pf, s.failing ? 1 : st.v === "fc" ? 1 - Math.pow(1 - s.pf, st.h) : st.a, s.forecast_source, plan.stabOK ? Math.round(s.p[plan.stabK] * 100) : "", s.dac, gis && gis.z[s.id] !== undefined ? gis.z[s.id] : ""].map(q).join(","); });
-    const blob = new Blob([`# Budget_USD ${st.b * 1e6}; selected_systems ${plan.chosen.length}; modeled_people ${plan.people}; modeled_cost_usd ${plan.spent}; scenario ${new URLSearchParams({b:st.b,l:st.l,h:st.h,v:st.v,a:st.a,r:st.r,c:st.c,m:st.m})}; stability_budget_musd ${plan.stabOK ? plan.stabBudget : "unavailable"}\n# Snapshot ${snapshot.id}; diagnostic snapshot estimates; annual failure probabilities and constant-annual-risk horizon conversion unvalidated.\n# Xylem placement plan: budget ${fmtM(st.b * 1e6)}, equity ${st.l}, ${st.v === "fc" ? "forecast horizon " + st.h + " yr" : "fixed At-Risk share " + pct(st.a)}, small-system reserve ${pct(st.r)}, routes ${st.c}, cost multiplier ${st.m}; stability ${plan.stabOK ? "stored at " + plan.stabBudget + "M, no reserve/routes, multiplier 1" : "unavailable for these controls"}; reach is modeled population, not measured intervention benefit; costs modeled; routes approximate\n`, head.join(",") + "\n" + rows.join("\n")], { type: "text/csv" });
+    const blob = new Blob([`# Budget_USD ${st.b * 1e6}; selected_systems ${plan.chosen.length}; modeled_people ${plan.people}; modeled_cost_usd ${plan.spent}; scenario ${new URLSearchParams({b:st.b,l:st.l,h:st.h,v:st.v,a:st.a,r:st.r,c:st.c,m:st.m})}; stability_budget_musd ${plan.stabOK ? plan.stabBudget : "unavailable"}\n# Snapshot ${snapshot.id}; UI_build ${build.id}; diagnostic snapshot estimates; annual failure probabilities and constant-annual-risk horizon conversion unvalidated.\n# Xylem placement plan: budget ${fmtM(st.b * 1e6)}, equity ${st.l}, ${st.v === "fc" ? "forecast horizon " + st.h + " yr" : "fixed At-Risk share " + pct(st.a)}, small-system reserve ${pct(st.r)}, routes ${st.c}, cost multiplier ${st.m}; stability ${plan.stabOK ? "stored at " + plan.stabBudget + "M, no reserve/routes, multiplier 1" : "unavailable for these controls"}; reach is modeled population, not measured intervention benefit; costs modeled; routes approximate\n`, head.join(",") + "\n" + rows.join("\n")], { type: "text/csv" });
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "xylem-placement-plan.csv"; a.click(); URL.revokeObjectURL(a.href);
   });
   $("#cons").checked = !!st.c;
@@ -585,7 +644,7 @@
   $("#spot").addEventListener("change", (e) => spotlight(e.target.value));
   $("#find").addEventListener("change", (e) => {
     const v = e.target.value.trim(), i = byLabel.has(v) ? byLabel.get(v) : idx.get(v.toUpperCase()); if (i === undefined || !dots[i]) return;
-    showDetail(i);
+    openDetail(i, e.target);
     st.spot = systems[i].county; $("#spot").value = st.spot; showTab("spot");
     if (on3d && window.Xylem3D) { Xylem3D.flyToSystem(i); return; }
     map.flyTo(dots[i].getLatLng(), 11); dots[i].openPopup();

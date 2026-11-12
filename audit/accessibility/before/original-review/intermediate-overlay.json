@@ -1,0 +1,25 @@
+{
+  "width": 960,
+  "text": "Budget $500M97 systems funded476,663 people reached",
+  "viewControls": {
+    "x": 347,
+    "y": 426.84375,
+    "width": 152.1875,
+    "height": 33.5,
+    "top": 426.84375,
+    "right": 499.1875,
+    "bottom": 460.34375,
+    "left": 347
+  },
+  "summaryChip": {
+    "x": 437.171875,
+    "y": 426.84375,
+    "width": 401.65625,
+    "height": 37,
+    "top": 426.84375,
+    "right": 838.828125,
+    "bottom": 463.84375,
+    "left": 437.171875
+  },
+  "overlap": true
+}

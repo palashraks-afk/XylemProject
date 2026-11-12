@@ -10,6 +10,8 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<a class="skip-results" href="#tabbody">Skip to plan results</a>
+<p id="resultStatus" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
 <header class="top">
   <div class="brand">
     <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 2.5c3.6 4.3 6 7.4 6 10.6A6 6 0 0 1 6 13.1C6 9.9 8.4 6.8 12 2.5z" fill="currentColor"/></svg>
@@ -117,7 +119,7 @@
       <div id="map3d" role="application" aria-label="3D terrain view of the funding plan"></div>
       <div class="legend" id="legend" hidden></div>
     </div>
-    <div id="detail" class="detail" hidden></div>
+    <div id="detail" class="detail" role="region" aria-labelledby="detailTitle" hidden></div>
     <div class="tabs" role="tablist" aria-label="Plan information">
       <button role="tab" data-tab="plan" class="on">Funded plan</button>
       <button role="tab" data-tab="spot">Local view</button>
@@ -127,7 +129,7 @@
       <button role="tab" data-tab="method">Method and tests</button>
       <button role="tab" data-tab="gaps">Gaps and prior work</button>
     </div>
-    <div id="tabbody" class="tabbody" role="tabpanel" aria-label="Funded plan"></div>
+    <div id="tabbody" class="tabbody" role="tabpanel" tabindex="0" aria-label="Funded plan"></div>
   </section>
 </main>
 <footer class="foot">Data: California State Water Resources Control Board (SAFER Risk Assessment 2024 to 2026, Affordability Assessment, 2024 Cost Assessment, service-area boundaries). Costs are modelled estimates, not quotes. <a href="https://github.com/palashraks-afk/XylemProject">Source</a></footer>

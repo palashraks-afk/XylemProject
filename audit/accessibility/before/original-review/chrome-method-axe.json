@@ -1,0 +1,344 @@
+{
+  "violations": [
+    {
+      "id": "scrollable-region-focusable",
+      "impact": "serious",
+      "description": "Ensure elements that have scrollable content are accessible by keyboard",
+      "help": "Scrollable region must have keyboard access",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/scrollable-region-focusable?application=axeAPI",
+      "tags": [
+        "cat.keyboard",
+        "wcag2a",
+        "wcag211",
+        "wcag213",
+        "TTv5",
+        "TT4.a",
+        "EN-301-549",
+        "EN-9.2.1.1",
+        "EN-9.2.1.3"
+      ],
+      "nodes": [
+        {
+          "target": [
+            ".scroll:nth-child(19)"
+          ],
+          "html": "<div class=\"scroll\">",
+          "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable",
+          "checks": [
+            {
+              "id": "focusable-content",
+              "message": "Element should have focusable content",
+              "data": null
+            },
+            {
+              "id": "focusable-element",
+              "message": "Element should be focusable",
+              "data": null
+            }
+          ]
+        },
+        {
+          "target": [
+            ".scroll:nth-child(22)"
+          ],
+          "html": "<div class=\"scroll\">",
+          "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable",
+          "checks": [
+            {
+              "id": "focusable-content",
+              "message": "Element should have focusable content",
+              "data": null
+            },
+            {
+              "id": "focusable-element",
+              "message": "Element should be focusable",
+              "data": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "incomplete": [
+    {
+      "id": "aria-prohibited-attr",
+      "help": "Elements must only use permitted ARIA attributes",
+      "nodes": [
+        {
+          "target": [
+            "div[aria-label=\"Budget presets\"]"
+          ],
+          "html": "<div class=\"chips\" aria-label=\"Budget presets\">",
+          "summary": "Fix all of the following:\n  aria-label attribute is not well supported on a div with no valid role attribute."
+        }
+      ]
+    },
+    {
+      "id": "color-contrast",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "nodes": [
+        {
+          "target": [
+            "#resLabel"
+          ],
+          "html": "<b id=\"resLabel\">0%</b>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "target": [
+            "#mulLabel"
+          ],
+          "html": "<b id=\"mulLabel\">1.00×</b>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "target": [
+            "#mapStatus"
+          ],
+          "html": "<p id=\"mapStatus\" class=\"map-status\" role=\"status\">2D basemap unavailable. Saved system boundaries, allocations and CSV export remain available.</p>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "target": [
+            "button[data-view=\"3d\"]"
+          ],
+          "html": "<button type=\"button\" data-view=\"3d\" class=\"\" aria-pressed=\"false\">3D terrain</button>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node"
+        },
+        {
+          "target": [
+            ".leaflet-control-zoom-out > span[aria-hidden=\"true\"]"
+          ],
+          "html": "<span aria-hidden=\"true\">−</span>",
+          "summary": "Fix any of the following:\n  Element content contains only non-text characters"
+        },
+        {
+          "target": [
+            ".leaflet-control-attribution"
+          ],
+          "html": "<div class=\"leaflet-control-attribution leaflet-control\">",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node"
+        },
+        {
+          "target": [
+            "a[href$=\"leafletjs.com\"]"
+          ],
+          "html": "<a href=\"https://leafletjs.com\" title=\"A JavaScript library for interactive maps\">",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node"
+        },
+        {
+          "target": [
+            "#legend > div:nth-child(1)"
+          ],
+          "html": "<div><span class=\"dot\" style=\"background:#1f6b52\"></span>Funded in this plan</div>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node"
+        },
+        {
+          "target": [
+            "#legend > div:nth-child(2)"
+          ],
+          "html": "<div><span class=\"dot\" style=\"background:#c2362f\"></span>Failing, not funded</div>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node"
+        },
+        {
+          "target": [
+            "#legend > div:nth-child(3)"
+          ],
+          "html": "<div><span class=\"dot\" style=\"background:#d98a1c\"></span>At-Risk, not funded</div>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node"
+        },
+        {
+          "target": [
+            "#legend > .mute"
+          ],
+          "html": "<div class=\"mute\">Dot size = people served</div>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because element contains an image node"
+        },
+        {
+          "target": [
+            "button[data-tab=\"plan\"]"
+          ],
+          "html": "<button role=\"tab\" data-tab=\"plan\" class=\"\" aria-selected=\"false\" tabindex=\"-1\">Funded plan</button>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "target": [
+            "button[data-tab=\"spot\"]"
+          ],
+          "html": "<button role=\"tab\" data-tab=\"spot\" aria-selected=\"false\" tabindex=\"-1\">Local view</button>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "target": [
+            "button[data-tab=\"hubs\"]"
+          ],
+          "html": "<button role=\"tab\" data-tab=\"hubs\" aria-selected=\"false\" tabindex=\"-1\">Hubs</button>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "target": [
+            "button[data-tab=\"left\"]"
+          ],
+          "html": "<button role=\"tab\" data-tab=\"left\" aria-selected=\"false\" tabindex=\"-1\">Left out</button>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "target": [
+            "button[data-tab=\"county\"]"
+          ],
+          "html": "<button role=\"tab\" data-tab=\"county\" aria-selected=\"false\" tabindex=\"-1\">Counties</button>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "target": [
+            "button[data-tab=\"method\"]"
+          ],
+          "html": "<button role=\"tab\" data-tab=\"method\" aria-selected=\"true\" tabindex=\"0\" class=\"on\">Method and tests</button>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "target": [
+            "button[data-tab=\"gaps\"]"
+          ],
+          "html": "<button role=\"tab\" data-tab=\"gaps\" aria-selected=\"false\" tabindex=\"-1\">Gaps and prior work</button>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
+        },
+        {
+          "target": [
+            ".scroll:nth-child(19) > table > tbody > tr:nth-child(1) > .num:nth-child(5)"
+          ],
+          "html": "<td class=\"num\">0.727</td>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+        },
+        {
+          "target": [
+            ".scroll:nth-child(19) > table > tbody > tr:nth-child(2) > .num:nth-child(5)"
+          ],
+          "html": "<td class=\"num\">0.713</td>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+        },
+        {
+          "target": [
+            ".scroll:nth-child(19) > table > tbody > tr:nth-child(3) > .num:nth-child(5)"
+          ],
+          "html": "<td class=\"num\">0.710</td>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+        },
+        {
+          "target": [
+            ".scroll:nth-child(19) > table > tbody > tr:nth-child(4) > .num:nth-child(5)"
+          ],
+          "html": "<td class=\"num\">0.719</td>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+        },
+        {
+          "target": [
+            ".scroll:nth-child(19) > table > tbody > tr:nth-child(5) > .num:nth-child(5)"
+          ],
+          "html": "<td class=\"num\">0.715</td>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+        },
+        {
+          "target": [
+            "tr:nth-child(6) > .num:nth-child(5)"
+          ],
+          "html": "<td class=\"num\">0.717</td>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+        },
+        {
+          "target": [
+            "tr:nth-child(7) > .num:nth-child(5)"
+          ],
+          "html": "<td class=\"num\">0.713</td>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+        },
+        {
+          "target": [
+            "tr:nth-child(8) > .num:nth-child(5)"
+          ],
+          "html": "<td class=\"num\">0.715</td>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+        },
+        {
+          "target": [
+            "tr:nth-child(9) > .num:nth-child(5)"
+          ],
+          "html": "<td class=\"num\">0.726</td>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+        },
+        {
+          "target": [
+            "tr:nth-child(10) > .num:nth-child(5)"
+          ],
+          "html": "<td class=\"num\">0.727</td>",
+          "summary": "Fix any of the following:\n  Element's background color could not be determined because it's partially obscured by another element"
+        }
+      ]
+    },
+    {
+      "id": "link-in-text-block",
+      "help": "Links must be distinguishable without relying on color",
+      "nodes": [
+        {
+          "target": [
+            "a[href$=\"leafletjs.com\"]"
+          ],
+          "html": "<a href=\"https://leafletjs.com\" title=\"A JavaScript library for interactive maps\">",
+          "summary": "Fix any of the following:\n  Element's contrast ratio could not be determined because element contains an image node"
+        }
+      ]
+    }
+  ],
+  "passes": [
+    "aria-allowed-attr",
+    "aria-allowed-role",
+    "aria-conditional-attr",
+    "aria-deprecated-role",
+    "aria-hidden-body",
+    "aria-hidden-focus",
+    "aria-prohibited-attr",
+    "aria-required-attr",
+    "aria-required-children",
+    "aria-required-parent",
+    "aria-roles",
+    "aria-valid-attr-value",
+    "aria-valid-attr",
+    "avoid-inline-spacing",
+    "button-name",
+    "bypass",
+    "color-contrast",
+    "document-title",
+    "empty-heading",
+    "empty-table-header",
+    "form-field-multiple-labels",
+    "heading-order",
+    "html-has-lang",
+    "html-lang-valid",
+    "label-title-only",
+    "label",
+    "landmark-banner-is-top-level",
+    "landmark-complementary-is-top-level",
+    "landmark-contentinfo-is-top-level",
+    "landmark-main-is-top-level",
+    "landmark-no-duplicate-banner",
+    "landmark-no-duplicate-contentinfo",
+    "landmark-no-duplicate-main",
+    "landmark-one-main",
+    "landmark-unique",
+    "link-in-text-block",
+    "link-name",
+    "meta-viewport-large",
+    "meta-viewport",
+    "nested-interactive",
+    "page-has-heading-one",
+    "region",
+    "select-name",
+    "summary-name",
+    "tabindex",
+    "table-duplicate-name",
+    "target-size",
+    "td-headers-attr",
+    "th-has-data-cells"
+  ],
+  "axeVersion": "4.10.3"
+}

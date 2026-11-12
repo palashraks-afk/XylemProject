@@ -1,0 +1,1021 @@
+{
+  "started": "2026-11-12T07:45:15.936Z",
+  "scope": "Browser automation, DOM mutations and computed layout; no physical phone, native zoom or spoken screen-reader testing.",
+  "checks": [
+    {
+      "name": "chrome default axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "chrome-default",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 724
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "chrome expanded axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "chrome-expanded",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 724
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "chrome all rendered badge combinations",
+      "status": "PASS",
+      "evidence": {
+        "nodes": 97,
+        "combinations": [
+          {
+            "text": "At-Risk",
+            "color": "rgb(133, 80, 13)",
+            "background": "rgb(248, 234, 214)",
+            "ratio": 5.6279791328866455
+          },
+          {
+            "text": "Failing",
+            "color": "rgb(146, 40, 32)",
+            "background": "rgb(245, 223, 222)",
+            "ratio": 6.476294708026299
+          }
+        ]
+      }
+    },
+    {
+      "name": "chrome Method axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "chrome-method",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 28
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "chrome named Method regions keyboard scroll and escape",
+      "status": "PASS",
+      "evidence": [
+        {
+          "width": 1280,
+          "index": 0,
+          "label": "Method and tests: Primary cohort table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 1,
+          "label": "Method and tests: Stage 1 candidate (top 10 by validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 58,
+            "maxY": 1
+          },
+          "after": {
+            "x": 40,
+            "y": 1
+          }
+        },
+        {
+          "width": 1280,
+          "index": 2,
+          "label": "Method and tests: Stage 2 candidate (top 10 by cross-validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 71
+          },
+          "after": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "width": 1280,
+          "index": 3,
+          "label": "Method and tests: Snapshot rank diagnostic, 2025 to 2026 table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 4,
+          "label": "Method and tests: Source dropped table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 5,
+          "label": "Method and tests: Budget table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 0,
+          "label": "Method and tests: Primary cohort table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 412,
+            "maxY": 0
+          },
+          "after": {
+            "x": 40,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 1,
+          "label": "Method and tests: Stage 1 candidate (top 10 by validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 694,
+            "maxY": 1
+          },
+          "after": {
+            "x": 40,
+            "y": 1
+          }
+        },
+        {
+          "width": 320,
+          "index": 2,
+          "label": "Method and tests: Stage 2 candidate (top 10 by cross-validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 484,
+            "maxY": 71
+          },
+          "after": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "width": 320,
+          "index": 3,
+          "label": "Method and tests: Snapshot rank diagnostic, 2025 to 2026 table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 444,
+            "maxY": 0
+          },
+          "after": {
+            "x": 40,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 4,
+          "label": "Method and tests: Source dropped table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 39,
+            "maxY": 0
+          },
+          "after": {
+            "x": 39,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 5,
+          "label": "Method and tests: Budget table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 480,
+            "maxY": 0
+          },
+          "after": {
+            "x": 40,
+            "y": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "chrome card close restores invoking button after redraw",
+      "status": "FAIL",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'' !== 'detailX'\n\n    at C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:68:10\n    at async check (C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:13:83)\n    at async C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:63:2"
+    },
+    {
+      "name": "chrome card refresh preserves title and close focus; missing row fallback",
+      "status": "PASS",
+      "evidence": {
+        "focus": "find",
+        "titleAndClosePreserved": true
+      }
+    },
+    {
+      "name": "chrome search card returns to search after scenario refresh",
+      "status": "PASS",
+      "evidence": {
+        "id": "CA0105009",
+        "focus": "find"
+      }
+    },
+    {
+      "name": "chrome plan updates coalesce and keep focus",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Plan updated. Budget $500M; 97 systems funded; 476,663 modeled people reached."
+        ],
+        "active": "lam",
+        "status": "<p id=\"resultStatus\" class=\"sr-only\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\">Plan updated. Budget $500M; 97 systems funded; 476,663 modeled people reached.</p>"
+      }
+    },
+    {
+      "name": "chrome scenario completion announces once with no progress flooding",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Cost scenarios complete. 3 of 8 funded systems were selected in at least 80% of 40 scenarios."
+        ],
+        "active": "",
+        "visible": "3 of 8 funded systems were chosen in at least 80% of 40 scenarios. Open a system to see its count."
+      }
+    },
+    {
+      "name": "chrome cancelled scenarios do not announce stale completion",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Cost scenarios cancelled. Plan updated. Budget $500M; 112 systems funded; 393,742 modeled people reached."
+        ],
+        "visible": "Controls changed. Run cost scenarios for this plan."
+      }
+    },
+    {
+      "name": "chrome tab linkage and skip path",
+      "status": "PASS",
+      "evidence": [
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-spot",
+          "labelledby": "tab-spot"
+        },
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-gaps",
+          "labelledby": "tab-gaps"
+        },
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-plan",
+          "labelledby": "tab-plan"
+        }
+      ]
+    },
+    {
+      "name": "chrome 320px axe and layout proxies",
+      "status": "PASS",
+      "evidence": {
+        "layouts": [
+          {
+            "width": 1100,
+            "scrollWidth": 1100
+          },
+          {
+            "width": 1024,
+            "scrollWidth": 1024
+          },
+          {
+            "width": 960,
+            "scrollWidth": 960
+          },
+          {
+            "width": 900,
+            "scrollWidth": 900
+          },
+          {
+            "width": 640,
+            "scrollWidth": 640
+          },
+          {
+            "width": 390,
+            "scrollWidth": 390
+          },
+          {
+            "width": 320,
+            "scrollWidth": 320
+          }
+        ],
+        "scan": {
+          "label": "chrome-320px",
+          "axe": "4.10.3",
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "nodes": 1
+            },
+            {
+              "id": "color-contrast",
+              "nodes": 782
+            },
+            {
+              "id": "link-in-text-block",
+              "nodes": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "chrome no uncaught app errors",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "chrome live 3D layout at intermediate/narrow widths and long labels",
+      "status": "FAIL",
+      "error": "page.waitForFunction: Timeout 30000ms exceeded.\n    at C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:120:26\n    at async check (C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:13:83)\n    at async C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:119:2"
+    },
+    {
+      "name": "chrome 3D budget value text while focused",
+      "status": "FAIL",
+      "error": "locator.focus: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-bud]')\u001b[22m\n\n    at C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:136:102\n    at async check (C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:13:83)\n    at async C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:135:2"
+    },
+    {
+      "name": "msedge default axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "msedge-default",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 724
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "msedge expanded axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "msedge-expanded",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 724
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "msedge all rendered badge combinations",
+      "status": "PASS",
+      "evidence": {
+        "nodes": 97,
+        "combinations": [
+          {
+            "text": "At-Risk",
+            "color": "rgb(133, 80, 13)",
+            "background": "rgb(248, 234, 214)",
+            "ratio": 5.6279791328866455
+          },
+          {
+            "text": "Failing",
+            "color": "rgb(146, 40, 32)",
+            "background": "rgb(245, 223, 222)",
+            "ratio": 6.476294708026299
+          }
+        ]
+      }
+    },
+    {
+      "name": "msedge Method axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "msedge-method",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 28
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "msedge named Method regions keyboard scroll and escape",
+      "status": "PASS",
+      "evidence": [
+        {
+          "width": 1280,
+          "index": 0,
+          "label": "Method and tests: Primary cohort table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 1,
+          "label": "Method and tests: Stage 1 candidate (top 10 by validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 58,
+            "maxY": 1
+          },
+          "after": {
+            "x": 58,
+            "y": 1
+          }
+        },
+        {
+          "width": 1280,
+          "index": 2,
+          "label": "Method and tests: Stage 2 candidate (top 10 by cross-validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 71
+          },
+          "after": {
+            "x": 0,
+            "y": 52.5
+          }
+        },
+        {
+          "width": 1280,
+          "index": 3,
+          "label": "Method and tests: Snapshot rank diagnostic, 2025 to 2026 table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 4,
+          "label": "Method and tests: Source dropped table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 5,
+          "label": "Method and tests: Budget table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 0,
+          "label": "Method and tests: Primary cohort table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 412,
+            "maxY": 0
+          },
+          "after": {
+            "x": 31.75,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 1,
+          "label": "Method and tests: Stage 1 candidate (top 10 by validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 694,
+            "maxY": 1
+          },
+          "after": {
+            "x": 31.75,
+            "y": 1
+          }
+        },
+        {
+          "width": 320,
+          "index": 2,
+          "label": "Method and tests: Stage 2 candidate (top 10 by cross-validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 484,
+            "maxY": 71
+          },
+          "after": {
+            "x": 31.75,
+            "y": 52.5
+          }
+        },
+        {
+          "width": 320,
+          "index": 3,
+          "label": "Method and tests: Snapshot rank diagnostic, 2025 to 2026 table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 444,
+            "maxY": 0
+          },
+          "after": {
+            "x": 31.75,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 4,
+          "label": "Method and tests: Source dropped table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 39,
+            "maxY": 0
+          },
+          "after": {
+            "x": 31.75,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 5,
+          "label": "Method and tests: Budget table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 480,
+            "maxY": 0
+          },
+          "after": {
+            "x": 31.75,
+            "y": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "msedge card close restores invoking button after redraw",
+      "status": "FAIL",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'' !== 'detailX'\n\n    at C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:68:10\n    at async check (C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:13:83)\n    at async C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:63:2"
+    },
+    {
+      "name": "msedge card refresh preserves title and close focus; missing row fallback",
+      "status": "PASS",
+      "evidence": {
+        "focus": "find",
+        "titleAndClosePreserved": true
+      }
+    },
+    {
+      "name": "msedge search card returns to search after scenario refresh",
+      "status": "PASS",
+      "evidence": {
+        "id": "CA0105009",
+        "focus": "find"
+      }
+    },
+    {
+      "name": "msedge plan updates coalesce and keep focus",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Plan updated. Budget $500M; 97 systems funded; 476,663 modeled people reached."
+        ],
+        "active": "lam",
+        "status": "<p id=\"resultStatus\" class=\"sr-only\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\">Plan updated. Budget $500M; 97 systems funded; 476,663 modeled people reached.</p>"
+      }
+    },
+    {
+      "name": "msedge scenario completion announces once with no progress flooding",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Cost scenarios complete. 3 of 8 funded systems were selected in at least 80% of 40 scenarios."
+        ],
+        "active": "",
+        "visible": "3 of 8 funded systems were chosen in at least 80% of 40 scenarios. Open a system to see its count."
+      }
+    },
+    {
+      "name": "msedge cancelled scenarios do not announce stale completion",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Cost scenarios cancelled. Plan updated. Budget $500M; 112 systems funded; 393,742 modeled people reached."
+        ],
+        "visible": "Controls changed. Run cost scenarios for this plan."
+      }
+    },
+    {
+      "name": "msedge tab linkage and skip path",
+      "status": "PASS",
+      "evidence": [
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-spot",
+          "labelledby": "tab-spot"
+        },
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-gaps",
+          "labelledby": "tab-gaps"
+        },
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-plan",
+          "labelledby": "tab-plan"
+        }
+      ]
+    },
+    {
+      "name": "msedge 320px axe and layout proxies",
+      "status": "PASS",
+      "evidence": {
+        "layouts": [
+          {
+            "width": 1100,
+            "scrollWidth": 1100
+          },
+          {
+            "width": 1024,
+            "scrollWidth": 1024
+          },
+          {
+            "width": 960,
+            "scrollWidth": 960
+          },
+          {
+            "width": 900,
+            "scrollWidth": 900
+          },
+          {
+            "width": 640,
+            "scrollWidth": 640
+          },
+          {
+            "width": 390,
+            "scrollWidth": 390
+          },
+          {
+            "width": 320,
+            "scrollWidth": 320
+          }
+        ],
+        "scan": {
+          "label": "msedge-320px",
+          "axe": "4.10.3",
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "nodes": 1
+            },
+            {
+              "id": "color-contrast",
+              "nodes": 782
+            },
+            {
+              "id": "link-in-text-block",
+              "nodes": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "msedge no uncaught app errors",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "msedge live 3D layout at intermediate/narrow widths and long labels",
+      "status": "FAIL",
+      "error": "page.waitForFunction: Timeout 30000ms exceeded.\n    at C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:120:26\n    at async check (C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:13:83)\n    at async C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:119:2"
+    },
+    {
+      "name": "msedge 3D budget value text while focused",
+      "status": "FAIL",
+      "error": "locator.focus: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-bud]')\u001b[22m\n\n    at C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:136:102\n    at async check (C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:13:83)\n    at async C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1ceb1-04db-7401-8063-6ff21bd35b5f\\XylemAccessibility\\tests\\accessibility_browser.cjs:135:2"
+    }
+  ],
+  "scans": [
+    {
+      "label": "chrome-default",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 724
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "chrome-expanded",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 724
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "chrome-method",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 28
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "chrome-320px",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 782
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-default",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 724
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-expanded",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 724
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-method",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 28
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-320px",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 782
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    }
+  ],
+  "browsers": [
+    {
+      "channel": "chrome",
+      "version": "157.0.8103.78"
+    },
+    {
+      "channel": "msedge",
+      "version": "119.0.2151.72"
+    }
+  ],
+  "finished": "2026-11-12T07:47:47.229Z",
+  "summary": {
+    "passed": 26,
+    "failed": 6
+  }
+}

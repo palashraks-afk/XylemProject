@@ -99,7 +99,10 @@
     const rt = [];
     if (D.routeLines) D.routeLines.features.forEach((f) => { const i = D.idx.get(f.properties.id), r = D.RT[f.properties.id]; if (D.drawRoutes && i !== undefined && D.inPlan[i] && D.viaRoute[i] && r && r.viable && r.receiver) rt.push(f); });
     map.getSource("routes").setData({ type: "FeatureCollection", features: rt });
-    if (hud.bud && D.budget && document.activeElement !== hud.bud) { hud.bud.value = D.budget.pos(); hud.bl.textContent = D.budget.label(); }
+    if (hud.bud && D.budget) {
+      if (document.activeElement !== hud.bud) hud.bud.value = D.budget.pos();
+      hud.bl.textContent = D.budget.label(); hud.bud.setAttribute("aria-valuetext", D.budget.label());
+    }
     if (hud.chip) { const s = D.summary(); hud.chip.innerHTML = `<span>Budget <b>${s.budget}</b></span><span><b>${s.systems}</b> systems funded</span><span><b>${s.people}</b> people reached</span>`; }
   }
   function refreshInfra() {
@@ -189,13 +192,15 @@
       <div><span class="sw" style="background:${RISK}"></span>At-risk, not selected</div><div class="mute">Each service area is shaded in its colour.</div><div><span class="sw bar" style="background:#3fb8ff"></span>Canal or aqueduct</div>
       <div><span class="sw bar" style="background:#ffd38a"></span>Tunnel</div><div><span class="sw sq" style="background:#7fc3ff"></span>Treatment plant</div>
       <div><span class="sw bar" style="background:${ROUTE}"></span>Consolidation pipeline</div></div>`);
-    box.append(hud.chip, panel, legend);
+    const tools = el(`<div class="tools3d"></div>`);
+    tools.append(hud.chip, panel); box.append(tools, legend);
     hud.legend = legend;
     panel.addEventListener("input", (e) => { const k = e.target.dataset.k; if (!k) return; opt[k] = e.target.type === "checkbox" ? e.target.checked : +e.target.value; if (k === "unfunded") refreshSystems(); applyOpts(); });
     panel.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return;
       if (b.dataset.act === "home") V.home(); });
     hud.bud = panel.querySelector("[data-bud]"); hud.bl = panel.querySelector("[data-bl]");
-    hud.bud.addEventListener("input", () => D.budget.set(+hud.bud.value));
+    hud.bud.value = D.budget.pos(); hud.bl.textContent = D.budget.label(); hud.bud.setAttribute("aria-valuetext", D.budget.label());
+    hud.bud.addEventListener("input", () => { D.budget.set(+hud.bud.value); hud.bl.textContent = D.budget.label(); hud.bud.setAttribute("aria-valuetext", D.budget.label()); });
     panel.querySelector("[data-jump]").addEventListener("change", (e) => { const c = CITIES[e.target.value]; if (c) V.flyToLonLat(c[0], c[1], 13.4); e.target.value = ""; });
   }
 })();

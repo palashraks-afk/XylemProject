@@ -1,0 +1,24 @@
+# Budget_USD 100000000; selected_systems 20; modeled_people 171738; modeled_cost_usd 97767799; scenario b=100&l=1&h=5&v=fc&a=0.5&r=0&c=0&m=1; stability_budget_musd 100
+# Snapshot 806032f64da14561b81c55e72179ec22f299774fa97b9b5f08c4742909f9c0bd; UI_build efb5e6e0e986178bef4bb6c9d3810854623d0c8947d3ecb631c80accda6c7a1b; diagnostic snapshot estimates; annual failure probabilities and constant-annual-risk horizon conversion unvalidated.
+# Xylem placement plan: budget $100M, equity 1, forecast horizon 5 yr, small-system reserve 0%, routes 0, cost multiplier 1; stability stored at 100M, no reserve/routes, multiplier 1; reach is modeled population, not measured intervention benefit; costs modeled; routes approximate
+water_system_id,name,county,status,people,connections,cost_usd,cost_per_person,solution,snapshot_probability,allocation_weight,forecast_source,stability_pct,economic_status,hotspot_z
+"CA0706029","Excelsior Middle School","Contra Costa","Failing","600","2","190799","318","Modelled average","","1","","82","Miss/Indet","-0.89"
+"CA1000180","Alta Elementary School","Fresno","Failing","395","1","95399","242","Modelled average","","1","","91","Miss/Indet","2.5"
+"CA1000196","Riverview School","Fresno","Failing","536","1","95399","178","Modelled average","","1","","98","Miss/Indet","2.29"
+"CA1010001","Bakman Water Company","Fresno","Failing","17393","2727","10799933","621","Modelled average","","1","","78","SDAC","0.47"
+"CA1010018","Kerman, City Of","Fresno","Failing","17860","4113","7404350","415","Modelled average","","1","","88","SDAC","0.35"
+"CA1010025","City Of Parlier","Fresno","Failing","14576","2711","10736567","737","Modelled average","","1","","65","SDAC","2.63"
+"CA1300554","Meadows Union Elementary School","Imperial","Failing","550","1","95399","173","Modelled average","","1","","97","Miss/Indet","3.84"
+"CA1502154","Lakeside School","Kern","Failing","897","4","381597","425","Modelled average","","1","","82","Miss/Indet","2.07"
+"CA1502231","Rosamond School Water System","Kern","Failing","940","2","190799","203","Modelled average","","1","","93","Miss/Indet","-0.46"
+"CA1503140","Frazier Mountain High School","Kern","Failing","516","1","95399","185","Modelled average","","1","","93","Miss/Indet","-0.11"
+"CA1510013","Mcfarland, City Of","Kern","Failing","14161","3130","12395963","875","Modelled average","","1","","65","SDAC","7.4"
+"CA1510021","Wasco, City Of","Kern","Failing","22757","5365","9658239","424","Modelled average","","1","","92","SDAC","7.16"
+"CA1610002","Avenal, City Of","Kings","Failing","13696","2123","8407869","614","Modelled average","","1","","80","SDAC","2.42"
+"CA1610005","Lemoore, City Of","Kings","Failing","27185","7474","13454925","495","Modelled average","","1","","79","DAC","1.36"
+"CA2410004","City Of Livingston","Merced","Failing","14894","3606","6491632","436","Modelled average","","1","","90","DAC","2.39"
+"CA2700552","Echo Valley School Ws","Monterey","Failing","579","1","95399","165","Modelled average","","1","","98","Miss/Indet","-1.49"
+"CA3310003","Blythe - City Of","Riverside","Failing","9735","3380","6084780","625","Modelled average","","1","","75","SDAC","0.76"
+"CA4200833","Bonita School","Santa Barbara","Failing","589","1","95399","162","Modelled average","","1","","98","Miss/Indet","-0.8"
+"CA5410001","Cutler Pud","Tulare","Failing","6200","1234","4887099","788","Modelled average","","1","","68","SDAC","2.95"
+"CA5410021","Earlimart Pud","Tulare","Failing","7679","1543","6110853","796","Modelled average","","1","","67","SDAC","3.79"

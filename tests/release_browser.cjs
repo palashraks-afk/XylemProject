@@ -32,6 +32,7 @@ async function exportAndCheck(page,label,immediate) {
   assert.ok(text.includes('selected_systems '+rows.length+';'));
   assert.ok(text.includes('modeled_cost_usd '+state.spent+';'));
   const manifest=JSON.parse(fs.readFileSync('app/data/snapshot.json'));assert.ok(text.includes(manifest.id));
+  const build=JSON.parse(fs.readFileSync('app/build.json'));assert.ok(text.includes('UI_build '+build.id+';'));
   const byId=new Map(state.systems.map(s=>[s.id,s]));
   for(const r of rows){const s=byId.get(r.water_system_id);assert.equal(+r.cost_usd,s.cost);assert.ok(Math.abs(+r.allocation_weight-(s.failing?1:state.st.v==='fixed'?state.st.a:1-Math.pow(1-s.pf,state.st.h)))<1e-12, 'independent weight formula differs beyond floating-point tolerance');assert.equal(r.stability_pct,state.stabOK?String(Math.round(s.p[state.stabBudget===100?0:state.stabBudget===250?1:state.stabBudget===500?2:state.stabBudget===1000?3:4]*100)):'');}
   assert.ok(state.kpis.includes(state.people.toLocaleString('en-US')));
@@ -62,10 +63,10 @@ async function exportAndCheck(page,label,immediate) {
   await check(channel+' cost scenarios complete and cancel on changed controls',async()=>{
     await ready(page,'#b=25');
     await page.locator('#runScen').click();
-    await page.waitForFunction(()=>!document.querySelector('#runScen').disabled);
+    await page.waitForFunction(()=>document.querySelector('#runScen').getAttribute('aria-disabled') !== 'true');
     const complete=await page.locator('#scenOut').innerText();assert.ok(complete.includes('80% of 40 scenarios'));
     await page.locator('#runScen').click();await control(page,'lam',2);
-    await page.waitForFunction(()=>!document.querySelector('#runScen').disabled);
+    await page.waitForFunction(()=>document.querySelector('#runScen').getAttribute('aria-disabled') !== 'true');
     const cancelled=await page.locator('#scenOut').innerText();assert.ok(cancelled.includes('Controls changed'));
     return {complete,cancelled};
   });

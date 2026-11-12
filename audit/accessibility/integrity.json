@@ -1,0 +1,43 @@
+{
+  "base_commit": "f0fa6006032f6b614276395c5628596a63b966fa",
+  "frozen_paths_unchanged": [
+    "app/data",
+    "data",
+    "pipeline",
+    ".github"
+  ],
+  "original_diagnostic_hashes_checked": 367,
+  "raw_input_hashes_checked": 335,
+  "archived_evaluated_ui_and_active_ui": "PASS",
+  "baseline_ui_bytes": "PASS",
+  "inherited_evidence_manifest_mismatches": {},
+  "local_before_evidence_sha256": {
+    "app/app.js": "e09012687b481f64ab897a9caf05a83eb721f27c3512828ddacf20a9f87dfc60",
+    "app/index.html": "77e472b4d89933c9f9e00283882190cca0b60d712b15e1c0a5fa7a7535e1fc03",
+    "app/map3d.js": "f7911b6d8a5435e747f8d1597326857a5c14a1459b48d96cb9991b2674f9f705",
+    "app/style.css": "1c51168cacc24d12975256b9d8e4eb4e07dbdd18255a030d4e9735f4bc6b906d",
+    "original-review/ACCESSIBILITY_REVIEW.md": "c312b8da438a3f375d265fd223b65c0e583f01f6a542a259f4bbf5b11db45818",
+    "original-review/chrome-320px-axe.json": "b39229fbef14f2e2b392193d427e0d3a67661dd8fc71a32fdda0498cd0b922e0",
+    "original-review/chrome-320px.png": "34dfe4e5d746f10396a20d5f46627b655624a5c1fa789fdeb2c8ecaf3558dcf7",
+    "original-review/chrome-640px.png": "1cae8daba4534c4b502ad2669fdb027e317906396caa33ca368d7773f51e1c4a",
+    "original-review/chrome-default-axe.json": "8cee8f238d2916b0d0eafa166fd62ec846c510b5ee4089f47b5b560b27946064",
+    "original-review/chrome-expanded-axe.json": "8cee8f238d2916b0d0eafa166fd62ec846c510b5ee4089f47b5b560b27946064",
+    "original-review/chrome-method-axe.json": "18ad4ebdf267bcb8ca9211f9ddca522f7d019f74f8d1abfc76266dde63d48072",
+    "original-review/intermediate-960px.png": "4b66c30707f9b9b5b7bffd3c811553057c24c4de10def96b0f4be46f520f6c16",
+    "original-review/intermediate-overlay.json": "8be14c06ed62c626193c6eedb23359ead02f741994c068206cffc6bbf2a288c4",
+    "original-review/msedge-320px-axe.json": "5629d43b8193fd13290f8e60ab78408b7f426ceca8056fa23d57e311483230a2",
+    "original-review/msedge-320px.png": "53cfede7e9fe58e07dd8b2345c945fdfaf77b043f16cc526627da0c45530fd88",
+    "original-review/msedge-640px.png": "4e4964559ee4cb75ea880abc7846e4ef9f0307a274097affb16e4db58db517cd",
+    "original-review/msedge-default-axe.json": "8cee8f238d2916b0d0eafa166fd62ec846c510b5ee4089f47b5b560b27946064",
+    "original-review/msedge-expanded-axe.json": "8cee8f238d2916b0d0eafa166fd62ec846c510b5ee4089f47b5b560b27946064",
+    "original-review/msedge-method-axe.json": "18ad4ebdf267bcb8ca9211f9ddca522f7d019f74f8d1abfc76266dde63d48072",
+    "original-review/native-tree-observation.json": "373ce204517ef2aa51e00bbb72853e43cf2dc36890e9ce283900ad39a1495599",
+    "original-review/NEXT_CHAT_PROMPT.md": "2f50efd3783d3c11404371218a3a70c30d7d5575875981fa9cdb6a5e6a06ca97",
+    "original-review/review.cjs": "1ddc84970aaf335865f1f16ba93514efd630d9c066f4669f17406a342418d600",
+    "original-review/run.log": "52bcdb12f12500eb28d7a7ffc61a9c76b2286764997b79752c8951d18c830579",
+    "original-review/SHA256-MANIFEST.json": "4a5c6168a1788f91804e99e386ae3099fc4b0e3a7c09a96332fe595d94450c8f",
+    "original-review/summary.json": "35c86c797c420f1b716dfa2974d1daa9fbf2752adc6a6a08ce89dd0a40c50f24"
+  },
+  "model_training": "not run; frozen results reused",
+  "raw_downloads": "none"
+}

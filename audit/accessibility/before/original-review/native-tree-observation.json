@@ -1,0 +1,33 @@
+{
+  "scope": "Observed Windows accessibility tree, not screen-reader speech or a completed native keyboard test",
+  "title": "Xylem: California Water Funding Optimizer - Google Chrome",
+  "controls": [
+    "\t\t\t\t\t\t\t\t\t\t\t86 slider (settable, float) Funding budget Value: 56 ID: budget",
+    "\t\t\t\t\t\t\t\t\t\t\t95 slider (settable, float) Equity priority Value: 1 ID: lam",
+    "\t\t\t\t\t\t\t\t\t\t\t98 slider (settable, float) Small-system budget reserve Value: 0 ID: res",
+    "\t\t\t\t\t\t\t\t\t\t\t101 slider (settable, float) Cost assumption Value: 1 ID: mul",
+    "\t\t\t\t\t\t\t\t\t\t125 combo box (settable, string) Find a water system or PWSID Description: Find a water system or PWSID ID: find",
+    "\t\t\t\t\t\t\t\t\t\t131 application 3D terrain view of the funding plan ID: map3d",
+    "\t\t\t\t\t\t\t\t\t\t\t\t1273 slider (settable, float) Funding budget Value: 50",
+    "\t\t\t\t\t\t\t\t\t\t\t\t\t1284 slider (settable, float) Relief Value: 1.7999999523162842",
+    "\t\t\t\t\t\t\t\t\t\t\t133 tab item (selectable) Funded plan",
+    "\t\t\t\t\t\t\t\t\t\t\t134 tab item (selectable) Local view",
+    "\t\t\t\t\t\t\t\t\t\t\t135 tab item (selectable) Hubs",
+    "\t\t\t\t\t\t\t\t\t\t\t136 tab item (selectable) Left out",
+    "\t\t\t\t\t\t\t\t\t\t\t137 tab item (selectable) Counties",
+    "\t\t\t\t\t\t\t\t\t\t\t138 tab item (selectable) Method and tests",
+    "\t\t\t\t\t\t\t\t\t\t\t139 tab item (selectable) Gaps and prior work",
+    "\t\t\t\t\t\t\t\t\t\t140 tab panel Funded plan ID: tabbody",
+    "\t\t\t\t\t\t\t\t\t\t\t\t\t173 column header SYSTEM",
+    "\t\t\t\t\t\t\t\t\t\t\t\t\t175 column header COUNTY",
+    "\t\t\t\t\t\t\t\t\t\t\t\t\t177 column header STATUS",
+    "\t\t\t\t\t\t\t\t\t\t\t\t\t179 column header PEOPLE ▼",
+    "\t\t\t\t\t\t\t\t\t\t\t\t\t181 column header COST",
+    "\t\t\t\t\t\t\t\t\t\t\t\t\t183 column header $/PERSON",
+    "\t\t\t\t\t\t\t\t\t\t\t\t\t185 column header STABILITY",
+    "\t\t\t\t\t\t\t\t\t\t\t\t\t187 column header ECONOMIC STATUS",
+    "\t\t\t\t\t\t\t\t\t\t\t\t\t189 column header SOLUTION",
+    "\t\t\t\t\t\t\t\t\t55 tab item (selectable) Xylem: California Water Funding Optimizer ID: view_20"
+  ],
+  "nativeInputLimitation": "Native input was unreliable: coordinate input geometry unavailable, and subsequent click did not establish budget focus. No native keyboard success is claimed."
+}

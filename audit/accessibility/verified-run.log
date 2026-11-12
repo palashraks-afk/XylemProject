@@ -1,0 +1,33 @@
+PASS chrome default axe
+PASS chrome expanded axe
+PASS chrome all rendered badge combinations
+PASS chrome Method axe
+PASS chrome named Method regions keyboard scroll and escape
+PASS chrome card close restores invoking button after redraw
+PASS chrome card refresh preserves title and close focus; missing row fallback
+PASS chrome search card returns to search after scenario refresh
+PASS chrome plan updates coalesce and keep focus
+PASS chrome scenario completion announces once with no progress flooding
+PASS chrome cancelled scenarios do not announce stale completion
+PASS chrome tab linkage and skip path
+PASS chrome 320px axe and layout proxies
+PASS chrome no uncaught app errors
+PASS chrome live 3D layout at intermediate/narrow widths and long labels
+PASS chrome 3D budget value text while focused
+PASS msedge default axe
+PASS msedge expanded axe
+PASS msedge all rendered badge combinations
+PASS msedge Method axe
+PASS msedge named Method regions keyboard scroll and escape
+PASS msedge card close restores invoking button after redraw
+PASS msedge card refresh preserves title and close focus; missing row fallback
+PASS msedge search card returns to search after scenario refresh
+PASS msedge plan updates coalesce and keep focus
+PASS msedge scenario completion announces once with no progress flooding
+PASS msedge cancelled scenarios do not announce stale completion
+PASS msedge tab linkage and skip path
+PASS msedge 320px axe and layout proxies
+PASS msedge no uncaught app errors
+PASS msedge live 3D layout at intermediate/narrow widths and long labels
+PASS msedge 3D budget value text while focused
+{"summary":{"passed":32,"failed":0},"failures":[]}

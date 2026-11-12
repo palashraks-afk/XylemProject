@@ -1,0 +1,2918 @@
+{
+  "started": "2026-11-12T07:51:35.359Z",
+  "scope": "Browser automation, DOM mutations and computed layout; no physical phone, native zoom or spoken screen-reader testing.",
+  "checks": [
+    {
+      "name": "chrome default axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "chrome-default",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 0
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "chrome expanded axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "chrome-expanded",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 0
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "chrome all rendered badge combinations",
+      "status": "PASS",
+      "evidence": {
+        "nodes": 97,
+        "combinations": [
+          {
+            "text": "At-Risk",
+            "color": "rgb(133, 80, 13)",
+            "background": "rgb(248, 234, 214)",
+            "ratio": 5.6279791328866455
+          },
+          {
+            "text": "Failing",
+            "color": "rgb(146, 40, 32)",
+            "background": "rgb(245, 223, 222)",
+            "ratio": 6.476294708026299
+          }
+        ]
+      }
+    },
+    {
+      "name": "chrome Method axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "chrome-method",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 0
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "chrome named Method regions keyboard scroll and escape",
+      "status": "PASS",
+      "evidence": [
+        {
+          "width": 1280,
+          "index": 0,
+          "label": "Method and tests: Primary cohort table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 1,
+          "label": "Method and tests: Stage 1 candidate (top 10 by validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 58,
+            "maxY": 1
+          },
+          "after": {
+            "x": 40,
+            "y": 1
+          }
+        },
+        {
+          "width": 1280,
+          "index": 2,
+          "label": "Method and tests: Stage 2 candidate (top 10 by cross-validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 71
+          },
+          "after": {
+            "x": 0,
+            "y": 40
+          }
+        },
+        {
+          "width": 1280,
+          "index": 3,
+          "label": "Method and tests: Snapshot rank diagnostic, 2025 to 2026 table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 4,
+          "label": "Method and tests: Source dropped table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 5,
+          "label": "Method and tests: Budget table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 0,
+          "label": "Method and tests: Primary cohort table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 412,
+            "maxY": 0
+          },
+          "after": {
+            "x": 40,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 1,
+          "label": "Method and tests: Stage 1 candidate (top 10 by validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 694,
+            "maxY": 1
+          },
+          "after": {
+            "x": 40,
+            "y": 1
+          }
+        },
+        {
+          "width": 320,
+          "index": 2,
+          "label": "Method and tests: Stage 2 candidate (top 10 by cross-validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 484,
+            "maxY": 71
+          },
+          "after": {
+            "x": 40,
+            "y": 40
+          }
+        },
+        {
+          "width": 320,
+          "index": 3,
+          "label": "Method and tests: Snapshot rank diagnostic, 2025 to 2026 table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 444,
+            "maxY": 0
+          },
+          "after": {
+            "x": 40,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 4,
+          "label": "Method and tests: Source dropped table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 39,
+            "maxY": 0
+          },
+          "after": {
+            "x": 39,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 5,
+          "label": "Method and tests: Budget table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 480,
+            "maxY": 0
+          },
+          "after": {
+            "x": 40,
+            "y": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "chrome card close restores invoking button after redraw",
+      "status": "PASS",
+      "evidence": {
+        "id": "CA3310007",
+        "focus": "<button type=\"button\" class=\"system-link\" data-system=\"CA3310007\">Coachella Water Authority</button>"
+      }
+    },
+    {
+      "name": "chrome card refresh preserves title and close focus; missing row fallback",
+      "status": "PASS",
+      "evidence": {
+        "focus": "find",
+        "titleAndClosePreserved": true
+      }
+    },
+    {
+      "name": "chrome search card returns to search after scenario refresh",
+      "status": "PASS",
+      "evidence": {
+        "id": "CA0105009",
+        "focus": "find"
+      }
+    },
+    {
+      "name": "chrome plan updates coalesce and keep focus",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Plan updated. Budget $500M; 97 systems funded; 476,663 modeled people reached."
+        ],
+        "active": "lam",
+        "status": "<p id=\"resultStatus\" class=\"sr-only\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\">Plan updated. Budget $500M; 97 systems funded; 476,663 modeled people reached.</p>"
+      }
+    },
+    {
+      "name": "chrome scenario completion announces once with no progress flooding",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Cost scenarios complete. 3 of 8 funded systems were selected in at least 80% of 40 scenarios."
+        ],
+        "active": "runScen",
+        "visible": "3 of 8 funded systems were chosen in at least 80% of 40 scenarios. Open a system to see its count."
+      }
+    },
+    {
+      "name": "chrome cancelled scenarios do not announce stale completion",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Cost scenarios cancelled. Plan updated. Budget $500M; 112 systems funded; 393,742 modeled people reached."
+        ],
+        "visible": "Controls changed. Run cost scenarios for this plan."
+      }
+    },
+    {
+      "name": "chrome tab linkage and skip path",
+      "status": "PASS",
+      "evidence": [
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-spot",
+          "labelledby": "tab-spot"
+        },
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-gaps",
+          "labelledby": "tab-gaps"
+        },
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-plan",
+          "labelledby": "tab-plan"
+        }
+      ]
+    },
+    {
+      "name": "chrome 320px axe and layout proxies",
+      "status": "PASS",
+      "evidence": {
+        "layouts": [
+          {
+            "width": 1100,
+            "scrollWidth": 1100
+          },
+          {
+            "width": 1024,
+            "scrollWidth": 1024
+          },
+          {
+            "width": 960,
+            "scrollWidth": 960
+          },
+          {
+            "width": 900,
+            "scrollWidth": 900
+          },
+          {
+            "width": 640,
+            "scrollWidth": 640
+          },
+          {
+            "width": 390,
+            "scrollWidth": 390
+          },
+          {
+            "width": 320,
+            "scrollWidth": 320
+          }
+        ],
+        "scan": {
+          "label": "chrome-320px",
+          "axe": "4.10.3",
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "nodes": 1
+            },
+            {
+              "id": "color-contrast",
+              "nodes": 0
+            },
+            {
+              "id": "link-in-text-block",
+              "nodes": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "chrome no uncaught app errors",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "chrome live 3D layout at intermediate/narrow widths and long labels",
+      "status": "PASS",
+      "evidence": {
+        "allocationFeatures": 1062,
+        "layouts": [
+          {
+            "width": 900,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 418.84375,
+                "right": 179.1875,
+                "bottom": 452.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 460.84375,
+                "right": 420.65625,
+                "bottom": 497.84375,
+                "width": 393.65625,
+                "height": 37
+              },
+              "hud": {
+                "x": 27,
+                "y": 505.84375,
+                "right": 195,
+                "bottom": 833.34375,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 844,
+                "y": 414.84375,
+                "right": 883,
+                "bottom": 511.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 408.84375,
+                "right": 883,
+                "bottom": 1208.84375,
+                "width": 866,
+                "height": 800
+              },
+              "page": 900
+            }
+          },
+          {
+            "width": 900,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 418.84375,
+                "right": 179.1875,
+                "bottom": 452.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 460.84375,
+                "right": 559.09375,
+                "bottom": 497.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 27,
+                "y": 505.84375,
+                "right": 195,
+                "bottom": 833.34375,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 844,
+                "y": 414.84375,
+                "right": 883,
+                "bottom": 511.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 408.84375,
+                "right": 883,
+                "bottom": 1208.84375,
+                "width": 866,
+                "height": 800
+              },
+              "page": 900
+            }
+          },
+          {
+            "width": 920,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 740.65625,
+                "bottom": 505.84375,
+                "width": 393.65625,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 515,
+                "bottom": 870.59375,
+                "width": 168,
+                "height": 356.75
+              },
+              "nav": {
+                "x": 860,
+                "y": 422.84375,
+                "right": 899,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 899,
+                "bottom": 1216.84375,
+                "width": 562,
+                "height": 800
+              },
+              "page": 920
+            }
+          },
+          {
+            "width": 920,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 847,
+                "bottom": 530.84375,
+                "width": 500,
+                "height": 62
+              },
+              "hud": {
+                "x": 347,
+                "y": 538.84375,
+                "right": 515,
+                "bottom": 895.59375,
+                "width": 168,
+                "height": 356.75
+              },
+              "nav": {
+                "x": 860,
+                "y": 422.84375,
+                "right": 899,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 899,
+                "bottom": 1216.84375,
+                "width": 562,
+                "height": 800
+              },
+              "page": 920
+            }
+          },
+          {
+            "width": 960,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 740.65625,
+                "bottom": 505.84375,
+                "width": 393.65625,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 900,
+                "y": 422.84375,
+                "right": 939,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 939,
+                "bottom": 1216.84375,
+                "width": 602,
+                "height": 800
+              },
+              "page": 960
+            }
+          },
+          {
+            "width": 960,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 879.09375,
+                "bottom": 505.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 900,
+                "y": 422.84375,
+                "right": 939,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 939,
+                "bottom": 1216.84375,
+                "width": 602,
+                "height": 800
+              },
+              "page": 960
+            }
+          },
+          {
+            "width": 1000,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 740.65625,
+                "bottom": 505.84375,
+                "width": 393.65625,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 940,
+                "y": 422.84375,
+                "right": 979,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 979,
+                "bottom": 1216.84375,
+                "width": 642,
+                "height": 800
+              },
+              "page": 1000
+            }
+          },
+          {
+            "width": 1000,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 879.09375,
+                "bottom": 505.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 940,
+                "y": 422.84375,
+                "right": 979,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 979,
+                "bottom": 1216.84375,
+                "width": 642,
+                "height": 800
+              },
+              "page": 1000
+            }
+          },
+          {
+            "width": 1040,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 408.84375,
+                "right": 499.1875,
+                "bottom": 442.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 450.84375,
+                "right": 740.65625,
+                "bottom": 487.84375,
+                "width": 393.65625,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 495.84375,
+                "right": 535,
+                "bottom": 833.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 980,
+                "y": 404.84375,
+                "right": 1019,
+                "bottom": 501.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 398.84375,
+                "right": 1019,
+                "bottom": 1198.84375,
+                "width": 682,
+                "height": 800
+              },
+              "page": 1040
+            }
+          },
+          {
+            "width": 1040,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 408.84375,
+                "right": 499.1875,
+                "bottom": 442.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 450.84375,
+                "right": 879.09375,
+                "bottom": 487.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 495.84375,
+                "right": 535,
+                "bottom": 833.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 980,
+                "y": 404.84375,
+                "right": 1019,
+                "bottom": 501.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 398.84375,
+                "right": 1019,
+                "bottom": 1198.84375,
+                "width": 682,
+                "height": 800
+              },
+              "page": 1040
+            }
+          },
+          {
+            "width": 1100,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 740.65625,
+                "bottom": 505.84375,
+                "width": 393.65625,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 1040,
+                "y": 422.84375,
+                "right": 1079,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 1079,
+                "bottom": 1216.84375,
+                "width": 742,
+                "height": 800
+              },
+              "page": 1100
+            }
+          },
+          {
+            "width": 1100,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 879.09375,
+                "bottom": 505.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 1040,
+                "y": 422.84375,
+                "right": 1079,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 1079,
+                "bottom": 1216.84375,
+                "width": 742,
+                "height": 800
+              },
+              "page": 1100
+            }
+          },
+          {
+            "width": 1440,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 289.296875,
+                "right": 499.1875,
+                "bottom": 322.796875,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 331.296875,
+                "right": 740.65625,
+                "bottom": 368.296875,
+                "width": 393.65625,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 376.296875,
+                "right": 535,
+                "bottom": 713.546875,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 1380,
+                "y": 285.296875,
+                "right": 1419,
+                "bottom": 382.296875,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 279.296875,
+                "right": 1419,
+                "bottom": 1079.296875,
+                "width": 1082,
+                "height": 800
+              },
+              "page": 1440
+            }
+          },
+          {
+            "width": 1440,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 289.296875,
+                "right": 499.1875,
+                "bottom": 322.796875,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 331.296875,
+                "right": 879.09375,
+                "bottom": 368.296875,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 376.296875,
+                "right": 535,
+                "bottom": 713.546875,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 1380,
+                "y": 285.296875,
+                "right": 1419,
+                "bottom": 382.296875,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 279.296875,
+                "right": 1419,
+                "bottom": 1079.296875,
+                "width": 1082,
+                "height": 800
+              },
+              "page": 1440
+            }
+          },
+          {
+            "width": 640,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 437.59375,
+                "right": 179.1875,
+                "bottom": 471.09375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 479.59375,
+                "right": 374.046875,
+                "bottom": 514.59375,
+                "width": 347.046875,
+                "height": 35
+              },
+              "hud": {
+                "x": 27,
+                "y": 522.59375,
+                "right": 195,
+                "bottom": 850.09375,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 584,
+                "y": 433.59375,
+                "right": 623,
+                "bottom": 530.59375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 427.59375,
+                "right": 623,
+                "bottom": 907.59375,
+                "width": 606,
+                "height": 480
+              },
+              "page": 640
+            }
+          },
+          {
+            "width": 640,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 437.59375,
+                "right": 179.1875,
+                "bottom": 471.09375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 479.59375,
+                "right": 506.203125,
+                "bottom": 514.59375,
+                "width": 479.203125,
+                "height": 35
+              },
+              "hud": {
+                "x": 27,
+                "y": 522.59375,
+                "right": 195,
+                "bottom": 850.09375,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 584,
+                "y": 433.59375,
+                "right": 623,
+                "bottom": 530.59375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 427.59375,
+                "right": 623,
+                "bottom": 907.59375,
+                "width": 606,
+                "height": 480
+              },
+              "page": 640
+            }
+          },
+          {
+            "width": 390,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 647.640625,
+                "right": 179.1875,
+                "bottom": 681.140625,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 689.640625,
+                "right": 321,
+                "bottom": 753.640625,
+                "width": 294,
+                "height": 64
+              },
+              "hud": {
+                "x": 27,
+                "y": 761.640625,
+                "right": 195,
+                "bottom": 1089.140625,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 334,
+                "y": 643.640625,
+                "right": 373,
+                "bottom": 740.640625,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 637.640625,
+                "right": 373,
+                "bottom": 1117.640625,
+                "width": 356,
+                "height": 480
+              },
+              "page": 390
+            }
+          },
+          {
+            "width": 390,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 647.640625,
+                "right": 179.1875,
+                "bottom": 681.140625,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 689.640625,
+                "right": 321,
+                "bottom": 753.640625,
+                "width": 294,
+                "height": 64
+              },
+              "hud": {
+                "x": 27,
+                "y": 761.640625,
+                "right": 195,
+                "bottom": 1089.140625,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 334,
+                "y": 643.640625,
+                "right": 373,
+                "bottom": 740.640625,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 637.640625,
+                "right": 373,
+                "bottom": 1117.640625,
+                "width": 356,
+                "height": 480
+              },
+              "page": 390
+            }
+          },
+          {
+            "width": 320,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 920.03125,
+                "right": 179.1875,
+                "bottom": 953.53125,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 962.03125,
+                "right": 251,
+                "bottom": 1026.03125,
+                "width": 224,
+                "height": 64
+              },
+              "hud": {
+                "x": 27,
+                "y": 1034.03125,
+                "right": 195,
+                "bottom": 1361.53125,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 264,
+                "y": 916.03125,
+                "right": 303,
+                "bottom": 1013.03125,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 910.03125,
+                "right": 303,
+                "bottom": 1390.03125,
+                "width": 286,
+                "height": 480
+              },
+              "page": 320
+            }
+          },
+          {
+            "width": 320,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 920.03125,
+                "right": 179.1875,
+                "bottom": 953.53125,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 962.03125,
+                "right": 251,
+                "bottom": 1055.03125,
+                "width": 224,
+                "height": 93
+              },
+              "hud": {
+                "x": 27,
+                "y": 1063.03125,
+                "right": 195,
+                "bottom": 1390.53125,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 264,
+                "y": 916.03125,
+                "right": 303,
+                "bottom": 1013.03125,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 910.03125,
+                "right": 303,
+                "bottom": 1390.03125,
+                "width": 286,
+                "height": 480
+              },
+              "page": 320
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "chrome 3D budget value text while focused",
+      "status": "PASS",
+      "evidence": {
+        "text": "$535M",
+        "label": "$535M",
+        "active": true
+      }
+    },
+    {
+      "name": "msedge default axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "msedge-default",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 0
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "msedge expanded axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "msedge-expanded",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 0
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "msedge all rendered badge combinations",
+      "status": "PASS",
+      "evidence": {
+        "nodes": 97,
+        "combinations": [
+          {
+            "text": "At-Risk",
+            "color": "rgb(133, 80, 13)",
+            "background": "rgb(248, 234, 214)",
+            "ratio": 5.6279791328866455
+          },
+          {
+            "text": "Failing",
+            "color": "rgb(146, 40, 32)",
+            "background": "rgb(245, 223, 222)",
+            "ratio": 6.476294708026299
+          }
+        ]
+      }
+    },
+    {
+      "name": "msedge Method axe",
+      "status": "PASS",
+      "evidence": {
+        "label": "msedge-method",
+        "axe": "4.10.3",
+        "violations": [],
+        "incomplete": [
+          {
+            "id": "aria-prohibited-attr",
+            "nodes": 1
+          },
+          {
+            "id": "color-contrast",
+            "nodes": 0
+          },
+          {
+            "id": "link-in-text-block",
+            "nodes": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "msedge named Method regions keyboard scroll and escape",
+      "status": "PASS",
+      "evidence": [
+        {
+          "width": 1280,
+          "index": 0,
+          "label": "Method and tests: Primary cohort table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 1,
+          "label": "Method and tests: Stage 1 candidate (top 10 by validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 58,
+            "maxY": 1
+          },
+          "after": {
+            "x": 58,
+            "y": 1
+          }
+        },
+        {
+          "width": 1280,
+          "index": 2,
+          "label": "Method and tests: Stage 2 candidate (top 10 by cross-validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 71
+          },
+          "after": {
+            "x": 0,
+            "y": 52.5
+          }
+        },
+        {
+          "width": 1280,
+          "index": 3,
+          "label": "Method and tests: Snapshot rank diagnostic, 2025 to 2026 table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 4,
+          "label": "Method and tests: Source dropped table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 1280,
+          "index": 5,
+          "label": "Method and tests: Budget table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 0,
+            "maxY": 0
+          },
+          "after": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 0,
+          "label": "Method and tests: Primary cohort table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 412,
+            "maxY": 0
+          },
+          "after": {
+            "x": 31.75,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 1,
+          "label": "Method and tests: Stage 1 candidate (top 10 by validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 694,
+            "maxY": 1
+          },
+          "after": {
+            "x": 31.75,
+            "y": 1
+          }
+        },
+        {
+          "width": 320,
+          "index": 2,
+          "label": "Method and tests: Stage 2 candidate (top 10 by cross-validation) table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 484,
+            "maxY": 71
+          },
+          "after": {
+            "x": 31.75,
+            "y": 52.5
+          }
+        },
+        {
+          "width": 320,
+          "index": 3,
+          "label": "Method and tests: Snapshot rank diagnostic, 2025 to 2026 table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 444,
+            "maxY": 0
+          },
+          "after": {
+            "x": 31.75,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 4,
+          "label": "Method and tests: Source dropped table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 39,
+            "maxY": 0
+          },
+          "after": {
+            "x": 31.75,
+            "y": 0
+          }
+        },
+        {
+          "width": 320,
+          "index": 5,
+          "label": "Method and tests: Budget table",
+          "before": {
+            "x": 0,
+            "y": 0,
+            "maxX": 480,
+            "maxY": 0
+          },
+          "after": {
+            "x": 31.75,
+            "y": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "msedge card close restores invoking button after redraw",
+      "status": "PASS",
+      "evidence": {
+        "id": "CA3310007",
+        "focus": "<button type=\"button\" class=\"system-link\" data-system=\"CA3310007\">Coachella Water Authority</button>"
+      }
+    },
+    {
+      "name": "msedge card refresh preserves title and close focus; missing row fallback",
+      "status": "PASS",
+      "evidence": {
+        "focus": "find",
+        "titleAndClosePreserved": true
+      }
+    },
+    {
+      "name": "msedge search card returns to search after scenario refresh",
+      "status": "PASS",
+      "evidence": {
+        "id": "CA0105009",
+        "focus": "find"
+      }
+    },
+    {
+      "name": "msedge plan updates coalesce and keep focus",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Plan updated. Budget $500M; 97 systems funded; 476,663 modeled people reached."
+        ],
+        "active": "lam",
+        "status": "<p id=\"resultStatus\" class=\"sr-only\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\">Plan updated. Budget $500M; 97 systems funded; 476,663 modeled people reached.</p>"
+      }
+    },
+    {
+      "name": "msedge scenario completion announces once with no progress flooding",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Cost scenarios complete. 3 of 8 funded systems were selected in at least 80% of 40 scenarios."
+        ],
+        "active": "runScen",
+        "visible": "3 of 8 funded systems were chosen in at least 80% of 40 scenarios. Open a system to see its count."
+      }
+    },
+    {
+      "name": "msedge cancelled scenarios do not announce stale completion",
+      "status": "PASS",
+      "evidence": {
+        "messages": [
+          "Cost scenarios cancelled. Plan updated. Budget $500M; 112 systems funded; 393,742 modeled people reached."
+        ],
+        "visible": "Controls changed. Run cost scenarios for this plan."
+      }
+    },
+    {
+      "name": "msedge tab linkage and skip path",
+      "status": "PASS",
+      "evidence": [
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-spot",
+          "labelledby": "tab-spot"
+        },
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-gaps",
+          "labelledby": "tab-gaps"
+        },
+        {
+          "selected": "true",
+          "controls": "tabbody",
+          "id": "tab-plan",
+          "labelledby": "tab-plan"
+        }
+      ]
+    },
+    {
+      "name": "msedge 320px axe and layout proxies",
+      "status": "PASS",
+      "evidence": {
+        "layouts": [
+          {
+            "width": 1100,
+            "scrollWidth": 1100
+          },
+          {
+            "width": 1024,
+            "scrollWidth": 1024
+          },
+          {
+            "width": 960,
+            "scrollWidth": 960
+          },
+          {
+            "width": 900,
+            "scrollWidth": 900
+          },
+          {
+            "width": 640,
+            "scrollWidth": 640
+          },
+          {
+            "width": 390,
+            "scrollWidth": 390
+          },
+          {
+            "width": 320,
+            "scrollWidth": 320
+          }
+        ],
+        "scan": {
+          "label": "msedge-320px",
+          "axe": "4.10.3",
+          "violations": [],
+          "incomplete": [
+            {
+              "id": "aria-prohibited-attr",
+              "nodes": 1
+            },
+            {
+              "id": "color-contrast",
+              "nodes": 0
+            },
+            {
+              "id": "link-in-text-block",
+              "nodes": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "msedge no uncaught app errors",
+      "status": "PASS",
+      "evidence": []
+    },
+    {
+      "name": "msedge live 3D layout at intermediate/narrow widths and long labels",
+      "status": "PASS",
+      "evidence": {
+        "allocationFeatures": 1062,
+        "layouts": [
+          {
+            "width": 900,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 418.84375,
+                "right": 179.1875,
+                "bottom": 452.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 460.84375,
+                "right": 420.65625,
+                "bottom": 497.84375,
+                "width": 393.65625,
+                "height": 37
+              },
+              "hud": {
+                "x": 27,
+                "y": 505.84375,
+                "right": 195,
+                "bottom": 833.34375,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 844,
+                "y": 414.84375,
+                "right": 883,
+                "bottom": 511.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 408.84375,
+                "right": 883,
+                "bottom": 1208.84375,
+                "width": 866,
+                "height": 800
+              },
+              "page": 900
+            }
+          },
+          {
+            "width": 900,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 418.84375,
+                "right": 179.1875,
+                "bottom": 452.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 460.84375,
+                "right": 559.09375,
+                "bottom": 497.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 27,
+                "y": 505.84375,
+                "right": 195,
+                "bottom": 833.34375,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 844,
+                "y": 414.84375,
+                "right": 883,
+                "bottom": 511.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 408.84375,
+                "right": 883,
+                "bottom": 1208.84375,
+                "width": 866,
+                "height": 800
+              },
+              "page": 900
+            }
+          },
+          {
+            "width": 920,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 740.65625,
+                "bottom": 505.84375,
+                "width": 393.65625,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 515,
+                "bottom": 870.59375,
+                "width": 168,
+                "height": 356.75
+              },
+              "nav": {
+                "x": 860,
+                "y": 422.84375,
+                "right": 899,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 899,
+                "bottom": 1216.84375,
+                "width": 562,
+                "height": 800
+              },
+              "page": 920
+            }
+          },
+          {
+            "width": 920,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 847,
+                "bottom": 530.84375,
+                "width": 500,
+                "height": 62
+              },
+              "hud": {
+                "x": 347,
+                "y": 538.84375,
+                "right": 515,
+                "bottom": 895.59375,
+                "width": 168,
+                "height": 356.75
+              },
+              "nav": {
+                "x": 860,
+                "y": 422.84375,
+                "right": 899,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 899,
+                "bottom": 1216.84375,
+                "width": 562,
+                "height": 800
+              },
+              "page": 920
+            }
+          },
+          {
+            "width": 960,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 740.65625,
+                "bottom": 505.84375,
+                "width": 393.65625,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 900,
+                "y": 422.84375,
+                "right": 939,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 939,
+                "bottom": 1216.84375,
+                "width": 602,
+                "height": 800
+              },
+              "page": 960
+            }
+          },
+          {
+            "width": 960,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 879.09375,
+                "bottom": 505.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 900,
+                "y": 422.84375,
+                "right": 939,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 939,
+                "bottom": 1216.84375,
+                "width": 602,
+                "height": 800
+              },
+              "page": 960
+            }
+          },
+          {
+            "width": 1000,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 879.09375,
+                "bottom": 505.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 940,
+                "y": 422.84375,
+                "right": 979,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 979,
+                "bottom": 1216.84375,
+                "width": 642,
+                "height": 800
+              },
+              "page": 1000
+            }
+          },
+          {
+            "width": 1000,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 879.09375,
+                "bottom": 505.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 940,
+                "y": 422.84375,
+                "right": 979,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 979,
+                "bottom": 1216.84375,
+                "width": 642,
+                "height": 800
+              },
+              "page": 1000
+            }
+          },
+          {
+            "width": 1040,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 408.84375,
+                "right": 499.1875,
+                "bottom": 442.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 450.84375,
+                "right": 879.09375,
+                "bottom": 487.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 495.84375,
+                "right": 535,
+                "bottom": 833.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 980,
+                "y": 404.84375,
+                "right": 1019,
+                "bottom": 501.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 398.84375,
+                "right": 1019,
+                "bottom": 1198.84375,
+                "width": 682,
+                "height": 800
+              },
+              "page": 1040
+            }
+          },
+          {
+            "width": 1040,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 408.84375,
+                "right": 499.1875,
+                "bottom": 442.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 450.84375,
+                "right": 879.09375,
+                "bottom": 487.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 495.84375,
+                "right": 535,
+                "bottom": 833.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 980,
+                "y": 404.84375,
+                "right": 1019,
+                "bottom": 501.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 398.84375,
+                "right": 1019,
+                "bottom": 1198.84375,
+                "width": 682,
+                "height": 800
+              },
+              "page": 1040
+            }
+          },
+          {
+            "width": 1100,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 879.09375,
+                "bottom": 505.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 1040,
+                "y": 422.84375,
+                "right": 1079,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 1079,
+                "bottom": 1216.84375,
+                "width": 742,
+                "height": 800
+              },
+              "page": 1100
+            }
+          },
+          {
+            "width": 1100,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 426.84375,
+                "right": 499.1875,
+                "bottom": 460.34375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 468.84375,
+                "right": 879.09375,
+                "bottom": 505.84375,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 513.84375,
+                "right": 535,
+                "bottom": 851.09375,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 1040,
+                "y": 422.84375,
+                "right": 1079,
+                "bottom": 519.84375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 416.84375,
+                "right": 1079,
+                "bottom": 1216.84375,
+                "width": 742,
+                "height": 800
+              },
+              "page": 1100
+            }
+          },
+          {
+            "width": 1440,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 289.296875,
+                "right": 499.1875,
+                "bottom": 322.796875,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 331.296875,
+                "right": 740.65625,
+                "bottom": 368.296875,
+                "width": 393.65625,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 376.296875,
+                "right": 535,
+                "bottom": 713.546875,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 1380,
+                "y": 285.296875,
+                "right": 1419,
+                "bottom": 382.296875,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 279.296875,
+                "right": 1419,
+                "bottom": 1079.296875,
+                "width": 1082,
+                "height": 800
+              },
+              "page": 1440
+            }
+          },
+          {
+            "width": 1440,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 347,
+                "y": 289.296875,
+                "right": 499.1875,
+                "bottom": 322.796875,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 347,
+                "y": 331.296875,
+                "right": 879.09375,
+                "bottom": 368.296875,
+                "width": 532.09375,
+                "height": 37
+              },
+              "hud": {
+                "x": 347,
+                "y": 376.296875,
+                "right": 535,
+                "bottom": 713.546875,
+                "width": 188,
+                "height": 337.25
+              },
+              "nav": {
+                "x": 1380,
+                "y": 285.296875,
+                "right": 1419,
+                "bottom": 382.296875,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 337,
+                "y": 279.296875,
+                "right": 1419,
+                "bottom": 1079.296875,
+                "width": 1082,
+                "height": 800
+              },
+              "page": 1440
+            }
+          },
+          {
+            "width": 640,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 437.59375,
+                "right": 179.1875,
+                "bottom": 471.09375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 479.59375,
+                "right": 506.203125,
+                "bottom": 514.59375,
+                "width": 479.203125,
+                "height": 35
+              },
+              "hud": {
+                "x": 27,
+                "y": 522.59375,
+                "right": 195,
+                "bottom": 850.09375,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 584,
+                "y": 433.59375,
+                "right": 623,
+                "bottom": 530.59375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 427.59375,
+                "right": 623,
+                "bottom": 907.59375,
+                "width": 606,
+                "height": 480
+              },
+              "page": 640
+            }
+          },
+          {
+            "width": 640,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 437.59375,
+                "right": 179.1875,
+                "bottom": 471.09375,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 479.59375,
+                "right": 506.203125,
+                "bottom": 514.59375,
+                "width": 479.203125,
+                "height": 35
+              },
+              "hud": {
+                "x": 27,
+                "y": 522.59375,
+                "right": 195,
+                "bottom": 850.09375,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 584,
+                "y": 433.59375,
+                "right": 623,
+                "bottom": 530.59375,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 427.59375,
+                "right": 623,
+                "bottom": 907.59375,
+                "width": 606,
+                "height": 480
+              },
+              "page": 640
+            }
+          },
+          {
+            "width": 390,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 647.640625,
+                "right": 179.1875,
+                "bottom": 681.140625,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 689.640625,
+                "right": 321,
+                "bottom": 753.640625,
+                "width": 294,
+                "height": 64
+              },
+              "hud": {
+                "x": 27,
+                "y": 761.640625,
+                "right": 195,
+                "bottom": 1089.140625,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 334,
+                "y": 643.640625,
+                "right": 373,
+                "bottom": 740.640625,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 637.640625,
+                "right": 373,
+                "bottom": 1117.640625,
+                "width": 356,
+                "height": 480
+              },
+              "page": 390
+            }
+          },
+          {
+            "width": 390,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 647.640625,
+                "right": 179.1875,
+                "bottom": 681.140625,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 689.640625,
+                "right": 321,
+                "bottom": 753.640625,
+                "width": 294,
+                "height": 64
+              },
+              "hud": {
+                "x": 27,
+                "y": 761.640625,
+                "right": 195,
+                "bottom": 1089.140625,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 334,
+                "y": 643.640625,
+                "right": 373,
+                "bottom": 740.640625,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 637.640625,
+                "right": 373,
+                "bottom": 1117.640625,
+                "width": 356,
+                "height": 480
+              },
+              "page": 390
+            }
+          },
+          {
+            "width": 320,
+            "long": false,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 920.03125,
+                "right": 179.1875,
+                "bottom": 953.53125,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 962.03125,
+                "right": 251,
+                "bottom": 1055.03125,
+                "width": 224,
+                "height": 93
+              },
+              "hud": {
+                "x": 27,
+                "y": 1063.03125,
+                "right": 195,
+                "bottom": 1390.53125,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 264,
+                "y": 916.03125,
+                "right": 303,
+                "bottom": 1013.03125,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 910.03125,
+                "right": 303,
+                "bottom": 1390.03125,
+                "width": 286,
+                "height": 480
+              },
+              "page": 320
+            }
+          },
+          {
+            "width": 320,
+            "long": true,
+            "rects": {
+              "view": {
+                "x": 27,
+                "y": 920.03125,
+                "right": 179.1875,
+                "bottom": 953.53125,
+                "width": 152.1875,
+                "height": 33.5
+              },
+              "summary": {
+                "x": 27,
+                "y": 962.03125,
+                "right": 251,
+                "bottom": 1055.03125,
+                "width": 224,
+                "height": 93
+              },
+              "hud": {
+                "x": 27,
+                "y": 1063.03125,
+                "right": 195,
+                "bottom": 1390.53125,
+                "width": 168,
+                "height": 327.5
+              },
+              "nav": {
+                "x": 264,
+                "y": 916.03125,
+                "right": 303,
+                "bottom": 1013.03125,
+                "width": 39,
+                "height": 97
+              },
+              "map": {
+                "x": 17,
+                "y": 910.03125,
+                "right": 303,
+                "bottom": 1390.03125,
+                "width": 286,
+                "height": 480
+              },
+              "page": 320
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "msedge 3D budget value text while focused",
+      "status": "PASS",
+      "evidence": {
+        "text": "$535M",
+        "label": "$535M",
+        "active": true
+      }
+    }
+  ],
+  "scans": [
+    {
+      "label": "chrome-default",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 0
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "chrome-expanded",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 0
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "chrome-method",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 0
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "chrome-320px",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 0
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-default",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 0
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-expanded",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 0
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-method",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 0
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "label": "msedge-320px",
+      "axe": "4.10.3",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 0
+        },
+        {
+          "id": "link-in-text-block",
+          "nodes": 1
+        }
+      ]
+    }
+  ],
+  "browsers": [
+    {
+      "channel": "chrome",
+      "version": "157.0.8103.78"
+    },
+    {
+      "channel": "msedge",
+      "version": "119.0.2151.72"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 """Verify the static app's saved data and vendored library bytes without ML dependencies."""
 import hashlib
 import json
+from presentation_build import verify
 from pathlib import Path
 
 root = Path(__file__).resolve().parents[1]
@@ -11,5 +12,6 @@ assert hashlib.sha256(json.dumps(snapshot['sha256'], sort_keys=True).encode()).h
 vendor = json.loads((root/'app/vendor/manifest.json').read_text())
 for name, expected in vendor['sha256'].items():
     assert hashlib.sha256((root/'app/vendor'/name).read_bytes()).hexdigest() == expected, name
-print(json.dumps({'snapshot_id':snapshot['id'], 'data_files':len(snapshot['sha256']),
+build = verify()
+print(json.dumps({'ui_build': build['id'], 'snapshot_id':snapshot['id'], 'data_files':len(snapshot['sha256']),
                   'vendor_files':len(vendor['sha256']), 'result':'PASS'}, indent=2))

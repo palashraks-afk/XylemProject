@@ -1,5 +1,6 @@
 """Independently reproduce each captured browser/demo CSV in the Python optimizer."""
 import csv
+import argparse
 import hashlib
 import io
 import json
@@ -21,7 +22,12 @@ snapshot=json.loads((root/'app/data/snapshot.json').read_text())['id']
 equity=np.array([np.mean([v for v in s['eq'] if v is not None]) if any(v is not None for v in s['eq']) else np.nan for s in systems])
 equity=np.where(np.isnan(equity),np.nanmedian(equity),equity)
 results=[]
-for file in sorted(list((root/'audit/release-qa/browser').glob('*.csv'))+list((root/'audit/demo').glob('*.csv'))):
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--input-dir', type=Path, action='append', help='CSV directory relative to repository; repeatable')
+parser.add_argument('--output', type=Path, default=Path('audit/release-qa/export-reconciliation.json'))
+args=parser.parse_args()
+directories=args.input_dir or [Path('audit/release-qa/browser'), Path('audit/demo')]
+for file in sorted(file for directory in directories for file in (root/directory).glob('*.csv')):
     text=file.read_text(encoding='utf-8-sig')
     assert snapshot in text
     query=parse_qs(re.search(r'; scenario ([^;]+);',text).group(1))
@@ -42,5 +48,6 @@ for file in sorted(list((root/'audit/release-qa/browser').glob('*.csv'))+list((r
         if systems[i]['pf'] is not None: assert float(r['snapshot_probability'])==systems[i]['pf']
     assert sum(max(1,math.ceil(costs[i]/250000))*250000 for i in chosen)<=st['b']*1e6
     results.append({'file':file.relative_to(root).as_posix(),'systems':len(chosen),'people':sum(systems[i]['pop'] for i in chosen),'cost':sum(costs[i] for i in chosen),'sha256':hashlib.sha256(file.read_bytes()).hexdigest(),'python_membership':'PASS'})
-(root/'audit/release-qa/export-reconciliation.json').write_text(json.dumps(results,indent=2)+'\n')
+assert results, 'No captured CSV exports found'
+(root/args.output).write_text(json.dumps(results,indent=2)+'\n')
 print(json.dumps({'matched_csv_exports':len(results),'result':'PASS'}))

@@ -12,6 +12,7 @@
 /app/*.js -text whitespace=cr-at-eol
 /app/*.html -text whitespace=cr-at-eol
 /app/*.css -text whitespace=cr-at-eol
+/app/build.json -text whitespace=cr-at-eol
 /data/cost_tables.json -text whitespace=cr-at-eol
 /data/ranked_systems.csv -text whitespace=cr-at-eol
 /*.md -text whitespace=cr-at-eol

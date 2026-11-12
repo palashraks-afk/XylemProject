@@ -1,0 +1,274 @@
+[
+  {
+    "file": "audit/accessibility/release-regressions/chrome-25M.csv",
+    "systems": 8,
+    "people": 58705,
+    "cost": 24126616.0,
+    "sha256": "6dfeaa9676dc93331559c3420c2f36698a9d1ad8e458155f4d1c32dbc06a9123",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-all.csv",
+    "systems": 1043,
+    "people": 1929926,
+    "cost": 5250709894.0,
+    "sha256": "6b95dc6a78674a4ff91ac71800df1dc57699ae7ef160fa0ce569a98730688988",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-combination-0.csv",
+    "systems": 114,
+    "people": 394101,
+    "cost": 485850493.0,
+    "sha256": "9592bca0dc9641c51e71ad4b3005774cdb938badc4b9d6fd830364d9cb2f03fd",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-combination-1.csv",
+    "systems": 89,
+    "people": 214907,
+    "cost": 490100572.0,
+    "sha256": "c6d23913595b4dab2b610c6b4f127c4152e2f30e28d336a36fc5ea486068b28f",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-combination-2.csv",
+    "systems": 172,
+    "people": 743189,
+    "cost": 478241750.25000006,
+    "sha256": "a8e56aff0b54b2e750fd125d1fec1916f67f25a8db2367a05ec782532535b7fc",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-combination-3.csv",
+    "systems": 54,
+    "people": 966559,
+    "cost": 493070597.0,
+    "sha256": "435efc3a70dc1b34e15dd0659def2b5de58b0c3a37e00a1595e5dcc88c35d4b1",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-combination-4.csv",
+    "systems": 32,
+    "people": 85926,
+    "cost": 20105065.5,
+    "sha256": "3d3c170450c69e07a96643bd8e379cf1cd7cb23cf5e30925cb653584faf3f431",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-combination-5.csv",
+    "systems": 415,
+    "people": 1651792,
+    "cost": 1949556932.0,
+    "sha256": "5c97e8aee05a0a3eca2b3cb355c105db9042e108fb09f26cc75f7dcb4e4074f0",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-default-100.csv",
+    "systems": 20,
+    "people": 171738,
+    "cost": 97767799.0,
+    "sha256": "bde159cc7b3aa22fd36d9151b2f5b7d3ff2cc97cb47c7e82419fc97420c947d1",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-default-1000.csv",
+    "systems": 196,
+    "people": 941150,
+    "cost": 976592934.0,
+    "sha256": "89bd4c7908f765cc45241ff78ce25ad95944e502bbe10843d8726ccccfed5517",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-default-2000.csv",
+    "systems": 409,
+    "people": 1600548,
+    "cost": 1950137982.0,
+    "sha256": "b4f8fcff8fb6be3a15c97f693b80cc80b51e49f00f22abeba5a510c4ce277a1d",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-default-250.csv",
+    "systems": 51,
+    "people": 310205,
+    "cost": 243243460.0,
+    "sha256": "3f906d1c7c3695aedbaa0d621681ecc2d6219e6aa202fa00448bd50122271884",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-default-500.csv",
+    "systems": 97,
+    "people": 476663,
+    "cost": 487919470.0,
+    "sha256": "3020f0ca51c9d3c9feb199838abfee23f680fc9ff16a432d581bc0e8135fd997",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-mobile-export.csv",
+    "systems": 47,
+    "people": 152124,
+    "cost": 94010649.0,
+    "sha256": "47d0cfd341ab151baf8f34256aa7bd1fb2e127ebfc0b6e37b3903c04d81fb6ab",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/chrome-rapid.csv",
+    "systems": 162,
+    "people": 824357,
+    "cost": 479676231.1,
+    "sha256": "45ceb3d903e8725c80c41c5252a2e020496cb5ce4edb4723870bfcc3afc24e81",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/failure-all-external-offline.csv",
+    "systems": 97,
+    "people": 476663,
+    "cost": 487919470.0,
+    "sha256": "3020f0ca51c9d3c9feb199838abfee23f680fc9ff16a432d581bc0e8135fd997",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/failure-missing-3d-library.csv",
+    "systems": 97,
+    "people": 476663,
+    "cost": 487919470.0,
+    "sha256": "3020f0ca51c9d3c9feb199838abfee23f680fc9ff16a432d581bc0e8135fd997",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/failure-style-failure.csv",
+    "systems": 97,
+    "people": 476663,
+    "cost": 487919470.0,
+    "sha256": "3020f0ca51c9d3c9feb199838abfee23f680fc9ff16a432d581bc0e8135fd997",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/failure-webgl-unavailable.csv",
+    "systems": 97,
+    "people": 476663,
+    "cost": 487919470.0,
+    "sha256": "3020f0ca51c9d3c9feb199838abfee23f680fc9ff16a432d581bc0e8135fd997",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-25M.csv",
+    "systems": 8,
+    "people": 58705,
+    "cost": 24126616.0,
+    "sha256": "6dfeaa9676dc93331559c3420c2f36698a9d1ad8e458155f4d1c32dbc06a9123",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-all.csv",
+    "systems": 1043,
+    "people": 1929926,
+    "cost": 5250709894.0,
+    "sha256": "5e9fcc8b65f5dc704191869ff953a8069801761d14a5f6c809946cb02094c2c0",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-combination-0.csv",
+    "systems": 114,
+    "people": 394101,
+    "cost": 485850493.0,
+    "sha256": "9592bca0dc9641c51e71ad4b3005774cdb938badc4b9d6fd830364d9cb2f03fd",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-combination-1.csv",
+    "systems": 89,
+    "people": 214907,
+    "cost": 490100572.0,
+    "sha256": "c6d23913595b4dab2b610c6b4f127c4152e2f30e28d336a36fc5ea486068b28f",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-combination-2.csv",
+    "systems": 172,
+    "people": 743189,
+    "cost": 478241750.25000006,
+    "sha256": "399a801a822cc886e2006df6fabe15c10a548c8b8cb733c5fb92734b23ee37d1",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-combination-3.csv",
+    "systems": 54,
+    "people": 966559,
+    "cost": 493070597.0,
+    "sha256": "435efc3a70dc1b34e15dd0659def2b5de58b0c3a37e00a1595e5dcc88c35d4b1",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-combination-4.csv",
+    "systems": 32,
+    "people": 85926,
+    "cost": 20105065.5,
+    "sha256": "3d3c170450c69e07a96643bd8e379cf1cd7cb23cf5e30925cb653584faf3f431",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-combination-5.csv",
+    "systems": 415,
+    "people": 1651792,
+    "cost": 1949556932.0,
+    "sha256": "e4ae4f756a9feeb222232f4982181943a1c20b6fbbcb85aa9322fb0f50f3c219",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-default-100.csv",
+    "systems": 20,
+    "people": 171738,
+    "cost": 97767799.0,
+    "sha256": "bde159cc7b3aa22fd36d9151b2f5b7d3ff2cc97cb47c7e82419fc97420c947d1",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-default-1000.csv",
+    "systems": 196,
+    "people": 941150,
+    "cost": 976592934.0,
+    "sha256": "8a30ac0370018c9d72dbd07b9dd083cd4db277be9968fbc1a83fc0dddab07ab6",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-default-2000.csv",
+    "systems": 409,
+    "people": 1600548,
+    "cost": 1950137982.0,
+    "sha256": "48b29074ea575a4b36b59c1ce96f66fb1d219912d122098207e688eee8cb7658",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-default-250.csv",
+    "systems": 51,
+    "people": 310205,
+    "cost": 243243460.0,
+    "sha256": "3f906d1c7c3695aedbaa0d621681ecc2d6219e6aa202fa00448bd50122271884",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-default-500.csv",
+    "systems": 97,
+    "people": 476663,
+    "cost": 487919470.0,
+    "sha256": "3020f0ca51c9d3c9feb199838abfee23f680fc9ff16a432d581bc0e8135fd997",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-mobile-export.csv",
+    "systems": 47,
+    "people": 152124,
+    "cost": 94010649.0,
+    "sha256": "47d0cfd341ab151baf8f34256aa7bd1fb2e127ebfc0b6e37b3903c04d81fb6ab",
+    "python_membership": "PASS"
+  },
+  {
+    "file": "audit/accessibility/release-regressions/msedge-rapid.csv",
+    "systems": 162,
+    "people": 824357,
+    "cost": 479676231.1,
+    "sha256": "ed848b46ee376586739546146b94d3522b30ccd0fd8777f19f3cca3a6df743ee",
+    "python_membership": "PASS"
+  }
+]
