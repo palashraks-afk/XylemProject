@@ -1,6 +1,6 @@
 # Historical input audit
 
-Policy: `historical-event-time-v2`. Generated app forecast and funding-plan files remain the original snapshots.
+Policy: `historical-event-time-v2`. The local app forecast and dependent plans are refreshed under this policy; old bytes are preserved in `audit/app-before/`. See `audit/APP_REFRESH_REPORT.md`.
 
 ## Input decisions
 
@@ -51,4 +51,4 @@ A true annual backtest needs original dated releases and complete Failing-list m
 
 ## Reproduction
 
-Preserve the supplied bytes rather than downloading mutable replacements. See `audit/requirements-lock.txt`, `audit/runtime.json`, `data/planner_evaluation.json` and `PLANNER_EVALUATION.md` for exact versions, hashes and commands. `pipeline/ml.py` is an optional local export and has not been run; the app snapshot and funding plans have not been regenerated.
+Preserve the supplied bytes rather than downloading mutable replacements. See `audit/requirements-lock.txt`, `audit/runtime.json`, `data/planner_evaluation.json` and `PLANNER_EVALUATION.md` for exact versions, hashes and commands. The local app export and dependent plans are now regenerated. Run selection, calibration and diagnostic evaluation before `pipeline/ml.py`, then `pipeline/build.py`, `pipeline/seal_snapshot.py` and `pipeline/compare_allocations.py`. See `audit/APP_REFRESH_REPORT.md` for the reviewed local snapshot.

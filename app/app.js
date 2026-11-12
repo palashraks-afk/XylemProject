@@ -7,19 +7,31 @@
   const pct = (x, d = 0) => (x * 100).toFixed(d) + "%";
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
+  const snapshot = await fetch("data/snapshot.json", {cache: "no-store"}).then(r => {
+    if (!r.ok) throw new Error("Missing snapshot manifest; run pipeline/seal_snapshot.py");
+    return r.json();
+  });
+  async function loadData(name) {
+    const response = await fetch("data/" + name, {cache: "no-store"});
+    if (!response.ok) throw new Error("Missing snapshot data: " + name);
+    const bytes = await response.arrayBuffer();
+    const hash = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)), b => b.toString(16).padStart(2, "0")).join("");
+    if (hash !== snapshot.sha256[name]) throw new Error("Snapshot hash mismatch: " + name);
+    return JSON.parse(new TextDecoder().decode(bytes));
+  }
   const [systems, summary, polys] = await Promise.all([
-    fetch("data/systems.json").then((r) => r.json()),
-    fetch("data/summary.json").then((r) => r.json()),
-    fetch("data/boundaries.geojson").then((r) => r.json()).catch(() => null),
+    loadData("systems.json"),
+    loadData("summary.json"),
+    loadData("boundaries.geojson"),
   ]);
-  const cov = await fetch("data/boundary_coverage.json").then((r) => r.json()).catch(() => null);
-  const routesData = await fetch("data/routes.json").then((r) => r.json()).catch(() => null);
-  const routeLines = await fetch("data/routes.geojson").then((r) => r.json()).catch(() => null);
+  const cov = await loadData("boundary_coverage.json");
+  const routesData = await loadData("routes.json");
+  const routeLines = await loadData("routes.geojson");
   const RT = routesData ? routesData.routes : {};
-  const gis = await fetch("data/gis.json").then((r) => r.json()).catch(() => null);
-  const forecast = await fetch("data/forecast.json").then((r) => r.json()).catch(() => null);
-  const countyGeo = await fetch("data/counties.geojson").then((r) => r.json()).catch(() => null);
-  const AT_RISK_RATE = forecast ? forecast.metrics.observed_failing_rate_by_status["At-Risk"] : 0.086;
+  const gis = await loadData("gis.json");
+  const forecast = await loadData("forecast.json");
+  const countyGeo = await loadData("counties.geojson");
+  const AT_RISK_RATE = forecast.metrics.fallback_at_risk_probability;
 
   const N = systems.length;
   const baseCost = systems.map((s) => s.cost);
@@ -53,7 +65,7 @@
     if (p.has("v")) st.v = p.get("v") === "fixed" ? "fixed" : "fc";
   })();
 
-  $("#snap").textContent = `SAFER snapshot ${String(summary.snapshot).slice(0, 10)} · ${fmtN(summary.all_systems)} systems · ${fmtN(N)} Failing or At-Risk · ${fmtN(totalPeople)} people`;
+  $("#snap").textContent = `SAFER snapshot ${String(summary.snapshot).slice(0, 10)} · ${fmtN(summary.all_systems)} systems · ${fmtN(N)} Failing or At-Risk · ${fmtN(totalPeople)} people · forecast ${snapshot.id.slice(0, 12)}`;
 
   // ---------- optimizer run ----------
   let plan = null;
@@ -88,7 +100,7 @@
     // stability at nearest precomputed budget
     const bs = summary.budgets_musd;
     let k = 0, bd = 1e9; bs.forEach((b, j) => { const d = Math.abs(Math.log(b / st.b)); if (d < bd) { bd = d; k = j; } });
-    plan.stabK = k; plan.stabOK = bd < Math.log(1.6) && !st.c && st.v === "fc" && st.l <= 2; plan.stabBudget = bs[k];   // stress tests ran on average-based costs
+    plan.stabK = k; plan.stabOK = bd < Math.log(1.6) && !st.c && st.v === "fc" && st.l <= 2 && st.r === 0 && st.m === 1; plan.stabBudget = bs[k];   // stress tests ran on average-based costs
     const strong = plan.stabOK ? chosen.filter((i) => systems[i].p[k] >= 0.5).length / Math.max(1, chosen.length) : null;
     plan.robust = strong;
   }
@@ -134,7 +146,7 @@
       <div class="r"><span>In plan</span><b>${plan.inPlan[i] ? "Yes" : "No"}</b></div>
       <div class="r"><span>Funded in</span><b>${stab}</b></div>
       <div class="r"><span>Funding since 2017</span><b>${s.funded17 ? "Yes" : "No"}</b></div>
-      ${s.pf != null ? `<div class="r"><span>Forecast: Failing within ${st.h} yr</span><b>${pct(1 - Math.pow(1 - s.pf, st.h))}</b></div>` : ""}
+      ${s.pf != null ? `<div class="r"><span>Exploratory ${st.h}-year weight</span><b>${pct(1 - Math.pow(1 - s.pf, st.h))}</b></div><div class="mute">Annual and multi-year risk unvalidated; constant annual risk assumed.</div>` : ""}
       ${gis && gis.z[s.id] !== undefined ? `<div class="r"><span>Hotspot score (25 km)</span><b>${gis.z[s.id].toFixed(1)}</b></div>` : ""}
       ${routeLine(i)}
       ${s.analytes ? `<div class="mute">Issue: ${esc(s.analytes)}</div>` : ""}`;
@@ -267,7 +279,7 @@
   function kpis() {
     const gain = plan.basePeople ? plan.people / plan.basePeople : 0;
     const k = [
-      `<div class="kpi hero"><div class="l">People reached</div><div class="v">${fmtN(plan.people)}</div><div class="s">${gain >= 1.005 ? `<span class="up">${gain.toFixed(1)}×</span> a status-first plan (${fmtN(plan.basePeople)})` : "same as status-first plan"}</div></div>`,
+      `<div class="kpi hero"><div class="l">Modeled people reached</div><div class="v">${fmtN(plan.people)}</div><div class="s">${gain >= 1.005 ? `<span class="up">${gain.toFixed(1)}×</span> a status-first plan (${fmtN(plan.basePeople)})` : "same as status-first plan"}</div></div>`,
       `<div class="kpi"><div class="l">Systems funded</div><div class="v">${fmtN(plan.chosen.length)}</div><div class="s">of ${fmtN(N)} · ${plan.small} with ≤500 connections</div></div>`,
       `<div class="kpi"><div class="l">Spent of budget</div><div class="v">${fmtM(plan.spent)}</div><div class="s">budget ${fmtM(st.b * 1e6)} · $${fmtN(plan.spent / Math.max(1, plan.people))}/person</div></div>`,
       `<div class="kpi"><div class="l">In disadvantaged areas</div><div class="v">${pct(plan.dac / Math.max(1, plan.people))}</div><div class="s">of people reached (DAC or SDAC)</div></div>`,
@@ -350,15 +362,16 @@
       <p>Following the state's physical-consolidation method, a Failing system with 1,000 or fewer connections (At-Risk: 500 or fewer) is connected to the largest healthy community system within 3 miles that has more than 500 connections. Pipeline is costed at $220 per foot plus $6,200 per connection for service lines, $5,437 per connection in fees, 15% administration, CEQA ($25k adjacent, $100k route), 20% contingency, 10% planning, 15% engineering and 3.1% inflation. A route is viable if it passes the state's funding test ($96,000 per connection, or $7.2M total for systems of 75 connections or fewer).</p>
       <div class="note good"><b>Check against the state.</b> We find ${f.viable} of ${f.total} Failing systems (${pct(f.viable / (f.total))}) and ${a.viable} of ${a.total} At-Risk systems (${pct(a.viable / (a.total))}) have a viable consolidation. The state's own 2024 model selected consolidation for 44% of Failing and 43% of At-Risk systems. The lists differ (2026 vs 2024), so agreement is encouraging, not proof.</div>
       <div class="note"><b>Departures from the state's method.</b> Straight-line distance times ${rs.assumptions.circuity} stands in for the street route (not validated); no regional (RSMeans) cost adjustment, so high-cost regions are understated; receiver boundaries are simplified. Stress tests were run on average-based costs, so stability is not shown when routes are on.</div>`; })() : ""}
-      ${forecast ? (() => { const m = forecast.metrics, g = m.models, sa = m.spatial_ablation, o = m.observed_failing_rate_by_status; const row = (n, k) => `<tr><td>${n}</td><td class="num">${g[k].auc}</td><td class="num">${g[k].auc_ci95[0]}–${g[k].auc_ci95[1]}</td><td class="num">${pct(g[k].recall_top10pct)}</td></tr>`; return `
-      <h3>Failure forecast (machine learning)</h3>
-      <div class="note"><b>Exploratory forecast.</b> These are diagnostic snapshot comparisons, with historical input availability and outcome timing still unresolved. Annual failure probabilities remain unvalidated. Multi-year estimates use 1 &minus; (1 &minus; p)<sup>h</sup>, assuming constant annual risk; multi-year probabilities have not been validated either.</div>
-      <p>Which systems that are not Failing in one assessment are Failing in the next? An ensemble uses risk indicators, size, economic status and a first-stage forecast of new violations. <b>Saved diagnostic comparison:</b> trained on 2024 to 2025 (${fmtN(m.train_n)} system-years, ${m.train_positives} failing onsets), tested on 2025 to 2026 (${fmtN(m.test_n)}, ${m.test_positives} onsets, base rate ${pct(m.test_base_rate, 1)}).</p>
-      <div class="scroll"><table><thead><tr><th>Predictor</th><th class="num">AUC</th><th class="num">95% interval</th><th class="num">Onsets caught in top 10%</th></tr></thead><tbody>
-        ${row("SAFER status alone (baseline)", "status_only")}${row("Total risk score (baseline)", "total_risk_score")}${row("Past presence on Failing list (baseline)", "past_failing_flag")}${row("Logistic model", "logistic")}${row("Gradient boosting", "gradient_boosting")}${row("Random forest", "random_forest")}${row("Rank ensemble (ranking only)", "ensemble")}</tbody></table></div>
-      <div class="note"><b>Read this honestly.</b> The ensemble beats the baselines (AUC ${g.ensemble.auc} vs ${g.status_only.auc}) but the gain is modest and the intervals overlap. The three models alone sit inside each other intervals, so the ensemble is chosen for robustness. Most failing onsets are not predicted; the top 10% of systems catch ${pct(g.ensemble.recall_top10pct)} of them. We also tried adding Failing-neighbour counts within 10 and 25 km: AUC went from ${sa.gb_auc_without_spatial} to ${sa.gb_auc_with_spatial}, essentially nothing.</div>
-      <p><b>Calibration on the held-out year.</b> Observed onset rate rises from ${pct(m.calibration_ensemble[0].observed_rate, 1)} in the lowest-risk fifth of systems to ${pct(m.calibration_ensemble[4].observed_rate, 1)} in the highest, so the ranking works. Absolute levels drift: the model predicts about ${pct(m.calibration_gb[4].mean_predicted, 1)} for the top fifth, because the onset rate rose from ${pct(m.train_positives / m.train_n, 1)} in the training transition to ${pct(m.test_base_rate, 1)} in the test year. The forecasts in the app are rescaled to the pooled rate, so treat them as approximate.</p>
-      <p><b>How it is used.</b> It supplies an exploratory weight for At-Risk systems. Measured snapshot-transition rate of becoming Failing: ${pct(o["At-Risk"], 1)} for At-Risk, ${pct(o["Potentially At-Risk"], 1)} for Potentially At-Risk, ${pct(o["Not At-Risk"], 1)} for Not At-Risk. An At-Risk system is weighted by its forecast and the constant-risk horizon conversion above. Switch to "fixed share" to use a manual discount instead.</p>`; })() : ""}
+      ${forecast ? (() => { const m = forecast.metrics, cohorts = m.planner_evaluation.cohorts;
+        const row = (name, key) => { const c = cohorts[key], p = c.models.planner_ensemble; return `<tr><td>${name}</td><td>${c.n} / ${c.onsets}</td><td>${p.auc.toFixed(3)}</td><td>${pct(p.mean_predicted, 2)} / ${pct(c.observed_rate, 2)}</td><td>${p.brier.toFixed(4)} / ${p.log_loss.toFixed(4)}</td></tr>`; };
+        return `
+      <h3>Exploratory failure forecast</h3>
+      <div class="note"><b>Diagnostic snapshot comparisons.</b> Previously examined 2025→2026 outcomes are not an untouched test. Historical availability and outcome dates remain unresolved. Annual failure probabilities remain unvalidated. The horizon conversion 1 − (1 − p)<sup>h</sup> assumes constant annual risk and is unvalidated.</div>
+      <p>Training: 2024→2025 (${fmtN(m.train_n)} systems, ${m.train_positives} snapshot positives). Primary diagnostic outcome: archived 2026 assessment, ${fmtN(m.test_n)} known outcomes, ${m.test_positives} positives. Normalization retains all 2,647 scored systems before unknown outcomes or At-Risk filtering. Rank scores order systems; calibrated snapshot estimates supply exploratory funding weights.</p>
+      <div class="scroll"><table><thead><tr><th>Primary cohort</th><th>Systems / positives</th><th>AUC</th><th>Mean estimate / observed</th><th>Brier / log loss</th></tr></thead><tbody>${row("All non-Failing", "all_non_failing")}${row("At-Risk", "at_risk")}</tbody></table></div>
+      <p><b>Training-only calibration.</b> Positive-slope ridge logistic calibration selected with nested 5 outer / 4 inner folds within 2024→2025 (68 events). No diagnostic outcomes select or fit the map. Configuration selection is not nested. Brier improves in the recorded comparisons; log loss does not improve in every comparison.</p>
+      <p><b>Separate November-2026 comparison:</b> exact original 582 At-Risk systems / 50 positives: AUC 0.756→0.739, paired 95% difference interval −0.053 to +0.017. Corrected mean 6.58% versus 8.59% observed. These outcomes differ from the primary archive and cannot be interchanged.</p>
+      <p><b>Current export.</b> ${esc(m.final_model_note)} Missing current At-Risk forecasts use the training status rate (${summary.fallback_at_risk_systems.length} systems). Modeled reach sums selected populations under the chosen objective; it is not measured intervention benefit.</p>`; })() : ""}
       ${forecast && forecast.metrics.model_selection ? (() => { const ms = forecast.metrics.model_selection, s1 = ms.stage1, s2 = ms.stage2, g = forecast.metrics.models;
         const f4 = (x) => (x == null ? "–" : x.toFixed(3));
         const top1 = s1.candidates.slice().sort((x, y) => y.val.auc - x.val.auc).slice(0, 10);
@@ -369,31 +382,31 @@
       <div class="scroll"><table><thead><tr><th>Stage 1 candidate (top 10 by validation)</th><th class="num">Validation AUC</th><th class="num">Validation avg precision</th><th class="num">Test AUC</th><th class="num">Test avg precision</th></tr></thead><tbody>
         ${top1.map((c) => `<tr><td>${esc(c.name.replace(/_/g, " "))}${c.name === s1.chosen ? " ✓" : ""}</td><td class="num">${f4(c.val.auc)}</td><td class="num">${f4(c.val.ap)}</td><td class="num">${f4(c.test.auc)}</td><td class="num">${f4(c.test.ap)}</td></tr>`).join("")}
         <tr><td><i>Baseline: count of past health violations</i></td><td class="num">–</td><td class="num">–</td><td class="num">${f4(Object.values(s1.baseline_violation_count_test_auc).reduce((x, y) => x + y, 0) / 2)}</td><td class="num">–</td></tr></tbody></table></div>
-      <p>Tuning changed little: every well-built model lands within about 0.01 AUC, so the gain comes from the data, not the algorithm. <b>Calibration:</b> the ensemble's raw scores run about three times too high (test mean prediction ${pct(s1.calibration["2025"].mean_pred_raw, 1)} vs observed ${pct(s1.calibration["2025"].observed_rate, 1)}), because several members are class-weighted. An isotonic map fitted on the 2021 to 2023 validation years only cuts the Brier score from ${s1.calibration["2025"].brier_raw} to ${s1.calibration["2025"].brier_calibrated} on 2025 (mean prediction ${pct(s1.calibration["2025"].mean_pred_calibrated, 1)}). It is applied to the violation chance shown for each system.</p>
-      <p><b>Stage 2 (a system becomes Failing).</b> Only ${forecast.metrics.train_positives} training onsets, so models were compared by repeated 5-fold cross-validation on the 2024 to 2025 transition, then scored once on 2025 to 2026. The two disagree on purpose: within-year cross-validation is optimistic (about 0.88) because conditions change between years, so these previously examined outcomes are diagnostic evidence, not an untouched test. Stage-1 forecasts for four violation types (health-based, any, monitoring and reporting, MCL) feed a small stacked logistic model alongside the trees. Chosen: <b>${esc(s2.chosen.replace(/_/g, " "))}</b>.</p>
+      <p><b>Calibration:</b> the ensemble's raw scores differ from observed levels (test mean prediction ${pct(s1.calibration["2025"].mean_pred_raw, 1)} vs observed ${pct(s1.calibration["2025"].observed_rate, 1)}), because several members are class-weighted. An isotonic map fitted on the 2021 to 2023 validation years only cuts the Brier score from ${s1.calibration["2025"].brier_raw} to ${s1.calibration["2025"].brier_calibrated} on 2025 (mean prediction ${pct(s1.calibration["2025"].mean_pred_calibrated, 1)}). It is applied to the violation estimate shown for each system. These folds also select configurations, so calibration evidence is not nested.</p>
+      <p><b>Stage 2 (a system becomes Failing).</b> Only ${forecast.metrics.train_positives} training onsets, so models were compared by repeated 5-fold cross-validation on the 2024 to 2025 transition, then scored diagnostically on the already-examined 2025 to 2026 snapshots. Within-year cross-validation does not establish transfer between years. Stage-1 forecasts for four violation types (health-based, any, monitoring and reporting, MCL) feed a small stacked logistic model alongside the trees. Chosen: <b>${esc(s2.chosen.replace(/_/g, " "))}</b>.</p>
       <div class="scroll"><table><thead><tr><th>Stage 2 candidate (top 10 by cross-validation)</th><th class="num">CV AUC</th><th class="num">Test AUC</th><th class="num">Test avg precision</th></tr></thead><tbody>
         ${top2.map((c) => `<tr><td>${esc(c.name.replace(/_/g, " "))}</td><td class="num">${f4(c.cv.auc)}</td><td class="num">${f4(c.test.auc)}</td><td class="num">${f4(c.test.ap)}</td></tr>`).join("")}
         <tr><td><b>Ensemble of the best of each family</b></td><td class="num">${f4(s2.ensemble.cv.auc)}</td><td class="num">${f4(s2.ensemble.test.auc)}</td><td class="num">${f4(s2.ensemble.test.ap)}</td></tr>
         ${s2.baselines.map((b) => `<tr><td><i>Baseline: ${esc(b.name.replace(/_/g, " "))}</i></td><td class="num">${f4(b.cv.auc)}</td><td class="num">${f4(b.test.auc)}</td><td class="num">${f4(b.test.ap)}</td></tr>`).join("")}</tbody></table></div>
-      <div class="note"><b>Honest read.</b> With a few dozen onsets, differences of 0.02 AUC between models are inside the noise (95% intervals span about ±0.05). The best models do not clearly beat the stage-1 forecast used on its own, so the extra complexity buys robustness, not a proven gain.</div>`; })() : ""}
+      <div class="note"><b>Honest read.</b> With a few dozen onsets, differences of 0.02 AUC between models are inside the noise (95% intervals span about ±0.05). The best models do not clearly beat the stage-1 forecast used on its own, so a gain from the extra complexity is not established by these diagnostic results.</div>`; })() : ""}
       ${forecast && forecast.metrics.source_value ? (() => { const m = forecast.metrics, sv = m.source_value, s1 = m.stage1_model, w = m.without_stage1.ensemble, e = m.models.ensemble;
         const drop = Object.entries(sv.drop_one).sort((x, y) => y[1].auc_lost - x[1].auc_lost);
         const nm = (k) => k.replace(/_/g, " ");
         return `
       <h3>More data: what it bought</h3>
-      <p>We added ${m.sources ? m.sources.filter((s) => s.ok).length : 23} public datasets (EPA violation, enforcement and lead records; State Water Board facilities, rates and school lead tests; DWR shortage scores, dry wells and groundwater basins; CDC social vulnerability, CalEnviroScreen, Census tracts; NOAA weather and drought; wildfire perimeters; terrain; OpenStreetMap infrastructure). Every dated source is cut off at the snapshot date, so the model never sees the future.</p>
-      <div class="scroll"><table><thead><tr><th>Failure-onset forecast, 2025 to 2026 test</th><th class="num">AUC</th><th class="num">Average precision</th><th class="num">Onsets caught in top 10%</th></tr></thead><tbody>
+      <p>We added ${m.sources ? m.sources.filter((s) => s.ok).length : 23} public datasets (EPA violation, enforcement and lead records; State Water Board facilities, rates and school lead tests; DWR shortage scores, dry wells and groundwater basins; CDC social vulnerability, CalEnviroScreen, Census tracts; NOAA weather and drought; wildfire perimeters; terrain; OpenStreetMap infrastructure). Retained model inputs follow historical-event-time-v2: mutable snapshots and undated lead/copper are excluded. Event cutoffs do not prove historical publication availability. Other downloaded inputs provide descriptive context or equity signals.</p>
+      <div class="scroll"><table><thead><tr><th>Snapshot rank diagnostic, 2025 to 2026</th><th class="num">AUC</th><th class="num">Average precision</th><th class="num">Onsets caught in top 10%</th></tr></thead><tbody>
         <tr><td>Before: risk scores and status only</td><td class="num">${w.auc}</td><td class="num">${w.avg_precision}</td><td class="num">${pct(w.recall_top10pct)}</td></tr>
         <tr><td>After: plus violation forecast from public data</td><td class="num">${e.auc}</td><td class="num">${e.avg_precision}</td><td class="num">${pct(e.recall_top10pct)}</td></tr></tbody></table></div>
-      <p><b>Stage 1.</b> With only dozens of new Failing systems a year, the failure label alone is too thin to learn from. So a first model learns from about 28,000 system-years: will this system get a new health-based violation in the next 12 months? It is trained only on earlier years and scores AUC ${Object.values(s1).map((x) => x.auc).join(", ")} on 2022 to 2025 (a plain count of past violations scores ${Object.values(s1).map((x) => x.auc_baseline_violation_count).join(", ")}). Used alone it predicts Failing onset with AUC ${m.stage1_failing_onset_auc}. One October 2024 spike of 793 lead service-line paperwork violations was excluded as an administrative deadline, not a water-quality change.</p>
-      <p><b>What each source is worth.</b> Retraining stage 1 without one source at a time. Size alone scores ${sv.size_only}; all sources together ${sv.all_sources}. Individual sources add little because they overlap; a few add nothing or are within noise.</p>
+      <p><b>Stage 1.</b> With only dozens of new Failing systems a year, the failure label alone is too thin to learn from. So a first model learns from historical system-years: will this system get a new health-based violation in the next 12 months? Retrospective diagnostics score AUC ${Object.values(s1).map((x) => x.auc).join(", ")} (in cycle order; early cycles use later-selected configurations and are not as-of forecasts). A plain count of past violations scores ${Object.values(s1).map((x) => x.auc_baseline_violation_count).join(", ")}. Used alone it predicts Failing onset with AUC ${m.stage1_failing_onset_auc}. One October 2024 spike of 793 lead service-line paperwork violations was excluded as an administrative deadline, not a water-quality change.</p>
+      <p><b>What each source is worth.</b> Retraining stage 1 without one source at a time. Size alone scores ${sv.size_only}; all sources together ${sv.all_sources}. These are retrospective source-drop diagnostics, not causal source contributions. The size-only score reflects missing historical size inputs in early training, not proof that system size is uninformative.</p>
       <div class="scroll"><table><thead><tr><th>Source dropped</th><th class="num">Features</th><th class="num">AUC lost</th></tr></thead><tbody>${drop.map(([k, v]) => `<tr><td>${nm(k)}</td><td class="num">${v.n_features}</td><td class="num">${v.auc_lost >= 0 ? "+" : ""}${v.auc_lost.toFixed(4)}</td></tr>`).join("")}</tbody></table></div>
       ${m.sources ? `<details class="grp"><summary>All ${m.sources.length} downloaded sources</summary><ul>${m.sources.map((s) => `<li><b>${esc(s.name)}</b> (${esc(s.owner || "")}): ${esc(s.desc || "")}${s.ok ? "" : " <i>(download failed)</i>"}</li>`).join("")}</ul></details>` : ""}`; })() : ""}
       ${gis ? (() => { const t = gis.stats; return `
       <h3>Spatial analysis (GIS)</h3>
       <p><b>Clustering.</b> Failing systems are spatially clustered: Moran's I = ${t.morans_i_failing} (random would be about 0), permutation p = ${t.morans_p_permutation_999}, ${t.radius_km} km neighbourhoods, ${fmtN(t.n_systems)} systems. The clustering is statistically clear but weak. <b>Hotspots.</b> Getis-Ord Gi* on people served by Failing or At-Risk systems flags ${t.hotspots_p05} systems at p&lt;0.05 and ${t.hotspots_p01} at p&lt;0.01 (rings on the map; not corrected for multiple testing). <b>Hubs.</b> ${t.hubs_with_3plus} healthy systems could each absorb three or more at-risk neighbours; see the Hubs tab.</p>`; })() : ""}
       <h3>Stress test</h3>
-      <p>${summary.n_scenarios} scenarios. In each, costs are multiplied by a county-level error drawn from the observed county errors above and a per-system lognormal error (σ ${summary.sigma_system}), and the equity weight (0–2) and the forecast horizon (1–10 years) are redrawn. The optimizer is re-run at $100M, $250M, $500M, $1B and $2B. Stability is the share of scenarios in which a system is funded.</p>
+      <p>${summary.n_scenarios} scenarios. In each, costs are multiplied by a county-level error drawn from the observed county errors above and a per-system lognormal error (σ ${summary.sigma_system}), and the equity weight (0–2) and the forecast horizon (1–10 years) are redrawn. The optimizer is re-run at $100M, $250M, $500M, $1B and $2B. Stability is the share of scenarios in which a system is funded, not a probability of successful remediation. Stored scenarios use no small-system reserve, routes off and a cost multiplier of 1.</p>
       <h3>Optimizer versus a status-first process</h3>
       <div class="scroll"><table><thead><tr><th>Budget</th><th class="num">Optimizer people</th><th class="num">Status-first people</th><th class="num">Ratio</th><th class="num">Optimizer systems</th><th class="num">Status-first systems</th></tr></thead><tbody>
       ${cmp.map((r) => `<tr><td>$${fmtN(r.budget_musd)}M</td><td class="num">${fmtN(r.optimizer.people)}</td><td class="num">${fmtN(r.status_first_baseline.people)}</td><td class="num">${(r.optimizer.people / r.status_first_baseline.people).toFixed(2)}×</td><td class="num">${r.optimizer.systems}</td><td class="num">${r.status_first_baseline.systems}</td></tr>`).join("")}</tbody></table></div>
@@ -413,7 +426,7 @@
         <li><b>${fmtN(s.missing_economic_status_systems)} systems have a missing economic status</b> (${s.missing_economic_status_in_target} of the Failing or At-Risk). Their equity index is built from the remaining components, not imputed.</li>
         <li><b>The state's cost estimates are from 2024.</b> The State Water Board's <a href="https://waterboards.ca.gov/drinking_water/certlic/drinkingwater/documents/needs/2026/2026-needs-factsheet.pdf">2026 factsheet</a> says the Cost Assessment was not updated in 2025 or 2026. Costs here use the 2024 averages on the 2026 system list.</li>
         <li><b>Service-area polygons:</b> ${cov ? `${cov.with_polygon} of ${cov.targets}` : "most"} Failing or At-Risk systems have a boundary in the state layer, simplified for the web. Boundaries are the state's, not independently verified.</li>
-        <li><b>At-Risk is a score, not a confirmed contaminant.</b> By default each At-Risk system is valued at its forecast chance of failing within the horizon. That forecast is modest (AUC about 0.68), so its per-system values are rough.</li>
+        <li><b>At-Risk is a score, not a confirmed contaminant.</b> At-Risk systems receive exploratory snapshot weights. Annual failure probabilities and constant-annual-risk horizon conversions are unvalidated.</li>
         <li><b>Count reconciliation:</b> this file lists ${fmtN(sc.Failing.systems)} Failing systems serving ${fmtN(sc.Failing.people)} people. The state's 2024 Needs Assessment summary reports 385 Failing systems. Different year and list; we have not reconciled every difference.</li>
         <li><b>Not modelled:</b> a system's readiness to build, willingness to consolidate, ongoing O&amp;M, and the state's separate analysis for state small systems and domestic wells.</li>
       </ul>
@@ -498,13 +511,15 @@
   $("#hot").addEventListener("change", (e) => { st.hot = e.target.checked; if (st.hot) hotGroup.addTo(map); else map.removeLayer(hotGroup); });
   $("#hub").addEventListener("change", (e) => { st.hubs = e.target.checked; if (st.hubs) hubGroup.addTo(map); else map.removeLayer(hubGroup); });
   $("#export").addEventListener("click", () => {
+    // Flush pending control changes so the display and CSV describe one plan.
+    clearTimeout(timer); run(); kpis(); restyle(); drawTab(); writeHash();
     const q = (x) => `"${String(x == null ? "" : x).replace(/"/g, '""')}"`;
-    const head = ["water_system_id", "name", "county", "status", "people", "connections", "cost_usd", "cost_per_person", "solution", "forecast_failing_within_horizon", "stability_pct", "economic_status", "hotspot_z"];
+    const head = ["water_system_id", "name", "county", "status", "people", "connections", "cost_usd", "cost_per_person", "solution", "snapshot_probability", "allocation_weight", "forecast_source", "stability_pct", "economic_status", "hotspot_z"];
     const rows = plan.chosen.map((i) => { const s = systems[i];
       return [s.id, s.name, s.county, s.failing ? "Failing" : "At-Risk", s.pop, s.conn, Math.round(s.cost), Math.round(s.cost / s.pop),
         viaRoute[i] ? `Consolidate into ${RT[s.id].receiver_name}` : "Modelled average",
-        s.pf == null ? "" : (1 - Math.pow(1 - s.pf, st.h)).toFixed(3), plan.stabOK ? Math.round(s.p[plan.stabK] * 100) : "", s.dac, gis && gis.z[s.id] !== undefined ? gis.z[s.id] : ""].map(q).join(","); });
-    const blob = new Blob([`# Xylem placement plan: budget ${fmtM(st.b * 1e6)}, equity ${st.l}, ${st.v === "fc" ? "forecast horizon " + st.h + " yr" : "fixed At-Risk share " + pct(st.a)}, small-system reserve ${pct(st.r)}\n`, head.join(",") + "\n" + rows.join("\n")], { type: "text/csv" });
+        s.pf == null ? "" : s.pf, s.failing ? 1 : st.v === "fc" ? 1 - Math.pow(1 - s.pf, st.h) : st.a, s.forecast_source, plan.stabOK ? Math.round(s.p[plan.stabK] * 100) : "", s.dac, gis && gis.z[s.id] !== undefined ? gis.z[s.id] : ""].map(q).join(","); });
+    const blob = new Blob([`# Snapshot ${snapshot.id}; diagnostic snapshot estimates; annual failure probabilities and constant-annual-risk horizon conversion unvalidated.\n# Xylem placement plan: budget ${fmtM(st.b * 1e6)}, equity ${st.l}, ${st.v === "fc" ? "forecast horizon " + st.h + " yr" : "fixed At-Risk share " + pct(st.a)}, small-system reserve ${pct(st.r)}, routes ${st.c}, cost multiplier ${st.m}; stability uses stored no-reserve/no-route scenarios\n`, head.join(",") + "\n" + rows.join("\n")], { type: "text/csv" });
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "xylem-placement-plan.csv"; a.click(); URL.revokeObjectURL(a.href);
   });
   $("#cons").checked = !!st.c;
@@ -544,4 +559,8 @@
   syncLabels(); run(); kpis(); restyle(); drawTab();
   Xylem3D.mount($("#map3d"), data3d());
   window.__xylem = { st, map, routeGroup, viaRoute, get plan() { return plan; }, systems, summary };
-})();
+})().catch(error => {
+  document.querySelector("#snap").textContent = "Snapshot could not be loaded: " + error.message;
+  document.querySelector("#export").disabled = true;
+  console.error(error);
+});

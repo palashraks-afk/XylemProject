@@ -3,6 +3,21 @@
 /pipeline/*.py -text whitespace=cr-at-eol
 /app/app.js -text whitespace=cr-at-eol
 /app/data/infrastructure.json -text whitespace=cr-at-eol
+# The refreshed browser snapshot checks exact bytes on every platform.
+/app/data/** -text whitespace=cr-at-eol
+# Preserve the remaining files covered by the local delivery hash receipt.
+/.gitattributes -text whitespace=cr-at-eol
+/.gitignore -text whitespace=cr-at-eol
+/.github/workflows/*.yml -text whitespace=cr-at-eol
+/app/*.js -text whitespace=cr-at-eol
+/app/*.html -text whitespace=cr-at-eol
+/app/*.css -text whitespace=cr-at-eol
+/data/cost_tables.json -text whitespace=cr-at-eol
+/data/ranked_systems.csv -text whitespace=cr-at-eol
+/*.md -text whitespace=cr-at-eol
+/pipeline/*.md -text whitespace=cr-at-eol
+/requirements.txt -text whitespace=cr-at-eol
+/tests/* -text whitespace=cr-at-eol
 /data/raw/** -text whitespace=cr-at-eol
 /data/extra_sources.json -text whitespace=cr-at-eol
 /data/model_selection.json -text whitespace=cr-at-eol

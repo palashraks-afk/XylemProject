@@ -11,6 +11,10 @@ The state does not publish per-system remediation costs as data. See `README.md`
 
 Prior-year files (2024, 2025 risk and affordability workbooks, same page) feed the failure forecast. `consol.pdf` is the state's physical-consolidation methodology, the source of the routing unit costs. County outlines: [plotly/datasets](https://github.com/plotly/datasets) (US Census cartographic boundaries). The three large risk workbooks are not committed; `pipeline/fetch_data.py` downloads them.
 
+## Downloaded extra sources (contents, not a model-feature inventory)
+
+Historical forecast use follows `pipeline/HISTORICAL_FEATURES.md`: retain dated violations/enforcement, school lead with collection AND load dates, dry-well reports, weather, fire counts/distances (no eventual acreage), terrain and qualified registry/location proxies. Sizes come from prior-year affordability archives. Mutable attributes, facilities, undated lead/copper, demographics, shortage/rate/basin/infrastructure snapshots and current-size substitutes are excluded from the historical model. Descriptive map/equity utilities can still use current contextual sources. Event cutoffs do not establish original publication availability.
+
 ## Extra public datasets (`pipeline/fetch_extra.py`, listed in `data/extra_sources.json`)
 
 | Source | Owner | Used for |
@@ -42,3 +46,7 @@ Prior-year files (2024, 2025 risk and affordability workbooks, same page) feed t
 OpenStreetMap infrastructure (`pipeline/fetch_infrastructure.py`): canals, aqueducts, treatment plants and water towers, ODbL. Terrain: AWS Terrain Tiles (SRTM, GMTED). Imagery on the 3D map: Esri World Imagery and Sentinel-2 cloudless by EOX. Buildings: OpenStreetMap via OpenFreeMap.
 
 Not found: no published dataset of actual drinking-water project costs, so the cost model is still calibrated only to the state's 2024 Cost Assessment tables.
+
+## Controlled reproduction
+
+Do not rerun fetch scripts for the audit comparison: preserve raw source versions and compare exact SHA-256 hashes. The large risk workbooks and 331 copied raw files are recorded in `audit/input-copy.json`; input hashes, workbook metadata and versions are in `data/planner_evaluation.json`. Original publication vintages and complete annual failure episodes remain unavailable. `audit/app-before/` preserves the prior app outputs; `app/data/snapshot.json` binds the refreshed local outputs.

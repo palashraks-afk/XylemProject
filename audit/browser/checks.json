@@ -1,0 +1,50 @@
+{
+  "default_presets_observed": [
+    [
+      100,
+      20,
+      171738
+    ],
+    [
+      250,
+      51,
+      310205
+    ],
+    [
+      500,
+      97,
+      476663
+    ],
+    [
+      1000,
+      196,
+      941150
+    ],
+    [
+      2000,
+      409,
+      1600548
+    ]
+  ],
+  "csv_reconciliation": [
+    {
+      "setting": "default",
+      "budget_musd": 500,
+      "rows": 97,
+      "people": 476663,
+      "cost_usd": 487919470,
+      "csv_sha256": "2cf7a8b11f719b4f270b840e786ae3487bb4f487fbfc09b99ca116b2c4815218"
+    },
+    {
+      "setting": "equity_reserve_routes",
+      "budget_musd": 500,
+      "rows": 114,
+      "people": 394101,
+      "cost_usd": 485850493,
+      "csv_sha256": "91df589af610b6bc2152d0adec7a4ebf63110a6993345c9524d8e4b6e0ed8dbd"
+    }
+  ],
+  "console_error_sample": [],
+  "screenshot": "audit/browser/preview-desktop.png",
+  "scope": "Desktop local preview, five default budgets, Method text, 2D and 3D map rendering, default CSV and combined equity/reserve/routing CSV. No mobile or user-study claim."
+}

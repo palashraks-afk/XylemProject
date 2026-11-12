@@ -1,0 +1,18 @@
+Nested calibration fold 1/5: training 2106, validation 527
+Nested calibration fold 2/5: training 2106, validation 527
+Nested calibration fold 3/5: training 2106, validation 527
+Nested calibration fold 4/5: training 2107, validation 526
+Nested calibration fold 5/5: training 2107, validation 526
+{
+  "chosen": "logit_ridge",
+  "map": {
+    "method": "logit_ridge",
+    "intercept": 2.1277405779605547,
+    "slope": 1.7441467362428626
+  },
+  "candidate_log_loss": {
+    "identity": 0.09111903492236317,
+    "intercept": 0.09114624672213753,
+    "logit_ridge": 0.08607544109524778
+  }
+}

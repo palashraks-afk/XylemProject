@@ -1,0 +1,23 @@
+{
+  "XylemEvaluation": {
+    "path": "C:\\Users\\sai71\\XylemEvaluation",
+    "branch": "evaluate/at-risk-planner",
+    "status_unchanged": true,
+    "tracked_diff_unchanged": true,
+    "untracked_hashes_unchanged": true
+  },
+  "XylemProject": {
+    "path": "C:\\Users\\sai71\\XylemProject",
+    "branch": "fix/historical-model-inputs",
+    "status_unchanged": true,
+    "tracked_diff_unchanged": true,
+    "untracked_hashes_unchanged": true
+  },
+  "validation_checkout": {
+    "path": "C:\\Users\\sai71\\.codex\\visualizations\\2026\\11\\12\\01a1cd55-8da6-78c0-8e32-a25d35740e1d\\XylemValidation",
+    "head": "946881dd3f8ad1635598d51401b3e2a2246170ca",
+    "main": "946881dd3f8ad1635598d51401b3e2a2246170ca",
+    "status": ""
+  },
+  "raw_files_verified": 335
+}

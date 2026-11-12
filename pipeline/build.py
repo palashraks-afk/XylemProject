@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from costmodel import system_cost, TABLES  # noqa: E402
 from optimizer import optimize, greedy_by_population  # noqa: E402
 import extra_features as ef  # noqa: E402
+from feature_policy import fingerprint, file_hash  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data" / "raw"
@@ -108,10 +109,16 @@ def main():
     county_logratio = (lr - lr.mean()).to_numpy()
 
     fc = json.loads((OUT / "forecast.json").read_text())
-    at_risk_rate = fc["metrics"]["observed_failing_rate_by_status"]["At-Risk"]
+    provenance = fc["metrics"]["export_provenance"]
+    if (provenance["feature_fingerprint"] != fingerprint(model=True)
+            or provenance["selection_sha256"] != file_hash(ROOT / "data/model_selection.json")
+            or provenance["calibration_sha256"] != file_hash(ROOT / "data/planner_calibration.json")):
+        raise ValueError("Stale forecast; rebuild selection, calibration and pipeline/ml.py before build.py")
+    at_risk_rate = fc["metrics"]["fallback_at_risk_probability"]
     pv = fc.get("p_violation", {})                                                    # chance of a new health-based violation in 12 months (stage 1)
-    pf = s.WATER_SYSTEM_NUMBER.map(fc["p_fail"]).fillna(at_risk_rate).to_numpy()   # annual chance of becoming Failing
-    ar_weight = lambda h: 1 - (1 - pf) ** h                                          # chance of failing within h years  # noqa: E731
+    missing_forecast = ~s.failing & ~s.WATER_SYSTEM_NUMBER.isin(fc["p_fail"])
+    pf = s.WATER_SYSTEM_NUMBER.map(fc["p_fail"]).fillna(at_risk_rate).to_numpy()
+    ar_weight = lambda h: 1 - (1 - pf) ** h  # unvalidated constant-annual-risk funding weight  # noqa: E731
     eq = s.equity.fillna(s.equity.median()).to_numpy()
     pops = s.POPULATION.to_numpy(float)
     failing = s.failing.to_numpy()
@@ -173,7 +180,9 @@ def main():
     cty = cty.merge(cal[["county", "official"]], on="county", how="left").rename(columns={"official": "official_musd"})
     cty["failing"] = cty.failing.astype(int)
 
-    def rr(x, n=3):
+    def rr(x, n=None):
+        if n is None:
+            return None if pd.isna(x) else float(x)
         return None if pd.isna(x) else round(float(x), n)
 
     systems = []
@@ -183,11 +192,12 @@ def main():
             "lat": rr(row.LATITUDE_MEASURE, 4), "lon": rr(row.LONGITUDE_MEASURE, 4),
             "pop": int(row.POPULATION), "conn": int(row.conn), "failing": bool(row.failing),
             "dac": row.SERVICE_AREA_ECONOMIC_STATUS if isinstance(row.SERVICE_AREA_ECONOMIC_STATUS, str) else "Missing",
-            "eq": [rr(row.eq_dac, 2), rr(row.eq_ces, 2), rr(row.eq_aff, 2), rr(row.eq_pov, 2)] + ([rr(row.eq_svi, 2), rr(row.eq_ces_dw, 2)] if "eq_svi" in s.columns else []),
+            "eq": [rr(row.eq_dac), rr(row.eq_ces), rr(row.eq_aff), rr(row.eq_pov)] + ([rr(row.eq_svi), rr(row.eq_ces_dw)] if "eq_svi" in s.columns else []),
             "cost": int(row.cost), "lo": int(row.cost_lo), "hi": int(row.cost_hi),
             "p": [round(float(fund_prob[B][i]), 2) for B in BUDGETS_M],
             "funded17": bool(funded[i]),
-            "pf": None if row.failing else round(float(pf[i]), 4),
+            "pf": None if row.failing else float(pf[i]),
+            "forecast_source": None if row.failing else ("training_status_rate" if missing_forecast[i] else "planner_probabilities"),
             "pv": pv.get(row.WATER_SYSTEM_NUMBER),
             "analytes": (row.PRIMARY_ANALYTES if isinstance(row.PRIMARY_ANALYTES, str) else "")[:80],
             "bill": rr(row.bill6hcf, 0),
@@ -196,6 +206,11 @@ def main():
 
     summary = {
         "snapshot": str(d.CREATED_DATE.iloc[0]),
+        "forecast_sha256": file_hash(OUT / "forecast.json"),
+        "fallback_at_risk_systems": s.loc[missing_forecast, "WATER_SYSTEM_NUMBER"].tolist(),
+        "forecast_limit": "Diagnostic snapshot weights; annual failure probabilities and constant-annual-risk horizon conversion unvalidated.",
+        "stress_settings": {"seed": 20261102, "reserve": 0, "routing": False, "cost_multiplier": 1,
+                           "equity_uniform": [0, 2], "horizon_uniform": [1, 10]},
         "all_systems": int(len(d)),
         "status_counts": {k: {"systems": int(v["count"]), "people": int(v["pop"])} for k, v in ctx.iterrows()},
         "failing_at_risk_people": int(pops.sum()),

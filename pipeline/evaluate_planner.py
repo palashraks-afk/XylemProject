@@ -214,7 +214,7 @@ def compare_saved(train, scoring, models, calibrator, n_boot):
 
 
 def write_report(result, path):
-    lines = ["# Planner forecast evaluation", "", "Train: 2024 to 2025. Test: 2025 to 2026. Full model; model selection rebuilt under historical input policy.", "",
+    lines = ["# Planner forecast evaluation", "", "Training: 2024 to 2025. Diagnostic snapshots: 2025 to 2026. Full model; model selection rebuilt under historical input policy.", "",
              "The planner probability ensemble is evaluated separately from the previously reported rank ensemble. Its probability calibration uses training outcomes only; the already-examined 2025-to-2026 transition is diagnostic, not an untouched test.", ""]
     for name, c in result["cohorts"].items():
         lines += ["## " + name.replace('_', ' ').title(), "", f"{c['n']} systems; {c['onsets']} onsets; observed rate {c['observed_rate']:.2%}.", "",
@@ -242,7 +242,7 @@ def write_report(result, path):
             lines += [f"- {label}: {d['auc_delta']:+.3f} (95% interval {lo:+.3f} to {hi:+.3f})."]
         lines += ['']
     lines += ["## Interpretation limits", "", *['- ' + v for v in result['limitations']], "",
-              "Inputs, file hashes, model settings, library versions and the bootstrap definition are recorded in `data/planner_evaluation.json`; individual held-out predictions are in `data/planner_test_predictions.csv`.", ""]
+              "Inputs, file hashes, model settings, library versions and the bootstrap definition are recorded in `data/planner_evaluation.json`; individual diagnostic predictions are in `data/planner_test_predictions.csv`.", ""]
     cal = result.get('calibration_artifact')
     if cal:
         lines += ['## Training-only probability calibration', '',
@@ -264,7 +264,7 @@ def write_report(result, path):
               '```text', 'python -X utf8 pipeline/model_selection.py', 'python -X utf8 pipeline/calibrate_planner.py',
               'python -X utf8 pipeline/evaluate_planner.py --bootstrap 1000',
               'python -m pytest tests -q --basetemp audit/pytest-final', '```', '',
-              'These commands rebuild selection, calibration and diagnostic results locally. Forecast export (`pipeline/ml.py`) uses the same frozen probability map and checks its hashes; it has not been run for this deliverable. The existing app forecast and funding plans remain the prior snapshots.', '',
+              'These commands rebuild selection, calibration and diagnostic results locally. Then run `pipeline/ml.py`, `pipeline/build.py`, `pipeline/seal_snapshot.py` and `pipeline/compare_allocations.py` to refresh the local app and its comparison. The app uses the same frozen map with hash checks. The reviewed local integration is recorded in `audit/APP_REFRESH_REPORT.md`; evaluation alone does not refresh app data.', '',
               'See `pipeline/HISTORICAL_FEATURES.md` for input-level timing decisions and `audit/VALIDATION_REPORT.md` for the audit findings.', '']
     path.write_text('\n'.join(lines), encoding='utf-8')
 
@@ -307,13 +307,13 @@ def main():
             'planner': metrics(test.y.to_numpy()[mask], predictions['planner_ensemble'][mask], probability=True),
             'violation_only': metrics(test.y.to_numpy()[mask], test.p_hbv.to_numpy()[mask])}
     result['limitations'] = [
-        'One annual held-out transition; intervals condition on the fitted models and observed prevalence and do not capture year-to-year drift, model-selection uncertainty or regional dependence.',
+        'One previously examined assessment transition; intervals condition on the fitted models and observed prevalence and do not capture year-to-year drift, model-selection uncertainty or regional dependence.',
         'Model configurations were already developed with this test year visible. This is a diagnostic re-evaluation of the existing model, not a new untouched test.',
         'Historical features use event-time-v2: mutable snapshots and undated lead/copper excluded; prior-year archived sizes only, no current-size fallback. Source publication dates and retrospective revisions remain unverified.',
         'The supplied 2024 risk workbook was modified 2025-06-23, after its nominal cutoff. Year-labelled workbooks are retrospective proxies, not verified original releases. The 2025 assessment uses December 2024 Failing-list status, not July 2025 status. These are snapshot-transition probabilities; annual failure calibration is unverified.',
         'Probability calibration is selected by nested folds within 2024-to-2025 training data only and frozen before diagnostic evaluation; no 2025-to-2026 outcomes fit or select its map. Normalization still depends on full scoring-cohort covariates. Base configuration selection is not nested.',
         'Systems missing a next-snapshot outcome are excluded from metrics but retained in the probability-normalization cohort. Attrition may still bias measured performance.',
-        'The five-year conversion 1-(1-p)^5 assumes constant annual risk and has not been validated on five-year outcomes. Report annual probabilities as approximate.',
+        'The five-year conversion 1-(1-p)^5 assumes constant annual risk and has not been validated on five-year outcomes. Annual failure probabilities also remain unvalidated.',
         'Current registry, system type, deactivation dates, coordinates and county define a retrospective cohort/location proxy; missing historical systems and changed locations remain unverified.',
         'The app snapshot and funding plans are not regenerated by this command. These diagnostic results do not update existing app claims.',
     ]

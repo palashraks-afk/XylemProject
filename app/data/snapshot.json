@@ -1,0 +1,31 @@
+{
+  "id": "806032f64da14561b81c55e72179ec22f299774fa97b9b5f08c4742909f9c0bd",
+  "base_commit": "946881dd3f8ad1635598d51401b3e2a2246170ca",
+  "feature_policy": "historical-event-time-v2",
+  "forecast_provenance": {
+    "feature_fingerprint": "adadd344e5b8b679e3249220903e05306a5ea8db194eb0961521c61b34edffff",
+    "selection_sha256": "f34dbbf8d7b7608378029f79ed3202134d1e16027d3e2cd30495a73e582e3b93",
+    "calibration_sha256": "5a7f64cd965d50a744f0eced694c25ff531cc07d75c6137a6c2c540c72df8aec",
+    "normalization_n": 2574,
+    "pooled_fit_n": 5266,
+    "pooled_fit_events": 129,
+    "pooled_fit_rate": 0.02449677174325864,
+    "calibration_training_transition": [
+      2024,
+      2025
+    ]
+  },
+  "sha256": {
+    "boundaries.geojson": "682a80b9b1858fd416e8f8c9c50b6527dc70ab73521b1a681d175a7ec59ac212",
+    "boundary_coverage.json": "574f6d09ad30eee09f628bbc69753120ccdf623d33914416a8daba90e27f55f3",
+    "counties.geojson": "a04ee3483159d19f5d708517e3e2f1a016718d364a31e1b0460a0a4c8ed467e7",
+    "forecast.json": "ce5f62defd5ed7389b692e2dd22be25476a76c932efb618f802b5d044c3d6a13",
+    "gis.json": "d57e8d7d359154b762d61669c634965cb55c3f243cd0d2e94d44697dc189ccd3",
+    "infrastructure.json": "4f363c660f0dff13bb444c8d59f780394815570446ed8b3fdfbd05a4d7fa306d",
+    "routes.geojson": "66f02eae22ca93de8dcc4840d79f9a94915bdf53ea63ec634ad0b76752d06449",
+    "routes.json": "79b37a100bda707cb767a08fb8f770c3476b4e3717f39879e27d099c47fa9a8a",
+    "summary.json": "cc8d23b9ac0e579b6264f7fbfff9a54dfd9217fee7321b15dbee0adecbc73cc1",
+    "systems.json": "e919b4c1be007506111bb93e5a282c84517ffbfef1dad9d940f430b483514562"
+  },
+  "limits": "Diagnostic snapshot weights; annual failure probabilities and constant-annual-risk horizon conversion unvalidated."
+}

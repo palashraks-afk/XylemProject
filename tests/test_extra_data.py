@@ -82,7 +82,7 @@ def test_extra_data_improves_the_failure_forecast_on_the_held_out_year():
 def test_source_value_table_covers_the_sources_and_all_beats_size_only():
     sv = forecast()["metrics"]["source_value"]
     assert sv["all_sources"] > sv["size_only"] + 0.05
-    if forecast()["metrics"].get("feature_policy") == "historical-event-time-v1":
+    if forecast()["metrics"].get("feature_policy") in ("historical-event-time-v1", "historical-event-time-v2"):
         assert set(sv["drop_one"]) == {"sdwis_violations", "sdwis_enforcement", "school_lead", "dry_wells",
                                        "wildfire", "noaa_precip", "noaa_pdsi", "noaa_temp", "terrain_srtm"}
     else:

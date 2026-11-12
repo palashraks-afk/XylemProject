@@ -322,7 +322,15 @@ def main():
     rate = float(yb.mean())
     p = planner_probabilities([m.predict_proba(cur[cols])[:, 1] for m in finals.values()], rate, calibrator=calibrator)
     forecast = {pid: float(v) for pid, v in zip(cur.index, p)}
-    res["final_model_note"] = (f"Final model trained on {len(yb)} system-years ({int(yb.sum())} failing onsets), average of {', '.join(finals)}, each rescaled to the training onset rate ({rate:.3f}) before the frozen training-only probability calibration ({calibrator['method']}). Five-year conversion assumes constant annual risk.")
+    res["final_model_note"] = (f"Final model refitted on {len(yb)} system-years ({int(yb.sum())} snapshot positives), average of {', '.join(finals)}, each normalized over all {len(cur)} scored systems to the pooled fitting rate ({rate:.3f}), then mapped by frozen 2024-to-2025 calibration ({calibrator['method']}). Calibration transfer to this refit is unvalidated. Annual failure probabilities remain unvalidated; 1-(1-p)^h assumes constant annual risk and is unvalidated.")
+    res["fallback_at_risk_probability"] = float(tr.loc[tr.status0 == STATUS_ORD["At-Risk"], "y"].mean())
+    res["fallback_note"] = "Missing current At-Risk forecasts use the 2024-to-2025 training At-Risk snapshot rate, never the diagnostic outcome rate."
+    res["export_provenance"] = {"feature_fingerprint": fingerprint(model=True),
+                                "selection_sha256": file_hash(ROOT / "data/model_selection.json"),
+                                "calibration_sha256": file_hash(ROOT / "data/planner_calibration.json"),
+                                "normalization_n": len(cur), "pooled_fit_n": len(yb),
+                                "pooled_fit_events": int(yb.sum()), "pooled_fit_rate": rate,
+                                "calibration_training_transition": [2024, 2025]}
     OUT.mkdir(parents=True, exist_ok=True)
     p_viol = stage1(2026) if STAGE1 else pd.Series(dtype=float)
     (OUT / "forecast.json").write_text(json.dumps({"metrics": res, "p_fail": forecast, "p_violation": {k: round(float(v), 4) for k, v in p_viol.items() if k in forecast}}, separators=(",", ":")))

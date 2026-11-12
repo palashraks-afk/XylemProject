@@ -1,3 +1,5 @@
+> Local integration completion: the two tasks below are completed in this isolated preview checkout. See [APP_REFRESH_REPORT.md](APP_REFRESH_REPORT.md) for current paths, hashes, checks and reproduction, and [allocation-comparison/README.md](allocation-comparison/README.md) for the 55-plan comparison. The original handoff below records the pre-refresh state; its statements about stale app data are historical. The user subsequently authorized committing and pushing this completed work. PR creation, deployment and other publication still require separate authorization; Pages remains manual-only.
+
 # Handoff: finish Xylem app integration and claims cleanup
 
 Continue Xylem's California water-funding planning prototype. Complete the two tasks below locally. Do not push, open a PR, deploy, or publish without new explicit authorization. The prior authorization to push covered the completed validation changes only. GitHub Pages now runs manually (`workflow_dispatch`); preserve that setting.

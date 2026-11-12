@@ -1,0 +1,121 @@
+C:\Users\sai71\.codex\visualizations\2026\11\12\01a1cd94-2f3a-7a32-a87e-686964d3f464\XylemPreview\pipeline\extra_features.py:260: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  sv["GEOID"] = sv.FIPS.astype(str).str.zfill(11)
+C:\Users\sai71\.codex\visualizations\2026\11\12\01a1cd94-2f3a-7a32-a87e-686964d3f464\XylemPreview\pipeline\extra_features.py:286: RuntimeWarning: Mean of empty slice
+  col = np.full(len(pw), np.nan); col[ok] = np.nanmean(vals, axis=1); sv_out["svi_" + c.lower()] = col
+C:\Users\sai71\.codex\visualizations\2026\11\12\01a1cd94-2f3a-7a32-a87e-686964d3f464\XylemPreview\pipeline\extra_features.py:291: RuntimeWarning: Mean of empty slice
+  col = np.full(len(pw), np.nan); col[ok] = np.nanmean(vals, axis=1); ce_out["ces_" + c.lower()] = col
+MC 0
+MC 50
+MC 100
+MC 150
+{
+ "calibration": {
+  "raw_total_musd": 7901.4,
+  "official_total_musd": 5386,
+  "scale_factor": 0.6816,
+  "counties_compared": 58,
+  "spearman_county": 0.882,
+  "pearson_county": 0.921,
+  "log_ratio_sd_county": 0.862,
+  "median_abs_pct_error_county_ge10M": 40.9,
+  "note": "Raw model overshoots the state total because our 2026 list has more systems than the state's 2024 list and Table 7 averages are not size-weighted; we scale to the state total and report the county-level fit."
+ },
+ "validation": {
+  "n_systems": 1062,
+  "n_funded_since_2017": 176,
+  "auc_need_benefit_vs_funded": 0.715,
+  "auc_efficiency_vs_funded": 0.69,
+  "auc_population_vs_funded": 0.646,
+  "auc_failing_flag_vs_funded": 0.627,
+  "funded_share_failing": 0.254,
+  "funded_share_at_risk": 0.107,
+  "interpretation": "AUC 0.5 = no relationship. Funding since 2017 reflects need, readiness and politics, not cost-effectiveness; this asks whether our ranking points at systems the state also chose to fund. A sanity check, not proof."
+ },
+ "comparison": [
+  {
+   "budget_musd": 100,
+   "optimizer": {
+    "systems": 20,
+    "people": 171738,
+    "spent_musd": 97.8,
+    "dac_people": 166136,
+    "small_systems": 9
+   },
+   "status_first_baseline": {
+    "systems": 13,
+    "people": 168274,
+    "spent_musd": 100.0,
+    "dac_people": 155181,
+    "small_systems": 3
+   }
+  },
+  {
+   "budget_musd": 250,
+   "optimizer": {
+    "systems": 51,
+    "people": 310205,
+    "spent_musd": 243.2,
+    "dac_people": 241976,
+    "small_systems": 24
+   },
+   "status_first_baseline": {
+    "systems": 32,
+    "people": 292238,
+    "spent_musd": 249.9,
+    "dac_people": 232154,
+    "small_systems": 5
+   }
+  },
+  {
+   "budget_musd": 500,
+   "optimizer": {
+    "systems": 97,
+    "people": 476663,
+    "spent_musd": 487.9,
+    "dac_people": 368352,
+    "small_systems": 48
+   },
+   "status_first_baseline": {
+    "systems": 68,
+    "people": 358300,
+    "spent_musd": 499.9,
+    "dac_people": 271413,
+    "small_systems": 23
+   }
+  },
+  {
+   "budget_musd": 1000,
+   "optimizer": {
+    "systems": 196,
+    "people": 941150,
+    "spent_musd": 976.6,
+    "dac_people": 725848,
+    "small_systems": 128
+   },
+   "status_first_baseline": {
+    "systems": 185,
+    "people": 406664,
+    "spent_musd": 999.9,
+    "dac_people": 300808,
+    "small_systems": 140
+   }
+  },
+  {
+   "budget_musd": 2000,
+   "optimizer": {
+    "systems": 409,
+    "people": 1600548,
+    "spent_musd": 1950.1,
+    "dac_people": 1199691,
+    "small_systems": 301
+   },
+   "status_first_baseline": {
+    "systems": 438,
+    "people": 944874,
+    "spent_musd": 2000.0,
+    "dac_people": 677518,
+    "small_systems": 384
+   }
+  }
+ ]
+}

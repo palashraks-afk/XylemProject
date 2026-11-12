@@ -1,3 +1,5 @@
+> Archived validation-stage report from before app integration. Statements below about unchanged app data describe that earlier stage. The current local refresh, checks and hashes are in [APP_REFRESH_REPORT.md](APP_REFRESH_REPORT.md).
+
 # Xylem validation and probability calibration
 
 **Ready for local diagnostic review; annual probability claims need revision.** Historical feature handling, selection and calibration are rebuilt locally. The available assessment snapshots do not support a clean annual-onset target or a publication-time backtest.

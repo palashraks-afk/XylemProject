@@ -1,0 +1,1691 @@
+setting,budget_musd,id,name,people,old_selected,new_selected
+default,250,CA1000316,Kings Canyon High School,107,False,True
+default,250,CA3601182,High Desert Detention Center,1400,True,False
+default,250,CA3610125,Sbdno County Service Area 70J,12895,False,True
+default,250,CA5410003,"Exeter, City Of",11169,True,False
+default,500,CA0706028,Knightsen Elementary School,350,False,True
+default,500,CA1000324,Manning Gardens Care Center Inc,170,False,True
+default,500,CA1010035,Del Rey Community Serv Dist,1491,False,True
+default,500,CA1510006,East Niles Csd,32517,True,False
+default,500,CA1510051,Lebec County Water District,1379,False,True
+default,500,CA2110005,Bolinas Community Pud,1937,False,True
+default,500,CA4700569,Willow Creek School,100,False,True
+default,500,CA5400711,Sierra View Jr Academy,121,False,True
+default,500,CA5400882,Pleasant View  West School,220,False,True
+default,500,CA5410002,"Dinuba, City Of",27641,True,False
+default,500,CA5410017,London Community Serv Dist,1800,False,True
+default,500,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+default,500,CA5410020,"Woodlake, City Of",7918,True,False
+default,500,CA5410025,Woodville Public Utility Dist,1740,False,True
+default,500,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+default,500,CA5610029,10/30/2026,1820,False,True
+default,500,CA5700571,Madison Service Dist,876,False,True
+default,1000,CA0300037,Jackson Valley Irrigation District,1303,True,False
+default,1000,CA0400067,Feather River School,34,False,True
+default,1000,CA0706028,Knightsen Elementary School,350,False,True
+default,1000,CA0707573,Delta Mutual Water Company,333,False,True
+default,1000,CA1000546,Fcsa 49 - Five Points,440,False,True
+default,1000,CA1010039,Caruthers Comm Serv Dist,2613,True,False
+default,1000,CA1010042,Malaga County Water District,1200,False,True
+default,1000,CA1210010,Scotia Csd,681,False,True
+default,1000,CA1300553,Magnolia Union School,142,False,True
+default,1000,CA1300560,Pine Union School,217,True,False
+default,1000,CA1310003,Gswc - Calipatria,7475,True,False
+default,1000,CA1500406,Tradewind Water Assoc.,632,False,True
+default,1000,CA1500409,Brock Mutual Water Company,462,False,True
+default,1000,CA1500475,Krista Mutual Water Company,504,False,True
+default,1000,CA1502221,Pond School Water System,250,False,True
+default,1000,CA1510007,Frazier Park Pud,2592,True,False
+default,1000,CA1800574,Johnstonville Elementary School,230,True,False
+default,1000,CA1800576,Long Valley Charter School,196,False,True
+default,1000,CA1810003,Lassen County Water Works District #1,450,False,True
+default,1000,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+default,1000,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+default,1000,CA2410001,City Of Atwater,29479,True,False
+default,1000,CA2410006,Delhi Cwd,7784,True,False
+default,1000,CA2702322,Captain Cooper School Ws,82,False,True
+default,1000,CA3200104,Grizzly Lake Csd-Delleker,657,False,True
+default,1000,CA3301428,Blythe - Mesa Ranch,568,False,True
+default,1000,CA3301630,Blythe - Hidden Beaches,399,False,True
+default,1000,CA3310033,Santa Ana River Water Company,6475,True,False
+default,1000,CA3310801,Bautista Cc No. 36,73,False,True
+default,1000,CA3310802,Chuckawalla Valley State Prison,4331,True,False
+default,1000,CA3600222,Juniper Riviera Cwd,858,False,True
+default,1000,CA3600260,Smiley Park Country Club,370,False,True
+default,1000,CA3600306,Thunderbird Cwd,1056,False,True
+default,1000,CA3601085,Rancho Pino Verde,66,False,True
+default,1000,CA3610117,Devore Wc,1574,False,True
+default,1000,CA3700041,Barrett Lake Mh And Rv Llc,300,False,True
+default,1000,CA3700924,Lake Morena Views Mwc,360,False,True
+default,1000,CA3701793,Twin Lakes Resort,400,False,True
+default,1000,CA3910022,Little Potato Slough Mutual,560,False,True
+default,1000,CA4000506,Woodland Park Mutual Water Co,538,False,True
+default,1000,CA4000554,Green River Mutual Water Co.,350,False,True
+default,1000,CA4000732,Carrisa Plains Elementary,40,False,True
+default,1000,CA4200879,Cuyama Elementary School,250,False,True
+default,1000,CA4400751,Bonny Doon School,160,False,True
+default,1000,CA4700578,Little Shasta School,30,False,True
+default,1000,CA4700585,Junction Elementary School,40,False,True
+default,1000,CA4700591,Delphic Elementary School,50,False,True
+default,1000,CA4900508,"Cazadero Water Company, Inc. (Puc)",525,False,True
+default,1000,CA4900562,Diamond A Mutual Water Company,640,False,True
+default,1000,CA5000090,Riverview Mobile Home Estates,540,False,True
+default,1000,CA5000295,Shiloh School District,105,False,True
+default,1000,CA5010009,Keyes Community Services Dist.,5672,True,False
+default,1000,CA5010028,"Ceres, City Of",54513,True,False
+default,1000,CA5110001,City Of Live Oak,9687,True,False
+default,1000,CA5410007,Lsid - Tonyville,500,False,True
+default,1000,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+default,1000,CA5700623,Davis Jusd - Fairfield School,46,False,True
+default,2000,CA0105009,Mountain House School,50,False,True
+default,2000,CA0707553,Riverview Mobile Home Park,126,True,False
+default,2000,CA1000063,New Auberry Water Association,120,False,True
+default,2000,CA1000200,Rubys Valley Care Home,43,False,True
+default,2000,CA1000208,Roosevelt Elementary School,580,False,True
+default,2000,CA1000229,Green Acres Mobile Home Estate,350,True,False
+default,2000,CA1000378,Sunset West Community Llc,350,True,False
+default,2000,CA1009027,Harris Farms Headquarters,140,False,True
+default,2000,CA1009051,"Cantua Creek Vineyards, Iv, Llc.",55,False,True
+default,2000,CA1010339,California State University Fresno,1500,False,True
+default,2000,CA1200501,Alderpoint County Water,190,False,True
+default,2000,CA1206002,Palomino Estates Water Company,64,False,True
+default,2000,CA1210023,Loleta C.S.D.,828,True,False
+default,2000,CA1300556,Mulberry Union School,85,True,False
+default,2000,CA1300622,Sportsmans Paradise,138,False,True
+default,2000,CA1310013,Seeley Cwd,1729,True,False
+default,2000,CA1500252,Kern Valley Mutual Water Company,132,False,True
+default,2000,CA1500289,Athal Mutual Water System,150,False,True
+default,2000,CA1500393,Rainbird Valley Mwc,238,False,True
+default,2000,CA1500413,Tejon Ranch Main Headquarters,132,False,True
+default,2000,CA1500465,Oak Knolls Mutual Water Company,123,False,True
+default,2000,CA1500493,"El Adobe Poa, Inc.",200,False,True
+default,2000,CA1500575,San Joaquin Estates Mutual Water Company,165,False,True
+default,2000,CA1502699,East Wilson Road Water Company,46,False,True
+default,2000,CA1510020,"Tehachapi, City Of",9094,True,False
+default,2000,CA1510023,Lake Of The Woods Mwc,875,True,False
+default,2000,CA1510027,Desert Lake Comm Serv Dist,968,True,False
+default,2000,CA1510046,Lost Hills Utility District,1926,True,False
+default,2000,CA1810004,Leavitt Lake Csd,950,True,False
+default,2000,CA1900007,California Conservation Camp #14,107,True,False
+default,2000,CA1900901,Fire Suppression Camp #19,125,True,False
+default,2000,CA1910023,Averydale Mwc,1026,True,False
+default,2000,CA1910140,Rubio Canon Land & Water Association,6646,True,False
+default,2000,CA1910166,Valley Water Co.,10113,True,False
+default,2000,CA2000512,East Acres Mutual Water Company,250,False,True
+default,2000,CA2000554,Md 33 Fairmead,568,True,False
+default,2000,CA2000611,Coarsegold School,389,True,False
+default,2000,CA2000760,Dixieland Elementary School,316,True,False
+default,2000,CA2010012,Cal Am - Raymond,347,True,False
+default,2000,CA2300634,Ocean'S Edge Estates,250,False,True
+default,2000,CA2310004,"Willits, City Of",6175,True,False
+default,2000,CA2400084,Evergreen Mobile Home Park,36,False,True
+default,2000,CA2400167,Ballico Csd,238,False,True
+default,2000,CA2500801,Newell County Water District,629,True,False
+default,2000,CA2700665,Oak Heights W & R Co Inc,105,False,True
+default,2000,CA2700773,Psmcsd - Sunny Mesa,880,True,False
+default,2000,CA2701063,River Rd Ws #25,65,False,True
+default,2000,CA2701926,Moro Rd Ws #09,210,False,True
+default,2000,CA2702007,Psmcsd - Vierra Estates Ws,164,False,True
+default,2000,CA2702180,Graves School Ws,56,True,False
+default,2000,CA2710019,Cwsc Oak Hills,3214,True,False
+default,2000,CA2710851,Salinas Valley State Prison,2930,True,False
+default,2000,CA2800526,Berryessa Estates (Lbrid),474,True,False
+default,2000,CA3200134,Blairsden Water Users Assn,200,False,True
+default,2000,CA3301491,Alpine Village,198,False,True
+default,2000,CA3310028,Riverside Csa #122-Mesa Verde,766,True,False
+default,2000,CA3500527,Valenzuela Water System,55,False,True
+default,2000,CA3600012,Apple Valley View Mwc,303,False,True
+default,2000,CA3600071,Chamisal Mwc,84,False,True
+default,2000,CA3600200,Rancheritos Mwc,487,True,False
+default,2000,CA3600297,Gordon Acres Water Co,200,False,True
+default,2000,CA3600385,Brookside Mhp,65,False,True
+default,2000,CA3610025,Joshua Basin Water District,6489,False,True
+default,2000,CA3610120,Phelan Pinon Hills Csd,24509,True,False
+default,2000,CA3700071,Heavenly Oaks,300,True,False
+default,2000,CA3700963,Potrero Elementary School,300,False,True
+default,2000,CA3702364,Clover Flat Elementary School,160,True,False
+default,2000,CA3900755,Shady Rest Trailer Court,150,False,True
+default,2000,CA3902136,Linden Usd-Chartville School,40,True,False
+default,2000,CA4000568,San Simeon Csd,462,True,False
+default,2000,CA4010016,Los Osos Community Services District,7086,True,False
+default,2000,CA4200867,Ray Water Company,40,False,True
+default,2000,CA4210009,Cuyama Community Services District,700,True,False
+default,2000,CA4300912,Mecchi Water Company,104,False,True
+default,2000,CA4400571,Davenport County Sanitation,350,True,False
+default,2000,CA4400756,Mountain Elementary School,240,True,False
+default,2000,CA4400762,Rountree Facility(Prev. Sheriff'S Rehab),160,False,True
+default,2000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+default,2000,CA4700577,Big Springs Union Elem. School,95,True,False
+default,2000,CA4900513,Madrone Mutual Water Company,76,False,True
+default,2000,CA4900532,Sonoma County Csa 41-Jenner,406,True,False
+default,2000,CA4900913,Robin Way Water System,66,False,True
+default,2000,CA4910011,"Sebastopol, City Of",7522,True,False
+default,2000,CA5100142,Nuestro School,120,False,True
+default,2000,CA5200507,Berrendos School,325,True,False
+default,2000,CA5200534,Paskenta Comm. Services Dist.,237,False,True
+default,2000,CA5200562,Sky View County Water,429,True,False
+default,2000,CA5301002,Lewiston Community Services District,677,True,False
+default,2000,CA5304109,Burnt Ranch Estates,115,False,True
+default,2000,CA5400647,Yokohl Mutual Water Co,95,False,True
+default,2000,CA5400682,Plainview Mwc - Central Water,138,False,True
+default,2000,CA5410050,Alpaugh Community Services District,871,True,False
+default,2000,CA5500042,Belleview Oaks Mutual Water Co,468,True,False
+default,2000,CA5601134,Elkins Ranch,150,False,True
+default,2000,CA5602110,Navalair Mobile Home Park,160,False,True
+default,2000,CA5610068,Cloverdale Mutual Water Co.,455,True,False
+no_equity,100,CA3610125,Sbdno County Service Area 70J,12895,False,True
+no_equity,100,CA3700018,Campo Elementary School,300,True,False
+no_equity,100,CA5000109,Ceres Unified/Westport School,450,True,False
+no_equity,100,CA5000255,Mountain View Elementary School,170,True,False
+no_equity,100,CA5400714,Sundale Union School,930,True,False
+no_equity,100,CA5410001,Cutler Pud,6200,True,False
+no_equity,250,CA1000206,Houghton-Kearney School,252,True,False
+no_equity,250,CA1010023,City Of Orange Cove,9525,True,False
+no_equity,250,CA3610125,Sbdno County Service Area 70J,12895,False,True
+no_equity,250,CA5000109,Ceres Unified/Westport School,450,True,False
+no_equity,500,CA0600008,Colusa Co. Wwd #1 - Grimes,512,False,True
+no_equity,500,CA0706028,Knightsen Elementary School,350,False,True
+no_equity,500,CA1000324,Manning Gardens Care Center Inc,170,False,True
+no_equity,500,CA1010035,Del Rey Community Serv Dist,1491,False,True
+no_equity,500,CA1310002,"Calexico, City Of",40357,True,False
+no_equity,500,CA1510006,East Niles Csd,32517,True,False
+no_equity,500,CA1510051,Lebec County Water District,1379,False,True
+no_equity,500,CA1800574,Johnstonville Elementary School,230,True,False
+no_equity,500,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+no_equity,500,CA2000602,Ripperdan Community Day School,120,False,True
+no_equity,500,CA2000612,North Fork Elementary School,350,False,True
+no_equity,500,CA2110005,Bolinas Community Pud,1937,False,True
+no_equity,500,CA2400097,Cressey School,155,False,True
+no_equity,500,CA2701221,Washington  School Ws,250,False,True
+no_equity,500,CA3301577,Csa 62,614,False,True
+no_equity,500,CA3600504,Knoll Enterprises,500,False,True
+no_equity,500,CA3601182,High Desert Detention Center,1400,True,False
+no_equity,500,CA4300779,Lakeside Sd-Lakeside School,127,False,True
+no_equity,500,CA4700569,Willow Creek School,100,False,True
+no_equity,500,CA5400711,Sierra View Jr Academy,121,False,True
+no_equity,500,CA5400882,Pleasant View  West School,220,False,True
+no_equity,500,CA5401003,East Orosi Community Services District,423,False,True
+no_equity,500,CA5410002,"Dinuba, City Of",27641,True,False
+no_equity,500,CA5410017,London Community Serv Dist,1800,False,True
+no_equity,500,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+no_equity,500,CA5410025,Woodville Public Utility Dist,1740,False,True
+no_equity,500,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+no_equity,500,CA5610029,10/30/2026,1820,False,True
+no_equity,500,CA5700571,Madison Service Dist,876,False,True
+no_equity,1000,CA0300037,Jackson Valley Irrigation District,1303,True,False
+no_equity,1000,CA0400067,Feather River School,34,False,True
+no_equity,1000,CA0706028,Knightsen Elementary School,350,False,True
+no_equity,1000,CA0707553,Riverview Mobile Home Park,126,True,False
+no_equity,1000,CA0707573,Delta Mutual Water Company,333,False,True
+no_equity,1000,CA1000078,Fcwwd 42/Alluvial & Fancher,291,False,True
+no_equity,1000,CA1010039,Caruthers Comm Serv Dist,2613,True,False
+no_equity,1000,CA1010042,Malaga County Water District,1200,False,True
+no_equity,1000,CA1210010,Scotia Csd,681,False,True
+no_equity,1000,CA1300009,Winterhaven County Water District,394,False,True
+no_equity,1000,CA1300553,Magnolia Union School,142,False,True
+no_equity,1000,CA1300616,Palo Verde County Water Dist.,410,False,True
+no_equity,1000,CA1500296,Fuller Acres Mutual Water Company,545,False,True
+no_equity,1000,CA1500406,Tradewind Water Assoc.,632,False,True
+no_equity,1000,CA1500409,Brock Mutual Water Company,462,False,True
+no_equity,1000,CA1500475,Krista Mutual Water Company,504,False,True
+no_equity,1000,CA1502221,Pond School Water System,250,False,True
+no_equity,1000,CA1510007,Frazier Park Pud,2592,True,False
+no_equity,1000,CA1800574,Johnstonville Elementary School,230,True,False
+no_equity,1000,CA1800576,Long Valley Charter School,196,False,True
+no_equity,1000,CA1810003,Lassen County Water Works District #1,450,False,True
+no_equity,1000,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+no_equity,1000,CA1910063,Lincoln Avenue Water Co.,8721,True,False
+no_equity,1000,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+no_equity,1000,CA2000690,Md 73 Quartz Mountain,375,False,True
+no_equity,1000,CA2410001,City Of Atwater,29479,True,False
+no_equity,1000,CA2700577,Elkhorn School Ws,694,False,True
+no_equity,1000,CA2702322,Captain Cooper School Ws,82,False,True
+no_equity,1000,CA3200104,Grizzly Lake Csd-Delleker,657,False,True
+no_equity,1000,CA3301107,Carver Tract Mutual Water Comp,600,False,True
+no_equity,1000,CA3301428,Blythe - Mesa Ranch,568,False,True
+no_equity,1000,CA3310033,Santa Ana River Water Company,6475,True,False
+no_equity,1000,CA3310051,Myoma Dunes Mutual Water Company,9445,False,True
+no_equity,1000,CA3310801,Bautista Cc No. 36,73,False,True
+no_equity,1000,CA3310802,Chuckawalla Valley State Prison,4331,True,False
+no_equity,1000,CA3601085,Rancho Pino Verde,66,False,True
+no_equity,1000,CA3601186,Rancheritos #2,291,False,True
+no_equity,1000,CA3700041,Barrett Lake Mh And Rv Llc,300,False,True
+no_equity,1000,CA3700924,Lake Morena Views Mwc,360,False,True
+no_equity,1000,CA3701793,Twin Lakes Resort,400,False,True
+no_equity,1000,CA3710009,Descanso Community Water District,870,False,True
+no_equity,1000,CA3910022,Little Potato Slough Mutual,560,False,True
+no_equity,1000,CA4000506,Woodland Park Mutual Water Co,538,False,True
+no_equity,1000,CA4000554,Green River Mutual Water Co.,350,False,True
+no_equity,1000,CA4100610,Puente Housing Solutions,28,False,True
+no_equity,1000,CA4200879,Cuyama Elementary School,250,False,True
+no_equity,1000,CA4700578,Little Shasta School,30,False,True
+no_equity,1000,CA4700591,Delphic Elementary School,50,False,True
+no_equity,1000,CA4900548,Holland Heights Mutual Water Company,300,False,True
+no_equity,1000,CA4900570,Palomino Lakes Mutual Water Co.,300,False,True
+no_equity,1000,CA4900720,Mobile Home Estates,403,False,True
+no_equity,1000,CA5000090,Riverview Mobile Home Estates,540,False,True
+no_equity,1000,CA5000095,Sunrise Village Mhp,339,False,True
+no_equity,1000,CA5000295,Shiloh School District,105,False,True
+no_equity,1000,CA5010009,Keyes Community Services Dist.,5672,True,False
+no_equity,1000,CA5010028,"Ceres, City Of",54513,True,False
+no_equity,1000,CA5100125,Harmony Village,25,False,True
+no_equity,1000,CA5110001,City Of Live Oak,9687,True,False
+no_equity,1000,CA5400553,Del Oro Traver District,657,False,True
+no_equity,1000,CA5400754,South Kaweah Mutual Water Company,384,False,True
+no_equity,1000,CA5410002,"Dinuba, City Of",27641,True,False
+no_equity,1000,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+no_equity,2000,CA0300062,Hope Foundation/Moriah Heights,299,False,True
+no_equity,2000,CA0300078,Ione Band Of Miwok Indians,40,False,True
+no_equity,2000,CA0706004,Oakley Mutual Water Company,170,False,True
+no_equity,2000,CA1000057,Del Oro Water Co - Metropolitan District,96,False,True
+no_equity,2000,CA1000063,New Auberry Water Association,120,False,True
+no_equity,2000,CA1000181,Alvina School,221,False,True
+no_equity,2000,CA1000200,Rubys Valley Care Home,43,False,True
+no_equity,2000,CA1000208,Roosevelt Elementary School,580,False,True
+no_equity,2000,CA1009039,Pappas & Co (Mendota),39,False,True
+no_equity,2000,CA1009051,"Cantua Creek Vineyards, Iv, Llc.",55,False,True
+no_equity,2000,CA1010339,California State University Fresno,1500,False,True
+no_equity,2000,CA1200501,Alderpoint County Water,190,False,True
+no_equity,2000,CA1206002,Palomino Estates Water Company,64,False,True
+no_equity,2000,CA1210023,Loleta C.S.D.,828,True,False
+no_equity,2000,CA1300018,Gateway,1215,True,False
+no_equity,2000,CA1310013,Seeley Cwd,1729,True,False
+no_equity,2000,CA1500314,Del Oro Wc - Country Estates Dist,297,False,True
+no_equity,2000,CA1500494,Wilson Road Water Community,66,False,True
+no_equity,2000,CA1502699,East Wilson Road Water Company,46,False,True
+no_equity,2000,CA1510023,Lake Of The Woods Mwc,875,True,False
+no_equity,2000,CA1510027,Desert Lake Comm Serv Dist,968,True,False
+no_equity,2000,CA1510046,Lost Hills Utility District,1926,True,False
+no_equity,2000,CA1510055,Cws - North Garden,27634,True,False
+no_equity,2000,CA1810004,Leavitt Lake Csd,950,True,False
+no_equity,2000,CA1900808,Lancaster Water Company,80,False,True
+no_equity,2000,CA1900901,Fire Suppression Camp #19,125,True,False
+no_equity,2000,CA1900942,Alpine Springs Mobile Home Park,175,False,True
+no_equity,2000,CA1910023,Averydale Mwc,1026,True,False
+no_equity,2000,CA1910140,Rubio Canon Land & Water Association,6646,True,False
+no_equity,2000,CA1910223,Gswc-South San Gabriel,26451,True,False
+no_equity,2000,CA2000544,Madera Co Md1-Hidden Lake Estates,162,False,True
+no_equity,2000,CA2000561,Md 08 North Fork Water System,264,False,True
+no_equity,2000,CA2000611,Coarsegold School,389,True,False
+no_equity,2000,CA2000729,Madera Co Sa16 Sumner Hill,135,False,True
+no_equity,2000,CA2010012,Cal Am - Raymond,347,True,False
+no_equity,2000,CA2300634,Ocean'S Edge Estates,250,False,True
+no_equity,2000,CA2310004,"Willits, City Of",6175,True,False
+no_equity,2000,CA2400167,Ballico Csd,238,False,True
+no_equity,2000,CA2500801,Newell County Water District,629,True,False
+no_equity,2000,CA2610004,June Lake Pud - Down Canyon,310,False,True
+no_equity,2000,CA2700665,Oak Heights W & R Co Inc,105,False,True
+no_equity,2000,CA2700773,Psmcsd - Sunny Mesa,880,True,False
+no_equity,2000,CA2701063,River Rd Ws #25,65,False,True
+no_equity,2000,CA2701676,San Lucas County Water District,315,False,True
+no_equity,2000,CA2701926,Moro Rd Ws #09,210,False,True
+no_equity,2000,CA2702007,Psmcsd - Vierra Estates Ws,164,False,True
+no_equity,2000,CA2702180,Graves School Ws,56,True,False
+no_equity,2000,CA2710019,Cwsc Oak Hills,3214,True,False
+no_equity,2000,CA2710851,Salinas Valley State Prison,2930,True,False
+no_equity,2000,CA2800526,Berryessa Estates (Lbrid),474,True,False
+no_equity,2000,CA3301491,Alpine Village,198,False,True
+no_equity,2000,CA3500527,Valenzuela Water System,55,False,True
+no_equity,2000,CA3500579,Vineyard Estates Mwc,90,False,True
+no_equity,2000,CA3500581,Rancho San Joaquin Mwc,96,False,True
+no_equity,2000,CA3600012,Apple Valley View Mwc,303,False,True
+no_equity,2000,CA3600027,"Bar """"H"""" Mwc",155,False,True
+no_equity,2000,CA3600200,Rancheritos Mwc,487,True,False
+no_equity,2000,CA3600385,Brookside Mhp,65,False,True
+no_equity,2000,CA3610038,"Rialto, City Of",59264,True,False
+no_equity,2000,CA3610120,Phelan Pinon Hills Csd,24509,True,False
+no_equity,2000,CA3700071,Heavenly Oaks,300,True,False
+no_equity,2000,CA3700897,Guatay Mutual Benefit Corporation,100,False,True
+no_equity,2000,CA3700963,Potrero Elementary School,300,False,True
+no_equity,2000,CA3702364,Clover Flat Elementary School,160,True,False
+no_equity,2000,CA3900755,Shady Rest Trailer Court,150,False,True
+no_equity,2000,CA3902136,Linden Usd-Chartville School,40,True,False
+no_equity,2000,CA4000568,San Simeon Csd,462,True,False
+no_equity,2000,CA4010011,Morro Bay Pw Dept - Water Division,10757,True,False
+no_equity,2000,CA4010016,Los Osos Community Services District,7086,True,False
+no_equity,2000,CA4200867,Ray Water Company,40,False,True
+no_equity,2000,CA4210009,Cuyama Community Services District,700,True,False
+no_equity,2000,CA4300575,Twin Valley Inc,317,False,True
+no_equity,2000,CA4400571,Davenport County Sanitation,350,True,False
+no_equity,2000,CA4400617,Summit West Mutual Water Co.,481,True,False
+no_equity,2000,CA4400762,Rountree Facility(Prev. Sheriff'S Rehab),160,False,True
+no_equity,2000,CA4500163,Junction School District,700,True,False
+no_equity,2000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+no_equity,2000,CA4700577,Big Springs Union Elem. School,95,True,False
+no_equity,2000,CA4900513,Madrone Mutual Water Company,76,False,True
+no_equity,2000,CA4900558,Belmont Terrace Mutual Water Company,287,False,True
+no_equity,2000,CA4900603,Riebli Mutual Water Company,150,False,True
+no_equity,2000,CA4900667,College Park Mutual Water Company,244,False,True
+no_equity,2000,CA4900893,West Water Company (Puc),40,False,True
+no_equity,2000,CA4900913,Robin Way Water System,66,False,True
+no_equity,2000,CA4901355,Terrace View Water System,60,False,True
+no_equity,2000,CA4901436,Sebastopol Charter School,310,True,False
+no_equity,2000,CA5100142,Nuestro School,120,False,True
+no_equity,2000,CA5200507,Berrendos School,325,True,False
+no_equity,2000,CA5200534,Paskenta Comm. Services Dist.,237,False,True
+no_equity,2000,CA5200562,Sky View County Water,429,True,False
+no_equity,2000,CA5304109,Burnt Ranch Estates,115,False,True
+no_equity,2000,CA5304502,"Salyer Heights W.S., Inc",130,False,True
+no_equity,2000,CA5400682,Plainview Mwc - Central Water,138,False,True
+no_equity,2000,CA5400964,Sierra Vista Association,43,False,True
+no_equity,2000,CA5410039,Plainview Mutual Water Company,617,True,False
+no_equity,2000,CA5410050,Alpaugh Community Services District,871,True,False
+no_equity,2000,CA5500042,Belleview Oaks Mutual Water Co,468,True,False
+no_equity,2000,CA5601134,Elkins Ranch,150,False,True
+no_equity,2000,CA5602103,Cypress Mutual Water Co Inc,224,False,True
+no_equity,2000,CA5602110,Navalair Mobile Home Park,160,False,True
+no_equity,2000,CA5610068,Cloverdale Mutual Water Co.,455,True,False
+high_equity,250,CA0400014,Lake Madrone Water District,297,True,False
+high_equity,250,CA0400063,Manzanita Elementary School,295,True,False
+high_equity,250,CA1000206,Houghton-Kearney School,252,True,False
+high_equity,250,CA1000316,Kings Canyon High School,107,False,True
+high_equity,250,CA1502229,Rio Bravo Greeley School Water System,1219,True,False
+high_equity,250,CA3601182,High Desert Detention Center,1400,True,False
+high_equity,250,CA3610023,Green Valley Mwc,2993,True,False
+high_equity,250,CA3610125,Sbdno County Service Area 70J,12895,False,True
+high_equity,500,CA0706028,Knightsen Elementary School,350,False,True
+high_equity,500,CA1000324,Manning Gardens Care Center Inc,170,False,True
+high_equity,500,CA1010035,Del Rey Community Serv Dist,1491,False,True
+high_equity,500,CA1310005,"Holtville, City Of",6355,True,False
+high_equity,500,CA1510006,East Niles Csd,32517,True,False
+high_equity,500,CA1510051,Lebec County Water District,1379,False,True
+high_equity,500,CA1610004,"Corcoran, City Of",22808,True,False
+high_equity,500,CA1910002,Amarillo Mutual Water Company,3134,True,False
+high_equity,500,CA1910105,"Paramount - City, Water Dept.",55200,True,False
+high_equity,500,CA2010003,Cal Am - Bass Lake,3066,False,True
+high_equity,500,CA2010008,Madera Co Md10A-Madera Ranchos,3072,False,True
+high_equity,500,CA2110005,Bolinas Community Pud,1937,False,True
+high_equity,500,CA2710016,Little Bear Water Company,2327,False,True
+high_equity,500,CA3710039,Pine Valley Mutual Wc,2574,False,True
+high_equity,500,CA4700569,Willow Creek School,100,False,True
+high_equity,500,CA5400711,Sierra View Jr Academy,121,False,True
+high_equity,500,CA5400882,Pleasant View  West School,220,False,True
+high_equity,500,CA5403146,Liberty Elementary School,818,False,True
+high_equity,500,CA5410002,"Dinuba, City Of",27641,True,False
+high_equity,500,CA5410017,London Community Serv Dist,1800,False,True
+high_equity,500,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+high_equity,500,CA5410020,"Woodlake, City Of",7918,True,False
+high_equity,500,CA5410025,Woodville Public Utility Dist,1740,False,True
+high_equity,500,CA5510008,Lake Don Pedro Csd,1700,False,True
+high_equity,500,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+high_equity,500,CA5700571,Madison Service Dist,876,False,True
+high_equity,1000,CA0400067,Feather River School,34,False,True
+high_equity,1000,CA0706028,Knightsen Elementary School,350,False,True
+high_equity,1000,CA0707507,Willow Park Marina,380,False,True
+high_equity,1000,CA0707573,Delta Mutual Water Company,333,False,True
+high_equity,1000,CA1000546,Fcsa 49 - Five Points,440,False,True
+high_equity,1000,CA1010039,Caruthers Comm Serv Dist,2613,True,False
+high_equity,1000,CA1010042,Malaga County Water District,1200,False,True
+high_equity,1000,CA1210010,Scotia Csd,681,False,True
+high_equity,1000,CA1310003,Gswc - Calipatria,7475,True,False
+high_equity,1000,CA1500406,Tradewind Water Assoc.,632,False,True
+high_equity,1000,CA1500409,Brock Mutual Water Company,462,False,True
+high_equity,1000,CA1502221,Pond School Water System,250,False,True
+high_equity,1000,CA1510007,Frazier Park Pud,2592,True,False
+high_equity,1000,CA1800574,Johnstonville Elementary School,230,True,False
+high_equity,1000,CA1800576,Long Valley Charter School,196,False,True
+high_equity,1000,CA1810003,Lassen County Water Works District #1,450,False,True
+high_equity,1000,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+high_equity,1000,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+high_equity,1000,CA2410001,City Of Atwater,29479,True,False
+high_equity,1000,CA2410006,Delhi Cwd,7784,True,False
+high_equity,1000,CA2701221,Washington  School Ws,250,False,True
+high_equity,1000,CA2702322,Captain Cooper School Ws,82,False,True
+high_equity,1000,CA3301428,Blythe - Mesa Ranch,568,False,True
+high_equity,1000,CA3301630,Blythe - Hidden Beaches,399,False,True
+high_equity,1000,CA3310033,Santa Ana River Water Company,6475,True,False
+high_equity,1000,CA3310801,Bautista Cc No. 36,73,False,True
+high_equity,1000,CA3310802,Chuckawalla Valley State Prison,4331,True,False
+high_equity,1000,CA3600222,Juniper Riviera Cwd,858,False,True
+high_equity,1000,CA3600260,Smiley Park Country Club,370,False,True
+high_equity,1000,CA3600306,Thunderbird Cwd,1056,False,True
+high_equity,1000,CA3610117,Devore Wc,1574,False,True
+high_equity,1000,CA3700041,Barrett Lake Mh And Rv Llc,300,False,True
+high_equity,1000,CA3700924,Lake Morena Views Mwc,360,False,True
+high_equity,1000,CA3701793,Twin Lakes Resort,400,False,True
+high_equity,1000,CA3910014,San Joaquin County-Raymus Village,1086,False,True
+high_equity,1000,CA3910022,Little Potato Slough Mutual,560,False,True
+high_equity,1000,CA4000506,Woodland Park Mutual Water Co,538,False,True
+high_equity,1000,CA4000554,Green River Mutual Water Co.,350,False,True
+high_equity,1000,CA4000732,Carrisa Plains Elementary,40,False,True
+high_equity,1000,CA4100610,Puente Housing Solutions,28,False,True
+high_equity,1000,CA4200879,Cuyama Elementary School,250,False,True
+high_equity,1000,CA4300779,Lakeside Sd-Lakeside School,127,False,True
+high_equity,1000,CA4400751,Bonny Doon School,160,False,True
+high_equity,1000,CA4410001,Big Basin Water Company,1120,False,True
+high_equity,1000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+high_equity,1000,CA4700578,Little Shasta School,30,False,True
+high_equity,1000,CA4700585,Junction Elementary School,40,False,True
+high_equity,1000,CA4700591,Delphic Elementary School,50,False,True
+high_equity,1000,CA4900508,"Cazadero Water Company, Inc. (Puc)",525,False,True
+high_equity,1000,CA5000295,Shiloh School District,105,False,True
+high_equity,1000,CA5010009,Keyes Community Services Dist.,5672,True,False
+high_equity,1000,CA5010028,"Ceres, City Of",54513,True,False
+high_equity,1000,CA5110001,City Of Live Oak,9687,True,False
+high_equity,1000,CA5410007,Lsid - Tonyville,500,False,True
+high_equity,1000,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+high_equity,1000,CA5700623,Davis Jusd - Fairfield School,46,False,True
+high_equity,2000,CA0707553,Riverview Mobile Home Park,126,True,False
+high_equity,2000,CA0900304,Silverfork School,25,False,True
+high_equity,2000,CA1000063,New Auberry Water Association,120,False,True
+high_equity,2000,CA1000200,Rubys Valley Care Home,43,False,True
+high_equity,2000,CA1000208,Roosevelt Elementary School,580,False,True
+high_equity,2000,CA1000229,Green Acres Mobile Home Estate,350,True,False
+high_equity,2000,CA1000378,Sunset West Community Llc,350,True,False
+high_equity,2000,CA1009027,Harris Farms Headquarters,140,False,True
+high_equity,2000,CA1010339,California State University Fresno,1500,False,True
+high_equity,2000,CA1200501,Alderpoint County Water,190,False,True
+high_equity,2000,CA1210023,Loleta C.S.D.,828,True,False
+high_equity,2000,CA1300556,Mulberry Union School,85,True,False
+high_equity,2000,CA1300622,Sportsmans Paradise,138,False,True
+high_equity,2000,CA1310013,Seeley Cwd,1729,True,False
+high_equity,2000,CA1500289,Athal Mutual Water System,150,False,True
+high_equity,2000,CA1500393,Rainbird Valley Mwc,238,False,True
+high_equity,2000,CA1500413,Tejon Ranch Main Headquarters,132,False,True
+high_equity,2000,CA1500465,Oak Knolls Mutual Water Company,123,False,True
+high_equity,2000,CA1500493,"El Adobe Poa, Inc.",200,False,True
+high_equity,2000,CA1500575,San Joaquin Estates Mutual Water Company,165,False,True
+high_equity,2000,CA1502699,East Wilson Road Water Company,46,False,True
+high_equity,2000,CA1510020,"Tehachapi, City Of",9094,True,False
+high_equity,2000,CA1510023,Lake Of The Woods Mwc,875,True,False
+high_equity,2000,CA1510027,Desert Lake Comm Serv Dist,968,True,False
+high_equity,2000,CA1510046,Lost Hills Utility District,1926,True,False
+high_equity,2000,CA1810004,Leavitt Lake Csd,950,True,False
+high_equity,2000,CA1900007,California Conservation Camp #14,107,True,False
+high_equity,2000,CA1900901,Fire Suppression Camp #19,125,True,False
+high_equity,2000,CA1910023,Averydale Mwc,1026,True,False
+high_equity,2000,CA1910140,Rubio Canon Land & Water Association,6646,True,False
+high_equity,2000,CA1910166,Valley Water Co.,10113,True,False
+high_equity,2000,CA2000554,Md 33 Fairmead,568,True,False
+high_equity,2000,CA2000561,Md 08 North Fork Water System,264,False,True
+high_equity,2000,CA2000611,Coarsegold School,389,True,False
+high_equity,2000,CA2000760,Dixieland Elementary School,316,True,False
+high_equity,2000,CA2010012,Cal Am - Raymond,347,True,False
+high_equity,2000,CA2300634,Ocean'S Edge Estates,250,False,True
+high_equity,2000,CA2310004,"Willits, City Of",6175,True,False
+high_equity,2000,CA2400084,Evergreen Mobile Home Park,36,False,True
+high_equity,2000,CA2400167,Ballico Csd,238,False,True
+high_equity,2000,CA2500801,Newell County Water District,629,True,False
+high_equity,2000,CA2700665,Oak Heights W & R Co Inc,105,False,True
+high_equity,2000,CA2700773,Psmcsd - Sunny Mesa,880,True,False
+high_equity,2000,CA2701063,River Rd Ws #25,65,False,True
+high_equity,2000,CA2701926,Moro Rd Ws #09,210,False,True
+high_equity,2000,CA2702007,Psmcsd - Vierra Estates Ws,164,False,True
+high_equity,2000,CA2702180,Graves School Ws,56,True,False
+high_equity,2000,CA2710019,Cwsc Oak Hills,3214,True,False
+high_equity,2000,CA2710851,Salinas Valley State Prison,2930,True,False
+high_equity,2000,CA2800526,Berryessa Estates (Lbrid),474,True,False
+high_equity,2000,CA3200134,Blairsden Water Users Assn,200,False,True
+high_equity,2000,CA3301491,Alpine Village,198,False,True
+high_equity,2000,CA3310028,Riverside Csa #122-Mesa Verde,766,True,False
+high_equity,2000,CA3500527,Valenzuela Water System,55,False,True
+high_equity,2000,CA3600012,Apple Valley View Mwc,303,False,True
+high_equity,2000,CA3600071,Chamisal Mwc,84,False,True
+high_equity,2000,CA3600200,Rancheritos Mwc,487,True,False
+high_equity,2000,CA3600297,Gordon Acres Water Co,200,False,True
+high_equity,2000,CA3600385,Brookside Mhp,65,False,True
+high_equity,2000,CA3610025,Joshua Basin Water District,6489,False,True
+high_equity,2000,CA3610120,Phelan Pinon Hills Csd,24509,True,False
+high_equity,2000,CA3700071,Heavenly Oaks,300,True,False
+high_equity,2000,CA3700963,Potrero Elementary School,300,False,True
+high_equity,2000,CA3702364,Clover Flat Elementary School,160,True,False
+high_equity,2000,CA3900755,Shady Rest Trailer Court,150,False,True
+high_equity,2000,CA4010016,Los Osos Community Services District,7086,True,False
+high_equity,2000,CA4200867,Ray Water Company,40,False,True
+high_equity,2000,CA4210009,Cuyama Community Services District,700,True,False
+high_equity,2000,CA4300912,Mecchi Water Company,104,False,True
+high_equity,2000,CA4400571,Davenport County Sanitation,350,True,False
+high_equity,2000,CA4400756,Mountain Elementary School,240,True,False
+high_equity,2000,CA4400762,Rountree Facility(Prev. Sheriff'S Rehab),160,False,True
+high_equity,2000,CA4500015,"Shasta Csa - Castella, #3",333,True,False
+high_equity,2000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+high_equity,2000,CA4700577,Big Springs Union Elem. School,95,True,False
+high_equity,2000,CA4910011,"Sebastopol, City Of",7522,True,False
+high_equity,2000,CA5000048,Lazy B Mobilehome Park,125,False,True
+high_equity,2000,CA5200507,Berrendos School,325,True,False
+high_equity,2000,CA5200534,Paskenta Comm. Services Dist.,237,False,True
+high_equity,2000,CA5200562,Sky View County Water,429,True,False
+high_equity,2000,CA5301002,Lewiston Community Services District,677,True,False
+high_equity,2000,CA5304109,Burnt Ranch Estates,115,False,True
+high_equity,2000,CA5400647,Yokohl Mutual Water Co,95,False,True
+high_equity,2000,CA5400682,Plainview Mwc - Central Water,138,False,True
+high_equity,2000,CA5410050,Alpaugh Community Services District,871,True,False
+high_equity,2000,CA5601134,Elkins Ranch,150,False,True
+high_equity,2000,CA5602101,Esterina Properties,50,False,True
+high_equity,2000,CA5602110,Navalair Mobile Home Park,160,False,True
+high_equity,2000,CA5610068,Cloverdale Mutual Water Co.,455,True,False
+small_reserve_30pct,100,CA0706028,Knightsen Elementary School,350,False,True
+small_reserve_30pct,100,CA1000324,Manning Gardens Care Center Inc,170,False,True
+small_reserve_30pct,100,CA1300560,Pine Union School,217,True,False
+small_reserve_30pct,100,CA2000602,Ripperdan Community Day School,120,True,False
+small_reserve_30pct,100,CA3301577,Csa 62,614,False,True
+small_reserve_30pct,100,CA4700569,Willow Creek School,100,False,True
+small_reserve_30pct,100,CA5400882,Pleasant View  West School,220,True,False
+small_reserve_30pct,100,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+small_reserve_30pct,250,CA0600008,Colusa Co. Wwd #1 - Grimes,512,False,True
+small_reserve_30pct,250,CA0610002,City Of Colusa,6675,False,True
+small_reserve_30pct,250,CA0706028,Knightsen Elementary School,350,False,True
+small_reserve_30pct,250,CA1000324,Manning Gardens Care Center Inc,170,False,True
+small_reserve_30pct,250,CA1010023,City Of Orange Cove,9525,True,False
+small_reserve_30pct,250,CA1300560,Pine Union School,217,True,False
+small_reserve_30pct,250,CA1800574,Johnstonville Elementary School,230,True,False
+small_reserve_30pct,250,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+small_reserve_30pct,250,CA2400075,El Nido Elementary School,220,True,False
+small_reserve_30pct,250,CA2400097,Cressey School,155,True,False
+small_reserve_30pct,250,CA2410002,City Of Dos Palos,7452,True,False
+small_reserve_30pct,250,CA3610125,Sbdno County Service Area 70J,12895,False,True
+small_reserve_30pct,250,CA4700569,Willow Creek School,100,False,True
+small_reserve_30pct,250,CA5401003,East Orosi Community Services District,423,False,True
+small_reserve_30pct,250,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+small_reserve_30pct,500,CA0706028,Knightsen Elementary School,350,False,True
+small_reserve_30pct,500,CA1010028,Riverdale Public Utility District,2756,False,True
+small_reserve_30pct,500,CA1300560,Pine Union School,217,True,False
+small_reserve_30pct,500,CA1310002,"Calexico, City Of",40357,True,False
+small_reserve_30pct,500,CA1510006,East Niles Csd,32517,True,False
+small_reserve_30pct,500,CA1710001,Clearlake Oaks County Water District,2359,False,True
+small_reserve_30pct,500,CA1800574,Johnstonville Elementary School,230,True,False
+small_reserve_30pct,500,CA1800576,Long Valley Charter School,196,False,True
+small_reserve_30pct,500,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+small_reserve_30pct,500,CA2110005,Bolinas Community Pud,1937,False,True
+small_reserve_30pct,500,CA2400075,El Nido Elementary School,220,True,False
+small_reserve_30pct,500,CA2700728,San Ardo Wd,575,True,False
+small_reserve_30pct,500,CA2701221,Washington  School Ws,250,False,True
+small_reserve_30pct,500,CA3700117,Mountain Empire High School,1000,True,False
+small_reserve_30pct,500,CA4400660,Rancho San Andreas,200,True,False
+small_reserve_30pct,500,CA4510004,"Shasta Csa - Jones Valley, #6",2006,False,True
+small_reserve_30pct,500,CA4700569,Willow Creek School,100,False,True
+small_reserve_30pct,500,CA5410009,Pixley Public Util Dist,2772,False,True
+small_reserve_30pct,500,CA5510008,Lake Don Pedro Csd,1700,False,True
+small_reserve_30pct,500,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+small_reserve_30pct,500,CA5700623,Davis Jusd - Fairfield School,46,False,True
+small_reserve_30pct,1000,CA0706028,Knightsen Elementary School,350,False,True
+small_reserve_30pct,1000,CA0707553,Riverview Mobile Home Park,126,True,False
+small_reserve_30pct,1000,CA1000366,Sunnyside Convalescent Hosp,107,True,False
+small_reserve_30pct,1000,CA1000546,Fcsa 49 - Five Points,440,False,True
+small_reserve_30pct,1000,CA1210010,Scotia Csd,681,False,True
+small_reserve_30pct,1000,CA1300560,Pine Union School,217,True,False
+small_reserve_30pct,1000,CA1500406,Tradewind Water Assoc.,632,False,True
+small_reserve_30pct,1000,CA1500409,Brock Mutual Water Company,462,False,True
+small_reserve_30pct,1000,CA1502221,Pond School Water System,250,False,True
+small_reserve_30pct,1000,CA1510007,Frazier Park Pud,2592,True,False
+small_reserve_30pct,1000,CA1510012,Lamont Public Utility Dist,19057,False,True
+small_reserve_30pct,1000,CA1800574,Johnstonville Elementary School,230,True,False
+small_reserve_30pct,1000,CA1810003,Lassen County Water Works District #1,450,False,True
+small_reserve_30pct,1000,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+small_reserve_30pct,1000,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+small_reserve_30pct,1000,CA2700577,Elkhorn School Ws,694,True,False
+small_reserve_30pct,1000,CA2702322,Captain Cooper School Ws,82,False,True
+small_reserve_30pct,1000,CA3301428,Blythe - Mesa Ranch,568,False,True
+small_reserve_30pct,1000,CA3310033,Santa Ana River Water Company,6475,True,False
+small_reserve_30pct,1000,CA3310801,Bautista Cc No. 36,73,False,True
+small_reserve_30pct,1000,CA3310802,Chuckawalla Valley State Prison,4331,True,False
+small_reserve_30pct,1000,CA3700041,Barrett Lake Mh And Rv Llc,300,False,True
+small_reserve_30pct,1000,CA3910022,Little Potato Slough Mutual,560,False,True
+small_reserve_30pct,1000,CA4200879,Cuyama Elementary School,250,False,True
+small_reserve_30pct,1000,CA4410001,Big Basin Water Company,1120,False,True
+small_reserve_30pct,1000,CA4700578,Little Shasta School,30,False,True
+small_reserve_30pct,1000,CA4700591,Delphic Elementary School,50,False,True
+small_reserve_30pct,1000,CA4900562,Diamond A Mutual Water Company,640,False,True
+small_reserve_30pct,1000,CA5010009,Keyes Community Services Dist.,5672,True,False
+small_reserve_30pct,1000,CA5110001,City Of Live Oak,9687,True,False
+small_reserve_30pct,1000,CA5410007,Lsid - Tonyville,500,False,True
+small_reserve_30pct,1000,CA5410012,Strathmore Public Util Dist,2669,True,False
+small_reserve_30pct,1000,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+small_reserve_30pct,2000,CA0105009,Mountain House School,50,False,True
+small_reserve_30pct,2000,CA0707553,Riverview Mobile Home Park,126,True,False
+small_reserve_30pct,2000,CA1000063,New Auberry Water Association,120,False,True
+small_reserve_30pct,2000,CA1000200,Rubys Valley Care Home,43,False,True
+small_reserve_30pct,2000,CA1000208,Roosevelt Elementary School,580,False,True
+small_reserve_30pct,2000,CA1000229,Green Acres Mobile Home Estate,350,True,False
+small_reserve_30pct,2000,CA1000378,Sunset West Community Llc,350,True,False
+small_reserve_30pct,2000,CA1009027,Harris Farms Headquarters,140,False,True
+small_reserve_30pct,2000,CA1009051,"Cantua Creek Vineyards, Iv, Llc.",55,False,True
+small_reserve_30pct,2000,CA1010339,California State University Fresno,1500,False,True
+small_reserve_30pct,2000,CA1200501,Alderpoint County Water,190,False,True
+small_reserve_30pct,2000,CA1206002,Palomino Estates Water Company,64,False,True
+small_reserve_30pct,2000,CA1210023,Loleta C.S.D.,828,True,False
+small_reserve_30pct,2000,CA1300556,Mulberry Union School,85,True,False
+small_reserve_30pct,2000,CA1300622,Sportsmans Paradise,138,False,True
+small_reserve_30pct,2000,CA1310013,Seeley Cwd,1729,True,False
+small_reserve_30pct,2000,CA1500252,Kern Valley Mutual Water Company,132,False,True
+small_reserve_30pct,2000,CA1500289,Athal Mutual Water System,150,False,True
+small_reserve_30pct,2000,CA1500393,Rainbird Valley Mwc,238,False,True
+small_reserve_30pct,2000,CA1500413,Tejon Ranch Main Headquarters,132,False,True
+small_reserve_30pct,2000,CA1500465,Oak Knolls Mutual Water Company,123,False,True
+small_reserve_30pct,2000,CA1500493,"El Adobe Poa, Inc.",200,False,True
+small_reserve_30pct,2000,CA1500575,San Joaquin Estates Mutual Water Company,165,False,True
+small_reserve_30pct,2000,CA1502699,East Wilson Road Water Company,46,False,True
+small_reserve_30pct,2000,CA1510020,"Tehachapi, City Of",9094,True,False
+small_reserve_30pct,2000,CA1510023,Lake Of The Woods Mwc,875,True,False
+small_reserve_30pct,2000,CA1510027,Desert Lake Comm Serv Dist,968,True,False
+small_reserve_30pct,2000,CA1510046,Lost Hills Utility District,1926,True,False
+small_reserve_30pct,2000,CA1810004,Leavitt Lake Csd,950,True,False
+small_reserve_30pct,2000,CA1900007,California Conservation Camp #14,107,True,False
+small_reserve_30pct,2000,CA1900901,Fire Suppression Camp #19,125,True,False
+small_reserve_30pct,2000,CA1910023,Averydale Mwc,1026,True,False
+small_reserve_30pct,2000,CA1910140,Rubio Canon Land & Water Association,6646,True,False
+small_reserve_30pct,2000,CA1910166,Valley Water Co.,10113,True,False
+small_reserve_30pct,2000,CA2000512,East Acres Mutual Water Company,250,False,True
+small_reserve_30pct,2000,CA2000554,Md 33 Fairmead,568,True,False
+small_reserve_30pct,2000,CA2000611,Coarsegold School,389,True,False
+small_reserve_30pct,2000,CA2000760,Dixieland Elementary School,316,True,False
+small_reserve_30pct,2000,CA2010012,Cal Am - Raymond,347,True,False
+small_reserve_30pct,2000,CA2300634,Ocean'S Edge Estates,250,False,True
+small_reserve_30pct,2000,CA2310004,"Willits, City Of",6175,True,False
+small_reserve_30pct,2000,CA2400084,Evergreen Mobile Home Park,36,False,True
+small_reserve_30pct,2000,CA2400167,Ballico Csd,238,False,True
+small_reserve_30pct,2000,CA2500801,Newell County Water District,629,True,False
+small_reserve_30pct,2000,CA2700665,Oak Heights W & R Co Inc,105,False,True
+small_reserve_30pct,2000,CA2700773,Psmcsd - Sunny Mesa,880,True,False
+small_reserve_30pct,2000,CA2701063,River Rd Ws #25,65,False,True
+small_reserve_30pct,2000,CA2701926,Moro Rd Ws #09,210,False,True
+small_reserve_30pct,2000,CA2702007,Psmcsd - Vierra Estates Ws,164,False,True
+small_reserve_30pct,2000,CA2702180,Graves School Ws,56,True,False
+small_reserve_30pct,2000,CA2710019,Cwsc Oak Hills,3214,True,False
+small_reserve_30pct,2000,CA2710851,Salinas Valley State Prison,2930,True,False
+small_reserve_30pct,2000,CA2800526,Berryessa Estates (Lbrid),474,True,False
+small_reserve_30pct,2000,CA3200134,Blairsden Water Users Assn,200,False,True
+small_reserve_30pct,2000,CA3301491,Alpine Village,198,False,True
+small_reserve_30pct,2000,CA3310028,Riverside Csa #122-Mesa Verde,766,True,False
+small_reserve_30pct,2000,CA3500527,Valenzuela Water System,55,False,True
+small_reserve_30pct,2000,CA3600012,Apple Valley View Mwc,303,False,True
+small_reserve_30pct,2000,CA3600071,Chamisal Mwc,84,False,True
+small_reserve_30pct,2000,CA3600200,Rancheritos Mwc,487,True,False
+small_reserve_30pct,2000,CA3600297,Gordon Acres Water Co,200,False,True
+small_reserve_30pct,2000,CA3600385,Brookside Mhp,65,False,True
+small_reserve_30pct,2000,CA3610025,Joshua Basin Water District,6489,False,True
+small_reserve_30pct,2000,CA3610120,Phelan Pinon Hills Csd,24509,True,False
+small_reserve_30pct,2000,CA3700071,Heavenly Oaks,300,True,False
+small_reserve_30pct,2000,CA3700963,Potrero Elementary School,300,False,True
+small_reserve_30pct,2000,CA3702364,Clover Flat Elementary School,160,True,False
+small_reserve_30pct,2000,CA3900755,Shady Rest Trailer Court,150,False,True
+small_reserve_30pct,2000,CA3902136,Linden Usd-Chartville School,40,True,False
+small_reserve_30pct,2000,CA4000568,San Simeon Csd,462,True,False
+small_reserve_30pct,2000,CA4010016,Los Osos Community Services District,7086,True,False
+small_reserve_30pct,2000,CA4200867,Ray Water Company,40,False,True
+small_reserve_30pct,2000,CA4210009,Cuyama Community Services District,700,True,False
+small_reserve_30pct,2000,CA4300912,Mecchi Water Company,104,False,True
+small_reserve_30pct,2000,CA4400571,Davenport County Sanitation,350,True,False
+small_reserve_30pct,2000,CA4400756,Mountain Elementary School,240,True,False
+small_reserve_30pct,2000,CA4400762,Rountree Facility(Prev. Sheriff'S Rehab),160,False,True
+small_reserve_30pct,2000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+small_reserve_30pct,2000,CA4700577,Big Springs Union Elem. School,95,True,False
+small_reserve_30pct,2000,CA4900513,Madrone Mutual Water Company,76,False,True
+small_reserve_30pct,2000,CA4900532,Sonoma County Csa 41-Jenner,406,True,False
+small_reserve_30pct,2000,CA4900913,Robin Way Water System,66,False,True
+small_reserve_30pct,2000,CA4910011,"Sebastopol, City Of",7522,True,False
+small_reserve_30pct,2000,CA5100142,Nuestro School,120,False,True
+small_reserve_30pct,2000,CA5200507,Berrendos School,325,True,False
+small_reserve_30pct,2000,CA5200534,Paskenta Comm. Services Dist.,237,False,True
+small_reserve_30pct,2000,CA5200562,Sky View County Water,429,True,False
+small_reserve_30pct,2000,CA5301002,Lewiston Community Services District,677,True,False
+small_reserve_30pct,2000,CA5304109,Burnt Ranch Estates,115,False,True
+small_reserve_30pct,2000,CA5400647,Yokohl Mutual Water Co,95,False,True
+small_reserve_30pct,2000,CA5400682,Plainview Mwc - Central Water,138,False,True
+small_reserve_30pct,2000,CA5410050,Alpaugh Community Services District,871,True,False
+small_reserve_30pct,2000,CA5500042,Belleview Oaks Mutual Water Co,468,True,False
+small_reserve_30pct,2000,CA5601134,Elkins Ranch,150,False,True
+small_reserve_30pct,2000,CA5602110,Navalair Mobile Home Park,160,False,True
+small_reserve_30pct,2000,CA5610068,Cloverdale Mutual Water Co.,455,True,False
+routes,250,CA0400065,Spring Valley School,100,True,False
+routes,250,CA1000316,Kings Canyon High School,107,True,False
+routes,250,CA3601182,High Desert Detention Center,1400,True,False
+routes,250,CA3610125,Sbdno County Service Area 70J,12895,False,True
+routes,250,CA5400850,Packwood School,105,True,False
+routes,250,CA5403146,Liberty Elementary School,818,False,True
+routes,250,CA5410003,"Exeter, City Of",11169,True,False
+routes,500,CA0706028,Knightsen Elementary School,350,False,True
+routes,500,CA1000324,Manning Gardens Care Center Inc,170,False,True
+routes,500,CA1010035,Del Rey Community Serv Dist,1491,False,True
+routes,500,CA1300560,Pine Union School,217,True,False
+routes,500,CA1510006,East Niles Csd,32517,True,False
+routes,500,CA1510051,Lebec County Water District,1379,False,True
+routes,500,CA1910002,Amarillo Mutual Water Company,3134,True,False
+routes,500,CA2000602,Ripperdan Community Day School,120,False,True
+routes,500,CA2110005,Bolinas Community Pud,1937,False,True
+routes,500,CA2701221,Washington  School Ws,250,False,True
+routes,500,CA3301577,Csa 62,614,False,True
+routes,500,CA5400711,Sierra View Jr Academy,121,False,True
+routes,500,CA5400882,Pleasant View  West School,220,False,True
+routes,500,CA5410002,"Dinuba, City Of",27641,True,False
+routes,500,CA5410017,London Community Serv Dist,1800,False,True
+routes,500,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+routes,500,CA5410020,"Woodlake, City Of",7918,True,False
+routes,500,CA5410025,Woodville Public Utility Dist,1740,False,True
+routes,500,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+routes,500,CA5610029,10/30/2026,1820,False,True
+routes,500,CA5700571,Madison Service Dist,876,False,True
+routes,1000,CA0300037,Jackson Valley Irrigation District,1303,True,False
+routes,1000,CA0400067,Feather River School,34,False,True
+routes,1000,CA0706028,Knightsen Elementary School,350,False,True
+routes,1000,CA0707573,Delta Mutual Water Company,333,False,True
+routes,1000,CA1000057,Del Oro Water Co - Metropolitan District,96,False,True
+routes,1000,CA1000105,Madison Elementary School,597,False,True
+routes,1000,CA1000190,Lone Star School,732,False,True
+routes,1000,CA1000546,Fcsa 49 - Five Points,440,False,True
+routes,1000,CA1010039,Caruthers Comm Serv Dist,2613,True,False
+routes,1000,CA1010042,Malaga County Water District,1200,False,True
+routes,1000,CA1210010,Scotia Csd,681,False,True
+routes,1000,CA1300560,Pine Union School,217,True,False
+routes,1000,CA1310003,Gswc - Calipatria,7475,True,False
+routes,1000,CA1500406,Tradewind Water Assoc.,632,False,True
+routes,1000,CA1500475,Krista Mutual Water Company,504,False,True
+routes,1000,CA1502221,Pond School Water System,250,False,True
+routes,1000,CA1510007,Frazier Park Pud,2592,True,False
+routes,1000,CA1800574,Johnstonville Elementary School,230,True,False
+routes,1000,CA1810003,Lassen County Water Works District #1,450,False,True
+routes,1000,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+routes,1000,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+routes,1000,CA2410001,City Of Atwater,29479,True,False
+routes,1000,CA2410006,Delhi Cwd,7784,True,False
+routes,1000,CA2702322,Captain Cooper School Ws,82,False,True
+routes,1000,CA3200104,Grizzly Lake Csd-Delleker,657,False,True
+routes,1000,CA3301428,Blythe - Mesa Ranch,568,False,True
+routes,1000,CA3301630,Blythe - Hidden Beaches,399,False,True
+routes,1000,CA3310033,Santa Ana River Water Company,6475,True,False
+routes,1000,CA3310801,Bautista Cc No. 36,73,False,True
+routes,1000,CA3310802,Chuckawalla Valley State Prison,4331,True,False
+routes,1000,CA3600012,Apple Valley View Mwc,303,False,True
+routes,1000,CA3600222,Juniper Riviera Cwd,858,False,True
+routes,1000,CA3600260,Smiley Park Country Club,370,False,True
+routes,1000,CA3600306,Thunderbird Cwd,1056,False,True
+routes,1000,CA3601085,Rancho Pino Verde,66,False,True
+routes,1000,CA3610117,Devore Wc,1574,False,True
+routes,1000,CA3700041,Barrett Lake Mh And Rv Llc,300,False,True
+routes,1000,CA3700924,Lake Morena Views Mwc,360,False,True
+routes,1000,CA3701793,Twin Lakes Resort,400,False,True
+routes,1000,CA3910014,San Joaquin County-Raymus Village,1086,False,True
+routes,1000,CA3910022,Little Potato Slough Mutual,560,False,True
+routes,1000,CA4000506,Woodland Park Mutual Water Co,538,False,True
+routes,1000,CA4000554,Green River Mutual Water Co.,350,False,True
+routes,1000,CA4000732,Carrisa Plains Elementary,40,False,True
+routes,1000,CA4200842,Saint Marie Mobile Home Park,320,False,True
+routes,1000,CA4400751,Bonny Doon School,160,False,True
+routes,1000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+routes,1000,CA4700578,Little Shasta School,30,False,True
+routes,1000,CA4700585,Junction Elementary School,40,False,True
+routes,1000,CA4700591,Delphic Elementary School,50,False,True
+routes,1000,CA4900508,"Cazadero Water Company, Inc. (Puc)",525,False,True
+routes,1000,CA5000090,Riverview Mobile Home Estates,540,False,True
+routes,1000,CA5000295,Shiloh School District,105,False,True
+routes,1000,CA5010009,Keyes Community Services Dist.,5672,True,False
+routes,1000,CA5010028,"Ceres, City Of",54513,True,False
+routes,1000,CA5110001,City Of Live Oak,9687,True,False
+routes,1000,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+routes,1000,CA5602103,Cypress Mutual Water Co Inc,224,False,True
+routes,1000,CA5602110,Navalair Mobile Home Park,160,False,True
+routes,2000,CA0105009,Mountain House School,50,False,True
+routes,2000,CA0707553,Riverview Mobile Home Park,126,True,False
+routes,2000,CA1000063,New Auberry Water Association,120,False,True
+routes,2000,CA1000200,Rubys Valley Care Home,43,False,True
+routes,2000,CA1000277,Elm Court,64,False,True
+routes,2000,CA1000378,Sunset West Community Llc,350,True,False
+routes,2000,CA1009051,"Cantua Creek Vineyards, Iv, Llc.",55,False,True
+routes,2000,CA1010339,California State University Fresno,1500,False,True
+routes,2000,CA1200501,Alderpoint County Water,190,False,True
+routes,2000,CA1210023,Loleta C.S.D.,828,True,False
+routes,2000,CA1310013,Seeley Cwd,1729,True,False
+routes,2000,CA1500289,Athal Mutual Water System,150,False,True
+routes,2000,CA1500393,Rainbird Valley Mwc,238,False,True
+routes,2000,CA1500413,Tejon Ranch Main Headquarters,132,False,True
+routes,2000,CA1500493,"El Adobe Poa, Inc.",200,False,True
+routes,2000,CA1500494,Wilson Road Water Community,66,False,True
+routes,2000,CA1500564,Hometown Water Association,25,False,True
+routes,2000,CA1500571,Kern Mobile Estates Llc,73,False,True
+routes,2000,CA1502569,First Mutual Water System,35,False,True
+routes,2000,CA1502699,East Wilson Road Water Company,46,False,True
+routes,2000,CA1502744,60Th Street Assoc. Water System,39,False,True
+routes,2000,CA1510020,"Tehachapi, City Of",9094,True,False
+routes,2000,CA1510023,Lake Of The Woods Mwc,875,True,False
+routes,2000,CA1510046,Lost Hills Utility District,1926,True,False
+routes,2000,CA1810004,Leavitt Lake Csd,950,True,False
+routes,2000,CA1900007,California Conservation Camp #14,107,True,False
+routes,2000,CA1900901,Fire Suppression Camp #19,125,True,False
+routes,2000,CA1910023,Averydale Mwc,1026,True,False
+routes,2000,CA1910140,Rubio Canon Land & Water Association,6646,True,False
+routes,2000,CA1910166,Valley Water Co.,10113,True,False
+routes,2000,CA1910223,Gswc-South San Gabriel,26451,True,False
+routes,2000,CA2000512,East Acres Mutual Water Company,250,False,True
+routes,2000,CA2000526,Pike Ranch Mutual Water Co,74,False,True
+routes,2000,CA2000554,Md 33 Fairmead,568,True,False
+routes,2000,CA2000561,Md 08 North Fork Water System,264,False,True
+routes,2000,CA2000611,Coarsegold School,389,True,False
+routes,2000,CA2000737,Md 42 Still Meadow,100,False,True
+routes,2000,CA2010012,Cal Am - Raymond,347,True,False
+routes,2000,CA2300634,Ocean'S Edge Estates,250,False,True
+routes,2000,CA2310004,"Willits, City Of",6175,True,False
+routes,2000,CA2400084,Evergreen Mobile Home Park,36,False,True
+routes,2000,CA2400167,Ballico Csd,238,False,True
+routes,2000,CA2500801,Newell County Water District,629,True,False
+routes,2000,CA2610004,June Lake Pud - Down Canyon,310,False,True
+routes,2000,CA2700665,Oak Heights W & R Co Inc,105,False,True
+routes,2000,CA2700773,Psmcsd - Sunny Mesa,880,True,False
+routes,2000,CA2701676,San Lucas County Water District,315,False,True
+routes,2000,CA2701926,Moro Rd Ws #09,210,False,True
+routes,2000,CA2702007,Psmcsd - Vierra Estates Ws,164,False,True
+routes,2000,CA2702180,Graves School Ws,56,True,False
+routes,2000,CA2710019,Cwsc Oak Hills,3214,True,False
+routes,2000,CA2710851,Salinas Valley State Prison,2930,True,False
+routes,2000,CA2800526,Berryessa Estates (Lbrid),474,True,False
+routes,2000,CA3500006,Csa No. 31 Stonegate Ws,230,False,True
+routes,2000,CA3500527,Valenzuela Water System,55,False,True
+routes,2000,CA3500904,Hollister Ranch Estates,150,False,True
+routes,2000,CA3600025,Bar-Len Mwc,126,False,True
+routes,2000,CA3600027,"Bar """"H"""" Mwc",155,False,True
+routes,2000,CA3600200,Rancheritos Mwc,487,True,False
+routes,2000,CA3600297,Gordon Acres Water Co,200,False,True
+routes,2000,CA3610120,Phelan Pinon Hills Csd,24509,True,False
+routes,2000,CA3700071,Heavenly Oaks,300,True,False
+routes,2000,CA3700962,Oakvale Park,260,False,True
+routes,2000,CA3700963,Potrero Elementary School,300,False,True
+routes,2000,CA3900755,Shady Rest Trailer Court,150,False,True
+routes,2000,CA3901085,Lodi Usd-Davis School,389,False,True
+routes,2000,CA4000653,Rancho Colina Mobile Home Park,252,False,True
+routes,2000,CA4010016,Los Osos Community Services District,7086,True,False
+routes,2000,CA4200851,Rolling Hills Mutual Water Company,66,False,True
+routes,2000,CA4210009,Cuyama Community Services District,700,True,False
+routes,2000,CA4300575,Twin Valley Inc,317,False,True
+routes,2000,CA4400756,Mountain Elementary School,240,True,False
+routes,2000,CA4400762,Rountree Facility(Prev. Sheriff'S Rehab),160,False,True
+routes,2000,CA4500015,"Shasta Csa - Castella, #3",333,True,False
+routes,2000,CA4500247,West Cottonwood Apartments,90,False,True
+routes,2000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+routes,2000,CA4700577,Big Springs Union Elem. School,95,True,False
+routes,2000,CA4900553,Park Royal Mutual Water Company,75,False,True
+routes,2000,CA4910011,"Sebastopol, City Of",7522,True,False
+routes,2000,CA5100142,Nuestro School,120,False,True
+routes,2000,CA5200534,Paskenta Comm. Services Dist.,237,False,True
+routes,2000,CA5200562,Sky View County Water,429,True,False
+routes,2000,CA5301002,Lewiston Community Services District,677,True,False
+routes,2000,CA5304109,Burnt Ranch Estates,115,False,True
+routes,2000,CA5400682,Plainview Mwc - Central Water,138,False,True
+routes,2000,CA5410039,Plainview Mutual Water Company,617,True,False
+routes,2000,CA5410050,Alpaugh Community Services District,871,True,False
+routes,2000,CA5601134,Elkins Ranch,150,False,True
+routes,2000,CA5601405,Santa Clara School,39,False,True
+routes,2000,CA5610068,Cloverdale Mutual Water Co.,455,True,False
+equity_reserve_routes,100,CA0706028,Knightsen Elementary School,350,False,True
+equity_reserve_routes,100,CA1000324,Manning Gardens Care Center Inc,170,False,True
+equity_reserve_routes,100,CA1300560,Pine Union School,217,True,False
+equity_reserve_routes,100,CA3301577,Csa 62,614,True,False
+equity_reserve_routes,100,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+equity_reserve_routes,100,CA5610029,10/30/2026,1820,False,True
+equity_reserve_routes,100,CA5700571,Madison Service Dist,876,True,False
+equity_reserve_routes,250,CA0706028,Knightsen Elementary School,350,False,True
+equity_reserve_routes,250,CA1000324,Manning Gardens Care Center Inc,170,False,True
+equity_reserve_routes,250,CA1010023,City Of Orange Cove,9525,True,False
+equity_reserve_routes,250,CA1010044,"Huron, City Of",7306,False,True
+equity_reserve_routes,250,CA1300560,Pine Union School,217,True,False
+equity_reserve_routes,250,CA1800574,Johnstonville Elementary School,230,True,False
+equity_reserve_routes,250,CA1800576,Long Valley Charter School,196,False,True
+equity_reserve_routes,250,CA1910149,"Signal Hill - City, Water Dept.",11848,True,False
+equity_reserve_routes,250,CA2000602,Ripperdan Community Day School,120,False,True
+equity_reserve_routes,250,CA2400075,El Nido Elementary School,220,False,True
+equity_reserve_routes,250,CA2400097,Cressey School,155,False,True
+equity_reserve_routes,250,CA2701221,Washington  School Ws,250,False,True
+equity_reserve_routes,250,CA3610125,Sbdno County Service Area 70J,12895,False,True
+equity_reserve_routes,250,CA4700569,Willow Creek School,100,False,True
+equity_reserve_routes,250,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+equity_reserve_routes,500,CA0400067,Feather River School,34,True,False
+equity_reserve_routes,500,CA0706028,Knightsen Elementary School,350,False,True
+equity_reserve_routes,500,CA1000105,Madison Elementary School,597,False,True
+equity_reserve_routes,500,CA1010028,Riverdale Public Utility District,2756,False,True
+equity_reserve_routes,500,CA1010042,Malaga County Water District,1200,False,True
+equity_reserve_routes,500,CA1300553,Magnolia Union School,142,True,False
+equity_reserve_routes,500,CA1300560,Pine Union School,217,True,False
+equity_reserve_routes,500,CA1300616,Palo Verde County Water Dist.,410,True,False
+equity_reserve_routes,500,CA1310002,"Calexico, City Of",40357,True,False
+equity_reserve_routes,500,CA1510006,East Niles Csd,32517,True,False
+equity_reserve_routes,500,CA1710001,Clearlake Oaks County Water District,2359,False,True
+equity_reserve_routes,500,CA1800574,Johnstonville Elementary School,230,True,False
+equity_reserve_routes,500,CA1910002,Amarillo Mutual Water Company,3134,True,False
+equity_reserve_routes,500,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+equity_reserve_routes,500,CA2110005,Bolinas Community Pud,1937,False,True
+equity_reserve_routes,500,CA2701221,Washington  School Ws,250,False,True
+equity_reserve_routes,500,CA4110020,Palo Alto Park Mutual Water Company,2900,False,True
+equity_reserve_routes,500,CA4400660,Rancho San Andreas,200,True,False
+equity_reserve_routes,500,CA5410024,Richgrove Community Services District,1617,False,True
+equity_reserve_routes,500,CA5510008,Lake Don Pedro Csd,1700,False,True
+equity_reserve_routes,500,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+equity_reserve_routes,1000,CA0706028,Knightsen Elementary School,350,False,True
+equity_reserve_routes,1000,CA0707553,Riverview Mobile Home Park,126,True,False
+equity_reserve_routes,1000,CA1000190,Lone Star School,732,False,True
+equity_reserve_routes,1000,CA1000366,Sunnyside Convalescent Hosp,107,True,False
+equity_reserve_routes,1000,CA1210010,Scotia Csd,681,False,True
+equity_reserve_routes,1000,CA1500406,Tradewind Water Assoc.,632,False,True
+equity_reserve_routes,1000,CA1502221,Pond School Water System,250,False,True
+equity_reserve_routes,1000,CA1510007,Frazier Park Pud,2592,True,False
+equity_reserve_routes,1000,CA1800574,Johnstonville Elementary School,230,True,False
+equity_reserve_routes,1000,CA1810003,Lassen County Water Works District #1,450,False,True
+equity_reserve_routes,1000,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+equity_reserve_routes,1000,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+equity_reserve_routes,1000,CA2400122,Longview Mennonite School,120,True,False
+equity_reserve_routes,1000,CA2700577,Elkhorn School Ws,694,True,False
+equity_reserve_routes,1000,CA2702322,Captain Cooper School Ws,82,False,True
+equity_reserve_routes,1000,CA3301428,Blythe - Mesa Ranch,568,False,True
+equity_reserve_routes,1000,CA3310801,Bautista Cc No. 36,73,False,True
+equity_reserve_routes,1000,CA3310802,Chuckawalla Valley State Prison,4331,True,False
+equity_reserve_routes,1000,CA3600222,Juniper Riviera Cwd,858,False,True
+equity_reserve_routes,1000,CA3600260,Smiley Park Country Club,370,False,True
+equity_reserve_routes,1000,CA3700041,Barrett Lake Mh And Rv Llc,300,False,True
+equity_reserve_routes,1000,CA3910022,Little Potato Slough Mutual,560,False,True
+equity_reserve_routes,1000,CA3910803,Cdcr California Health Care Facility,2186,True,False
+equity_reserve_routes,1000,CA4000506,Woodland Park Mutual Water Co,538,False,True
+equity_reserve_routes,1000,CA4000554,Green River Mutual Water Co.,350,False,True
+equity_reserve_routes,1000,CA4200842,Saint Marie Mobile Home Park,320,False,True
+equity_reserve_routes,1000,CA4400751,Bonny Doon School,160,False,True
+equity_reserve_routes,1000,CA4410001,Big Basin Water Company,1120,False,True
+equity_reserve_routes,1000,CA4700591,Delphic Elementary School,50,False,True
+equity_reserve_routes,1000,CA5110001,City Of Live Oak,9687,True,False
+equity_reserve_routes,1000,CA5410012,Strathmore Public Util Dist,2669,True,False
+equity_reserve_routes,1000,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+equity_reserve_routes,1000,CA5602110,Navalair Mobile Home Park,160,False,True
+equity_reserve_routes,2000,CA0707553,Riverview Mobile Home Park,126,True,False
+equity_reserve_routes,2000,CA0900304,Silverfork School,25,False,True
+equity_reserve_routes,2000,CA1000200,Rubys Valley Care Home,43,False,True
+equity_reserve_routes,2000,CA1000229,Green Acres Mobile Home Estate,350,True,False
+equity_reserve_routes,2000,CA1000277,Elm Court,64,False,True
+equity_reserve_routes,2000,CA1000378,Sunset West Community Llc,350,True,False
+equity_reserve_routes,2000,CA1009027,Harris Farms Headquarters,140,False,True
+equity_reserve_routes,2000,CA1009051,"Cantua Creek Vineyards, Iv, Llc.",55,False,True
+equity_reserve_routes,2000,CA1010339,California State University Fresno,1500,False,True
+equity_reserve_routes,2000,CA1200501,Alderpoint County Water,190,False,True
+equity_reserve_routes,2000,CA1210023,Loleta C.S.D.,828,True,False
+equity_reserve_routes,2000,CA1300622,Sportsmans Paradise,138,False,True
+equity_reserve_routes,2000,CA1310013,Seeley Cwd,1729,True,False
+equity_reserve_routes,2000,CA1400045,Primrose Lane Apartments,73,False,True
+equity_reserve_routes,2000,CA1500289,Athal Mutual Water System,150,False,True
+equity_reserve_routes,2000,CA1500393,Rainbird Valley Mwc,238,False,True
+equity_reserve_routes,2000,CA1500493,"El Adobe Poa, Inc.",200,False,True
+equity_reserve_routes,2000,CA1500494,Wilson Road Water Community,66,False,True
+equity_reserve_routes,2000,CA1500564,Hometown Water Association,25,False,True
+equity_reserve_routes,2000,CA1500571,Kern Mobile Estates Llc,73,False,True
+equity_reserve_routes,2000,CA1500575,San Joaquin Estates Mutual Water Company,165,False,True
+equity_reserve_routes,2000,CA1502569,First Mutual Water System,35,False,True
+equity_reserve_routes,2000,CA1502699,East Wilson Road Water Company,46,False,True
+equity_reserve_routes,2000,CA1502744,60Th Street Assoc. Water System,39,False,True
+equity_reserve_routes,2000,CA1510020,"Tehachapi, City Of",9094,True,False
+equity_reserve_routes,2000,CA1510023,Lake Of The Woods Mwc,875,True,False
+equity_reserve_routes,2000,CA1510027,Desert Lake Comm Serv Dist,968,True,False
+equity_reserve_routes,2000,CA1510046,Lost Hills Utility District,1926,True,False
+equity_reserve_routes,2000,CA1900007,California Conservation Camp #14,107,True,False
+equity_reserve_routes,2000,CA1900901,Fire Suppression Camp #19,125,True,False
+equity_reserve_routes,2000,CA1910023,Averydale Mwc,1026,True,False
+equity_reserve_routes,2000,CA1910140,Rubio Canon Land & Water Association,6646,True,False
+equity_reserve_routes,2000,CA1910166,Valley Water Co.,10113,True,False
+equity_reserve_routes,2000,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+equity_reserve_routes,2000,CA2000512,East Acres Mutual Water Company,250,False,True
+equity_reserve_routes,2000,CA2000554,Md 33 Fairmead,568,True,False
+equity_reserve_routes,2000,CA2000561,Md 08 North Fork Water System,264,False,True
+equity_reserve_routes,2000,CA2000611,Coarsegold School,389,True,False
+equity_reserve_routes,2000,CA2000737,Md 42 Still Meadow,100,False,True
+equity_reserve_routes,2000,CA2010012,Cal Am - Raymond,347,True,False
+equity_reserve_routes,2000,CA2300634,Ocean'S Edge Estates,250,False,True
+equity_reserve_routes,2000,CA2310004,"Willits, City Of",6175,True,False
+equity_reserve_routes,2000,CA2400084,Evergreen Mobile Home Park,36,False,True
+equity_reserve_routes,2000,CA2400167,Ballico Csd,238,False,True
+equity_reserve_routes,2000,CA2500801,Newell County Water District,629,True,False
+equity_reserve_routes,2000,CA2610004,June Lake Pud - Down Canyon,310,False,True
+equity_reserve_routes,2000,CA2700665,Oak Heights W & R Co Inc,105,False,True
+equity_reserve_routes,2000,CA2700773,Psmcsd - Sunny Mesa,880,True,False
+equity_reserve_routes,2000,CA2701676,San Lucas County Water District,315,False,True
+equity_reserve_routes,2000,CA2701926,Moro Rd Ws #09,210,False,True
+equity_reserve_routes,2000,CA2702007,Psmcsd - Vierra Estates Ws,164,False,True
+equity_reserve_routes,2000,CA2702180,Graves School Ws,56,True,False
+equity_reserve_routes,2000,CA2710851,Salinas Valley State Prison,2930,True,False
+equity_reserve_routes,2000,CA2800526,Berryessa Estates (Lbrid),474,True,False
+equity_reserve_routes,2000,CA3000618,Liberty Park Water Association,95,False,True
+equity_reserve_routes,2000,CA3310028,Riverside Csa #122-Mesa Verde,766,True,False
+equity_reserve_routes,2000,CA3500006,Csa No. 31 Stonegate Ws,230,False,True
+equity_reserve_routes,2000,CA3500527,Valenzuela Water System,55,False,True
+equity_reserve_routes,2000,CA3500904,Hollister Ranch Estates,150,False,True
+equity_reserve_routes,2000,CA3600025,Bar-Len Mwc,126,False,True
+equity_reserve_routes,2000,CA3600071,Chamisal Mwc,84,False,True
+equity_reserve_routes,2000,CA3600200,Rancheritos Mwc,487,True,False
+equity_reserve_routes,2000,CA3600297,Gordon Acres Water Co,200,False,True
+equity_reserve_routes,2000,CA3610120,Phelan Pinon Hills Csd,24509,True,False
+equity_reserve_routes,2000,CA3700071,Heavenly Oaks,300,True,False
+equity_reserve_routes,2000,CA3700900,Lake Henshaw Resort Inc.,108,False,True
+equity_reserve_routes,2000,CA3700962,Oakvale Park,260,False,True
+equity_reserve_routes,2000,CA3700963,Potrero Elementary School,300,False,True
+equity_reserve_routes,2000,CA3900755,Shady Rest Trailer Court,150,False,True
+equity_reserve_routes,2000,CA3901085,Lodi Usd-Davis School,389,False,True
+equity_reserve_routes,2000,CA4000653,Rancho Colina Mobile Home Park,252,False,True
+equity_reserve_routes,2000,CA4000675,Branch Elementary School,253,True,False
+equity_reserve_routes,2000,CA4010016,Los Osos Community Services District,7086,True,False
+equity_reserve_routes,2000,CA4210009,Cuyama Community Services District,700,True,False
+equity_reserve_routes,2000,CA4400756,Mountain Elementary School,240,True,False
+equity_reserve_routes,2000,CA4400762,Rountree Facility(Prev. Sheriff'S Rehab),160,False,True
+equity_reserve_routes,2000,CA4500015,"Shasta Csa - Castella, #3",333,True,False
+equity_reserve_routes,2000,CA4500247,West Cottonwood Apartments,90,False,True
+equity_reserve_routes,2000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+equity_reserve_routes,2000,CA4700577,Big Springs Union Elem. School,95,True,False
+equity_reserve_routes,2000,CA4900568,Valley Ford Water Association,84,False,True
+equity_reserve_routes,2000,CA4901168,Salmon Creek Middle School,300,False,True
+equity_reserve_routes,2000,CA4910011,"Sebastopol, City Of",7522,True,False
+equity_reserve_routes,2000,CA5200534,Paskenta Comm. Services Dist.,237,False,True
+equity_reserve_routes,2000,CA5200562,Sky View County Water,429,True,False
+equity_reserve_routes,2000,CA5301002,Lewiston Community Services District,677,True,False
+equity_reserve_routes,2000,CA5400682,Plainview Mwc - Central Water,138,False,True
+equity_reserve_routes,2000,CA5410050,Alpaugh Community Services District,871,True,False
+equity_reserve_routes,2000,CA5601134,Elkins Ranch,150,False,True
+equity_reserve_routes,2000,CA5610068,Cloverdale Mutual Water Co.,455,True,False
+equity_reserve_routes,2000,CA5800851,Feather River Manor,35,False,True
+one_year,500,CA1010023,City Of Orange Cove,9525,True,False
+one_year,500,CA3600114,Csa 70 W-3 Hacienda,611,True,False
+one_year,500,CA3610125,Sbdno County Service Area 70J,12895,False,True
+one_year,500,CA4300779,Lakeside Sd-Lakeside School,127,True,False
+one_year,500,CA5010007,Hillsview Homes,887,True,False
+one_year,500,CA5410025,Woodville Public Utility Dist,1740,False,True
+one_year,1000,CA0706028,Knightsen Elementary School,350,False,True
+one_year,1000,CA1000324,Manning Gardens Care Center Inc,170,False,True
+one_year,1000,CA1000345,Panoche Water District,225,False,True
+one_year,1000,CA1010042,Malaga County Water District,1200,False,True
+one_year,1000,CA1300560,Pine Union School,217,True,False
+one_year,1000,CA1500406,Tradewind Water Assoc.,632,False,True
+one_year,1000,CA1510006,East Niles Csd,32517,True,False
+one_year,1000,CA1610004,"Corcoran, City Of",22808,True,False
+one_year,1000,CA1910002,Amarillo Mutual Water Company,3134,True,False
+one_year,1000,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+one_year,1000,CA1910105,"Paramount - City, Water Dept.",55200,True,False
+one_year,1000,CA2000526,Pike Ranch Mutual Water Co,74,False,True
+one_year,1000,CA2000647,John Hovannisian Water System,80,False,True
+one_year,1000,CA2000688,Ecco,100,False,True
+one_year,1000,CA2110005,Bolinas Community Pud,1937,False,True
+one_year,1000,CA2701221,Washington  School Ws,250,False,True
+one_year,1000,CA2800531,Napa River Ranch,70,False,True
+one_year,1000,CA3310004,Box Springs Mutual Wc,3382,True,False
+one_year,1000,CA3310802,Chuckawalla Valley State Prison,4331,True,False
+one_year,1000,CA3600027,"Bar """"H"""" Mwc",155,False,True
+one_year,1000,CA3600226,Csa 70-F Morongo,300,False,True
+one_year,1000,CA3700041,Barrett Lake Mh And Rv Llc,300,False,True
+one_year,1000,CA3700900,Lake Henshaw Resort Inc.,108,False,True
+one_year,1000,CA3700905,Pine Hills Mutual Water Company,350,False,True
+one_year,1000,CA3701793,Twin Lakes Resort,400,False,True
+one_year,1000,CA3910022,Little Potato Slough Mutual,560,False,True
+one_year,1000,CA4700569,Willow Creek School,100,False,True
+one_year,1000,CA4900568,Valley Ford Water Association,84,False,True
+one_year,1000,CA4901445,James Court Water System,208,False,True
+one_year,1000,CA5000033,Cobles Corner,50,False,True
+one_year,1000,CA5110001,City Of Live Oak,9687,True,False
+one_year,1000,CA5400567,Tooleville Mutual Non Profit Water Assn,340,False,True
+one_year,1000,CA5400964,Sierra Vista Association,43,False,True
+one_year,1000,CA5410002,"Dinuba, City Of",27641,True,False
+one_year,1000,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+one_year,1000,CA5410034,Del Oro California Pines District,249,False,True
+one_year,1000,CA5602115,Saviers Road Mutual Water Co,368,False,True
+one_year,1000,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+one_year,1000,CA5800851,Feather River Manor,35,False,True
+one_year,2000,CA0300037,Jackson Valley Irrigation District,1303,True,False
+one_year,2000,CA0706028,Knightsen Elementary School,350,False,True
+one_year,2000,CA0707553,Riverview Mobile Home Park,126,True,False
+one_year,2000,CA0900304,Silverfork School,25,False,True
+one_year,2000,CA1000105,Madison Elementary School,597,False,True
+one_year,2000,CA1000186,Helm School,25,False,True
+one_year,2000,CA1000554,Fcsa 10A - Mansionette Estates,81,False,True
+one_year,2000,CA1010051,Fcwwd 18/Friant,909,False,True
+one_year,2000,CA1200566,Orleans Mutual Water Company,85,False,True
+one_year,2000,CA1300555,Mitchells Camp Family Assoc.,125,False,True
+one_year,2000,CA1300588,Iid Village,37,False,True
+one_year,2000,CA1310003,Gswc - Calipatria,7475,True,False
+one_year,2000,CA1400045,Primrose Lane Apartments,73,False,True
+one_year,2000,CA1500344,South Kern Mutual Water Company,32,False,True
+one_year,2000,CA1500401,Mettler County Water District,90,False,True
+one_year,2000,CA1500406,Tradewind Water Assoc.,632,False,True
+one_year,2000,CA1500458,R.S. Mutual Water Company,35,False,True
+one_year,2000,CA1500564,Hometown Water Association,25,False,True
+one_year,2000,CA1500566,Spring Mountain Mutual Water Company,26,False,True
+one_year,2000,CA1500584,Gooselake Water Company,90,False,True
+one_year,2000,CA1502221,Pond School Water System,250,False,True
+one_year,2000,CA1503683,Peak To Peak Mountain Charter School Ws,100,False,True
+one_year,2000,CA1510007,Frazier Park Pud,2592,True,False
+one_year,2000,CA1800524,Lassen Mobile Home Park,62,False,True
+one_year,2000,CA1900100,Mettler Valley Mutual,160,False,True
+one_year,2000,CA1900520,The Village Mobile Home Park,71,False,True
+one_year,2000,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+one_year,2000,CA1910063,Lincoln Avenue Water Co.,8721,True,False
+one_year,2000,CA1910092,"Monterey Park-City, Water Dept.",61096,True,False
+one_year,2000,CA1910161,Liberty Utilities - Lynwood,24649,True,False
+one_year,2000,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+one_year,2000,CA1910223,Gswc-South San Gabriel,26451,True,False
+one_year,2000,CA2000506,Sierra Linda Mutual Water Co,200,False,True
+one_year,2000,CA2000538,Cedar Valley Mutual Water Co,137,False,True
+one_year,2000,CA2000800,Marquez Rental,50,False,True
+one_year,2000,CA2000832,Skp Park Of The Sierras Inc,130,False,True
+one_year,2000,CA2210001,Mariposa Public Utility Dist,2000,True,False
+one_year,2000,CA2210907,Mcusd - Sierra Foothill Charter School,151,False,True
+one_year,2000,CA2300705,Little Lake Mobile Home Park,38,False,True
+one_year,2000,CA2400122,Longview Mennonite School,120,True,False
+one_year,2000,CA2410001,City Of Atwater,29479,True,False
+one_year,2000,CA2410006,Delhi Cwd,7784,True,False
+one_year,2000,CA2702322,Captain Cooper School Ws,82,False,True
+one_year,2000,CA2702608,Thimio Mwc,59,False,True
+one_year,2000,CA2900502,Floriston Water System,110,False,True
+one_year,2000,CA3310033,Santa Ana River Water Company,6475,True,False
+one_year,2000,CA3310051,Myoma Dunes Mutual Water Company,9445,False,True
+one_year,2000,CA3310801,Bautista Cc No. 36,73,False,True
+one_year,2000,CA3310802,Chuckawalla Valley State Prison,4331,True,False
+one_year,2000,CA3400138,Locke Water Works Co [Sws],80,False,True
+one_year,2000,CA3600196,Csa 70 W-4 Pioneertown,474,False,True
+one_year,2000,CA3610112,Helendale Community Service District,6347,True,False
+one_year,2000,CA3700041,Barrett Lake Mh And Rv Llc,300,False,True
+one_year,2000,CA3700918,Rancho Santa Teresa Mw Co.,102,False,True
+one_year,2000,CA3700934,Pauma Valley Water Company,185,False,True
+one_year,2000,CA3701961,Pine Valley Trailer Park,200,False,True
+one_year,2000,CA4200814,Jonata Homeowners Association,38,False,True
+one_year,2000,CA4200851,Rolling Hills Mutual Water Company,66,False,True
+one_year,2000,CA4200879,Cuyama Elementary School,250,False,True
+one_year,2000,CA4300637,Los Ranchos De Uvas Water Company,58,False,True
+one_year,2000,CA4300829,Live Oak Creek Mutual Water Company,30,False,True
+one_year,2000,CA4400528,Laurel Community League,64,False,True
+one_year,2000,CA4500290,Pine Grove Mobilehome Park,53,False,True
+one_year,2000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+one_year,2000,CA4700503,Callahan Water District,70,False,True
+one_year,2000,CA4700591,Delphic Elementary School,50,False,True
+one_year,2000,CA4900510,South Cloverdale Water Company,90,False,True
+one_year,2000,CA4900551,Melita Heights Mutual Water Company,64,False,True
+one_year,2000,CA4900552,Michele Mutual Water Company,93,False,True
+one_year,2000,CA4900575,Loch Haven Mutual Water Company,26,False,True
+one_year,2000,CA4900603,Riebli Mutual Water Company,150,False,True
+one_year,2000,CA4900605,Mark West Acres Mwc,61,False,True
+one_year,2000,CA4900675,Roseland Mobile Home Park,130,False,True
+one_year,2000,CA4900843,Sonoma Ranch Mutual Water Company,151,False,True
+one_year,2000,CA5000218,Country Villa Apts,60,False,True
+one_year,2000,CA5010009,Keyes Community Services Dist.,5672,True,False
+one_year,2000,CA5010028,"Ceres, City Of",54513,True,False
+one_year,2000,CA5100140,Marcum Illinois Elementary School,185,False,True
+one_year,2000,CA5110001,City Of Live Oak,9687,True,False
+one_year,2000,CA5400544,Allensworth Csd,531,False,True
+one_year,2000,CA5410004,"Farmersville, City Of",10243,True,False
+one_year,2000,CA5410012,Strathmore Public Util Dist,2669,True,False
+one_year,2000,CA5500148,Chinese Camp School,34,False,True
+one_year,2000,CA5602140,Saticoy Country Club-City Of Ventura,196,False,True
+one_year,2000,CA5800820,River Highlands Csd,200,False,True
+ten_year,250,CA0400014,Lake Madrone Water District,297,True,False
+ten_year,250,CA1310002,"Calexico, City Of",40357,True,False
+ten_year,250,CA3601182,High Desert Detention Center,1400,True,False
+ten_year,250,CA3610023,Green Valley Mwc,2993,True,False
+ten_year,250,CA3610125,Sbdno County Service Area 70J,12895,False,True
+ten_year,250,CA3700018,Campo Elementary School,300,True,False
+ten_year,250,CA5000255,Mountain View Elementary School,170,True,False
+ten_year,250,CA5010008,"Hughson, City Of",7977,False,True
+ten_year,250,CA5310001,Weaverville C.S.D.,3975,False,True
+ten_year,250,CA5403146,Liberty Elementary School,818,False,True
+ten_year,500,CA0706028,Knightsen Elementary School,350,False,True
+ten_year,500,CA1000324,Manning Gardens Care Center Inc,170,False,True
+ten_year,500,CA1010006,City Of Fowler,7448,False,True
+ten_year,500,CA1010027,"Reedley, City Of",26076,False,True
+ten_year,500,CA1010028,Riverdale Public Utility District,2756,False,True
+ten_year,500,CA1300560,Pine Union School,217,True,False
+ten_year,500,CA1310001,"Brawley, City Of",26862,True,False
+ten_year,500,CA1510019,"Shafter, City Of",21915,True,False
+ten_year,500,CA1610004,"Corcoran, City Of",22808,True,False
+ten_year,500,CA1710001,Clearlake Oaks County Water District,2359,False,True
+ten_year,500,CA1800574,Johnstonville Elementary School,230,True,False
+ten_year,500,CA1800576,Long Valley Charter School,196,False,True
+ten_year,500,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+ten_year,500,CA1910105,"Paramount - City, Water Dept.",55200,True,False
+ten_year,500,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+ten_year,500,CA2110005,Bolinas Community Pud,1937,False,True
+ten_year,500,CA2400075,El Nido Elementary School,220,False,True
+ten_year,500,CA2400113,Schelby School,290,False,True
+ten_year,500,CA2701221,Washington  School Ws,250,False,True
+ten_year,500,CA3310802,Chuckawalla Valley State Prison,4331,True,False
+ten_year,500,CA3610014,"Colton, City Of",46525,False,True
+ten_year,500,CA4010027,Nacimiento Water Company,2191,False,True
+ten_year,500,CA4110020,Palo Alto Park Mutual Water Company,2900,False,True
+ten_year,500,CA4700569,Willow Creek School,100,False,True
+ten_year,500,CA5110001,City Of Live Oak,9687,True,False
+ten_year,500,CA5304209,Junction City School,80,False,True
+ten_year,500,CA5410002,"Dinuba, City Of",27641,True,False
+ten_year,500,CA5410009,Pixley Public Util Dist,2772,False,True
+ten_year,500,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+ten_year,500,CA5410024,Richgrove Community Services District,1617,False,True
+ten_year,500,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+ten_year,1000,CA0300037,Jackson Valley Irrigation District,1303,True,False
+ten_year,1000,CA0706028,Knightsen Elementary School,350,False,True
+ten_year,1000,CA1000053,Lanare Community Services Dist,540,False,True
+ten_year,1000,CA1000105,Madison Elementary School,597,False,True
+ten_year,1000,CA1000190,Lone Star School,732,False,True
+ten_year,1000,CA1000366,Sunnyside Convalescent Hosp,107,False,True
+ten_year,1000,CA1010042,Malaga County Water District,1200,False,True
+ten_year,1000,CA1200518,Riverside Csd,333,False,True
+ten_year,1000,CA1200553,Weott C.S.D.,448,False,True
+ten_year,1000,CA1200729,Orleans C.S.D.,636,False,True
+ten_year,1000,CA1210011,Redway C.S.D.,1207,False,True
+ten_year,1000,CA1300009,Winterhaven County Water District,394,False,True
+ten_year,1000,CA1300616,Palo Verde County Water Dist.,410,False,True
+ten_year,1000,CA1310003,Gswc - Calipatria,7475,True,False
+ten_year,1000,CA1500296,Fuller Acres Mutual Water Company,545,False,True
+ten_year,1000,CA1500406,Tradewind Water Assoc.,632,False,True
+ten_year,1000,CA1500588,Son Shine Properties,438,False,True
+ten_year,1000,CA1502221,Pond School Water System,250,False,True
+ten_year,1000,CA1510007,Frazier Park Pud,2592,True,False
+ten_year,1000,CA1510036,Inyokern Csd,1125,False,True
+ten_year,1000,CA1510054,Pinon Pines Mwc,908,False,True
+ten_year,1000,CA1610009,Kettleman City Csd,1242,False,True
+ten_year,1000,CA1610700,Lemoore Naval Air Station,6000,False,True
+ten_year,1000,CA1710010,Lower Lake County Water District,1326,False,True
+ten_year,1000,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+ten_year,1000,CA1910063,Lincoln Avenue Water Co.,8721,True,False
+ten_year,1000,CA1910092,"Monterey Park-City, Water Dept.",61096,True,False
+ten_year,1000,CA1910161,Liberty Utilities - Lynwood,24649,True,False
+ten_year,1000,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+ten_year,1000,CA1910223,Gswc-South San Gabriel,26451,True,False
+ten_year,1000,CA2000600,Howard Elementary School,618,False,True
+ten_year,1000,CA2000612,North Fork Elementary School,350,False,True
+ten_year,1000,CA2010014,Cal Am - Goldside,1053,False,True
+ten_year,1000,CA2210001,Mariposa Public Utility Dist,2000,True,False
+ten_year,1000,CA2410001,City Of Atwater,29479,True,False
+ten_year,1000,CA2410006,Delhi Cwd,7784,True,False
+ten_year,1000,CA2410007,Planada Csd,4164,False,True
+ten_year,1000,CA2700728,San Ardo Wd,575,False,True
+ten_year,1000,CA2702322,Captain Cooper School Ws,82,False,True
+ten_year,1000,CA3200104,Grizzly Lake Csd-Delleker,657,False,True
+ten_year,1000,CA3301107,Carver Tract Mutual Water Comp,600,False,True
+ten_year,1000,CA3310033,Santa Ana River Water Company,6475,True,False
+ten_year,1000,CA3310051,Myoma Dunes Mutual Water Company,9445,False,True
+ten_year,1000,CA3310801,Bautista Cc No. 36,73,False,True
+ten_year,1000,CA3600114,Csa 70 W-3 Hacienda,611,False,True
+ten_year,1000,CA3600196,Csa 70 W-4 Pioneertown,474,False,True
+ten_year,1000,CA3610038,"Rialto, City Of",59264,True,False
+ten_year,1000,CA3610112,Helendale Community Service District,6347,True,False
+ten_year,1000,CA3700041,Barrett Lake Mh And Rv Llc,300,False,True
+ten_year,1000,CA3701010,Warner Unified School District,250,False,True
+ten_year,1000,CA3701793,Twin Lakes Resort,400,False,True
+ten_year,1000,CA3910014,San Joaquin County-Raymus Village,1086,False,True
+ten_year,1000,CA3910022,Little Potato Slough Mutual,560,False,True
+ten_year,1000,CA4200879,Cuyama Elementary School,250,False,True
+ten_year,1000,CA4300779,Lakeside Sd-Lakeside School,127,False,True
+ten_year,1000,CA4400660,Rancho San Andreas,200,False,True
+ten_year,1000,CA4410001,Big Basin Water Company,1120,False,True
+ten_year,1000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+ten_year,1000,CA4510004,"Shasta Csa - Jones Valley, #6",2006,False,True
+ten_year,1000,CA4700585,Junction Elementary School,40,False,True
+ten_year,1000,CA4700591,Delphic Elementary School,50,False,True
+ten_year,1000,CA5000019,Riverdale Park Tract Csd,610,False,True
+ten_year,1000,CA5000090,Riverview Mobile Home Estates,540,False,True
+ten_year,1000,CA5000095,Sunrise Village Mhp,339,False,True
+ten_year,1000,CA5010007,Hillsview Homes,887,False,True
+ten_year,1000,CA5110001,City Of Live Oak,9687,True,False
+ten_year,1000,CA5400553,Del Oro Traver District,657,False,True
+ten_year,1000,CA5400641,Teviston Community Services District,403,False,True
+ten_year,1000,CA5400665,Del Oro River Island Serv Terr #1,1277,False,True
+ten_year,1000,CA5400792,Woodville Farm Labor Center,646,False,True
+ten_year,1000,CA5410004,"Farmersville, City Of",10243,True,False
+ten_year,1000,CA5410012,Strathmore Public Util Dist,2669,True,False
+ten_year,1000,CA5700623,Davis Jusd - Fairfield School,46,False,True
+ten_year,2000,CA0300062,Hope Foundation/Moriah Heights,299,False,True
+ten_year,2000,CA1000019,Fcsa 30 - El Porvenir,241,False,True
+ten_year,2000,CA1000199,Fowler Care Center,46,True,False
+ten_year,2000,CA1000200,Rubys Valley Care Home,43,False,True
+ten_year,2000,CA1000229,Green Acres Mobile Home Estate,350,True,False
+ten_year,2000,CA1000345,Panoche Water District,225,False,True
+ten_year,2000,CA1210023,Loleta C.S.D.,828,True,False
+ten_year,2000,CA1500314,Del Oro Wc - Country Estates Dist,297,False,True
+ten_year,2000,CA1500494,Wilson Road Water Community,66,False,True
+ten_year,2000,CA1502056,Clark Street Community Well,90,False,True
+ten_year,2000,CA1502744,60Th Street Assoc. Water System,39,False,True
+ten_year,2000,CA1510027,Desert Lake Comm Serv Dist,968,True,False
+ten_year,2000,CA1710011,Buckingham Park Water District,1502,True,False
+ten_year,2000,CA1810004,Leavitt Lake Csd,950,True,False
+ten_year,2000,CA1900794,Antelope Park Mutual Water Company,445,False,True
+ten_year,2000,CA1900808,Lancaster Water Company,80,False,True
+ten_year,2000,CA1910140,Rubio Canon Land & Water Association,6646,True,False
+ten_year,2000,CA1910158,Sterling Mutual Water Company,198,False,True
+ten_year,2000,CA2000526,Pike Ranch Mutual Water Co,74,False,True
+ten_year,2000,CA2000611,Coarsegold School,389,True,False
+ten_year,2000,CA2000647,John Hovannisian Water System,80,False,True
+ten_year,2000,CA2000688,Ecco,100,False,True
+ten_year,2000,CA2000760,Dixieland Elementary School,316,True,False
+ten_year,2000,CA2000851,Md 40 Sunset Ridge Estates,150,False,True
+ten_year,2000,CA2010012,Cal Am - Raymond,347,True,False
+ten_year,2000,CA2700773,Psmcsd - Sunny Mesa,880,True,False
+ten_year,2000,CA2701676,San Lucas County Water District,315,False,True
+ten_year,2000,CA2710019,Cwsc Oak Hills,3214,True,False
+ten_year,2000,CA2710851,Salinas Valley State Prison,2930,True,False
+ten_year,2000,CA2800531,Napa River Ranch,70,False,True
+ten_year,2000,CA2900531,Creekside Village,300,True,False
+ten_year,2000,CA3100041,Alpine Meadows Property Owners Asso,250,True,False
+ten_year,2000,CA3310028,Riverside Csa #122-Mesa Verde,766,True,False
+ten_year,2000,CA3400172,Tokay Park Water Co,653,True,False
+ten_year,2000,CA3400191,Eleven Oaks Mobile Home Community,262,True,False
+ten_year,2000,CA3600027,"Bar """"H"""" Mwc",155,False,True
+ten_year,2000,CA3600200,Rancheritos Mwc,487,True,False
+ten_year,2000,CA3600226,Csa 70-F Morongo,300,False,True
+ten_year,2000,CA3610120,Phelan Pinon Hills Csd,24509,True,False
+ten_year,2000,CA3700071,Heavenly Oaks,300,True,False
+ten_year,2000,CA3700900,Lake Henshaw Resort Inc.,108,False,True
+ten_year,2000,CA3700905,Pine Hills Mutual Water Company,350,False,True
+ten_year,2000,CA4000568,San Simeon Csd,462,True,False
+ten_year,2000,CA4000839,Ada'S Lodges,25,False,True
+ten_year,2000,CA4010011,Morro Bay Pw Dept - Water Division,10757,True,False
+ten_year,2000,CA4010016,Los Osos Community Services District,7086,True,False
+ten_year,2000,CA4400571,Davenport County Sanitation,350,True,False
+ten_year,2000,CA4400617,Summit West Mutual Water Co.,481,True,False
+ten_year,2000,CA4400762,Rountree Facility(Prev. Sheriff'S Rehab),160,False,True
+ten_year,2000,CA4500163,Junction School District,700,True,False
+ten_year,2000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+ten_year,2000,CA4700577,Big Springs Union Elem. School,95,True,False
+ten_year,2000,CA4900568,Valley Ford Water Association,84,False,True
+ten_year,2000,CA4900723,Shamrock Mobile Home Park,188,False,True
+ten_year,2000,CA4901436,Sebastopol Charter School,310,True,False
+ten_year,2000,CA4901445,James Court Water System,208,False,True
+ten_year,2000,CA5000033,Cobles Corner,50,False,True
+ten_year,2000,CA5000273,Gratton School,141,False,True
+ten_year,2000,CA5100142,Nuestro School,120,False,True
+ten_year,2000,CA5200507,Berrendos School,325,True,False
+ten_year,2000,CA5200508,Rio Vista Mobile Home Park,543,True,False
+ten_year,2000,CA5200562,Sky View County Water,429,True,False
+ten_year,2000,CA5400567,Tooleville Mutual Non Profit Water Assn,340,False,True
+ten_year,2000,CA5400964,Sierra Vista Association,43,False,True
+ten_year,2000,CA5410034,Del Oro California Pines District,249,False,True
+ten_year,2000,CA5500042,Belleview Oaks Mutual Water Co,468,True,False
+ten_year,2000,CA5602103,Cypress Mutual Water Co Inc,224,False,True
+ten_year,2000,CA5602115,Saviers Road Mutual Water Co,368,False,True
+ten_year,2000,CA5610063,Camrosa Water District,32700,False,True
+ten_year,2000,CA5610068,Cloverdale Mutual Water Co.,455,True,False
+ten_year,2000,CA5700555,Bonfire Village Hotel,25,False,True
+ten_year,2000,CA5800851,Feather River Manor,35,False,True
+half_cost,100,CA0400014,Lake Madrone Water District,297,True,False
+half_cost,100,CA1010023,City Of Orange Cove,9525,True,False
+half_cost,100,CA1502068,Di Giorgio School Water System,268,True,False
+half_cost,100,CA3610125,Sbdno County Service Area 70J,12895,False,True
+half_cost,100,CA3700018,Campo Elementary School,300,True,False
+half_cost,250,CA0400065,Spring Valley School,100,False,True
+half_cost,250,CA0600008,Colusa Co. Wwd #1 - Grimes,512,False,True
+half_cost,250,CA1000316,Kings Canyon High School,107,False,True
+half_cost,250,CA1010035,Del Rey Community Serv Dist,1491,False,True
+half_cost,250,CA1310002,"Calexico, City Of",40357,True,False
+half_cost,250,CA1310005,"Holtville, City Of",6355,True,False
+half_cost,250,CA1500588,Son Shine Properties,438,False,True
+half_cost,250,CA1510006,East Niles Csd,32517,True,False
+half_cost,250,CA1510051,Lebec County Water District,1379,False,True
+half_cost,250,CA2000602,Ripperdan Community Day School,120,False,True
+half_cost,250,CA2110005,Bolinas Community Pud,1937,False,True
+half_cost,250,CA2701221,Washington  School Ws,250,False,True
+half_cost,250,CA2710016,Little Bear Water Company,2327,False,True
+half_cost,250,CA3301577,Csa 62,614,False,True
+half_cost,250,CA3600504,Knoll Enterprises,500,False,True
+half_cost,250,CA3601182,High Desert Detention Center,1400,True,False
+half_cost,250,CA5400711,Sierra View Jr Academy,121,False,True
+half_cost,250,CA5400795,Waukena Elementary School,220,False,True
+half_cost,250,CA5400882,Pleasant View  West School,220,False,True
+half_cost,250,CA5410002,"Dinuba, City Of",27641,True,False
+half_cost,250,CA5410017,London Community Serv Dist,1800,False,True
+half_cost,250,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+half_cost,250,CA5410020,"Woodlake, City Of",7918,True,False
+half_cost,250,CA5410025,Woodville Public Utility Dist,1740,False,True
+half_cost,250,CA5510008,Lake Don Pedro Csd,1700,False,True
+half_cost,250,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+half_cost,250,CA5610029,10/30/2026,1820,False,True
+half_cost,250,CA5700571,Madison Service Dist,876,False,True
+half_cost,500,CA0300037,Jackson Valley Irrigation District,1303,True,False
+half_cost,500,CA0706028,Knightsen Elementary School,350,False,True
+half_cost,500,CA0707573,Delta Mutual Water Company,333,False,True
+half_cost,500,CA1000324,Manning Gardens Care Center Inc,170,False,True
+half_cost,500,CA1000546,Fcsa 49 - Five Points,440,False,True
+half_cost,500,CA1010039,Caruthers Comm Serv Dist,2613,True,False
+half_cost,500,CA1010042,Malaga County Water District,1200,False,True
+half_cost,500,CA1200518,Riverside Csd,333,False,True
+half_cost,500,CA1210010,Scotia Csd,681,False,True
+half_cost,500,CA1310003,Gswc - Calipatria,7475,True,False
+half_cost,500,CA1500406,Tradewind Water Assoc.,632,False,True
+half_cost,500,CA1500475,Krista Mutual Water Company,504,False,True
+half_cost,500,CA1502221,Pond School Water System,250,False,True
+half_cost,500,CA1510007,Frazier Park Pud,2592,True,False
+half_cost,500,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+half_cost,500,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+half_cost,500,CA2410001,City Of Atwater,29479,True,False
+half_cost,500,CA2410006,Delhi Cwd,7784,True,False
+half_cost,500,CA3200104,Grizzly Lake Csd-Delleker,657,False,True
+half_cost,500,CA3301107,Carver Tract Mutual Water Comp,600,False,True
+half_cost,500,CA3301428,Blythe - Mesa Ranch,568,False,True
+half_cost,500,CA3301630,Blythe - Hidden Beaches,399,False,True
+half_cost,500,CA3310033,Santa Ana River Water Company,6475,True,False
+half_cost,500,CA3310802,Chuckawalla Valley State Prison,4331,True,False
+half_cost,500,CA3600222,Juniper Riviera Cwd,858,False,True
+half_cost,500,CA3600260,Smiley Park Country Club,370,False,True
+half_cost,500,CA3600306,Thunderbird Cwd,1056,False,True
+half_cost,500,CA3610117,Devore Wc,1574,False,True
+half_cost,500,CA3700041,Barrett Lake Mh And Rv Llc,300,False,True
+half_cost,500,CA3700924,Lake Morena Views Mwc,360,False,True
+half_cost,500,CA3701793,Twin Lakes Resort,400,False,True
+half_cost,500,CA3910014,San Joaquin County-Raymus Village,1086,False,True
+half_cost,500,CA3910022,Little Potato Slough Mutual,560,False,True
+half_cost,500,CA4000506,Woodland Park Mutual Water Co,538,False,True
+half_cost,500,CA4400751,Bonny Doon School,160,False,True
+half_cost,500,CA4410001,Big Basin Water Company,1120,False,True
+half_cost,500,CA4510002,Mountain Gate C.S.D.,2227,True,False
+half_cost,500,CA4700569,Willow Creek School,100,False,True
+half_cost,500,CA4900508,"Cazadero Water Company, Inc. (Puc)",525,False,True
+half_cost,500,CA5000090,Riverview Mobile Home Estates,540,False,True
+half_cost,500,CA5000095,Sunrise Village Mhp,339,False,True
+half_cost,500,CA5000295,Shiloh School District,105,False,True
+half_cost,500,CA5010009,Keyes Community Services Dist.,5672,True,False
+half_cost,500,CA5010028,"Ceres, City Of",54513,True,False
+half_cost,500,CA5110001,City Of Live Oak,9687,True,False
+half_cost,500,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+half_cost,1000,CA0707553,Riverview Mobile Home Park,126,True,False
+half_cost,1000,CA1000063,New Auberry Water Association,120,False,True
+half_cost,1000,CA1000208,Roosevelt Elementary School,580,False,True
+half_cost,1000,CA1000229,Green Acres Mobile Home Estate,350,True,False
+half_cost,1000,CA1000378,Sunset West Community Llc,350,True,False
+half_cost,1000,CA1009027,Harris Farms Headquarters,140,False,True
+half_cost,1000,CA1010339,California State University Fresno,1500,False,True
+half_cost,1000,CA1200501,Alderpoint County Water,190,False,True
+half_cost,1000,CA1210023,Loleta C.S.D.,828,True,False
+half_cost,1000,CA1310013,Seeley Cwd,1729,True,False
+half_cost,1000,CA1500252,Kern Valley Mutual Water Company,132,False,True
+half_cost,1000,CA1500289,Athal Mutual Water System,150,False,True
+half_cost,1000,CA1500393,Rainbird Valley Mwc,238,False,True
+half_cost,1000,CA1500413,Tejon Ranch Main Headquarters,132,False,True
+half_cost,1000,CA1500493,"El Adobe Poa, Inc.",200,False,True
+half_cost,1000,CA1500575,San Joaquin Estates Mutual Water Company,165,False,True
+half_cost,1000,CA1502699,East Wilson Road Water Company,46,False,True
+half_cost,1000,CA1503368,South Fork Middle School,204,True,False
+half_cost,1000,CA1510020,"Tehachapi, City Of",9094,True,False
+half_cost,1000,CA1510023,Lake Of The Woods Mwc,875,True,False
+half_cost,1000,CA1510046,Lost Hills Utility District,1926,True,False
+half_cost,1000,CA1810004,Leavitt Lake Csd,950,True,False
+half_cost,1000,CA1900808,Lancaster Water Company,80,False,True
+half_cost,1000,CA1910023,Averydale Mwc,1026,True,False
+half_cost,1000,CA1910140,Rubio Canon Land & Water Association,6646,True,False
+half_cost,1000,CA1910166,Valley Water Co.,10113,True,False
+half_cost,1000,CA2000512,East Acres Mutual Water Company,250,False,True
+half_cost,1000,CA2000554,Md 33 Fairmead,568,True,False
+half_cost,1000,CA2000561,Md 08 North Fork Water System,264,False,True
+half_cost,1000,CA2000611,Coarsegold School,389,True,False
+half_cost,1000,CA2010012,Cal Am - Raymond,347,True,False
+half_cost,1000,CA2300634,Ocean'S Edge Estates,250,False,True
+half_cost,1000,CA2310004,"Willits, City Of",6175,True,False
+half_cost,1000,CA2400122,Longview Mennonite School,120,True,False
+half_cost,1000,CA2400167,Ballico Csd,238,False,True
+half_cost,1000,CA2500801,Newell County Water District,629,True,False
+half_cost,1000,CA2610004,June Lake Pud - Down Canyon,310,False,True
+half_cost,1000,CA2700665,Oak Heights W & R Co Inc,105,False,True
+half_cost,1000,CA2700773,Psmcsd - Sunny Mesa,880,True,False
+half_cost,1000,CA2700964,Bradley Union School Ws,100,True,False
+half_cost,1000,CA2701063,River Rd Ws #25,65,False,True
+half_cost,1000,CA2701926,Moro Rd Ws #09,210,False,True
+half_cost,1000,CA2702007,Psmcsd - Vierra Estates Ws,164,False,True
+half_cost,1000,CA2702317,Mission School Ws,100,True,False
+half_cost,1000,CA2710019,Cwsc Oak Hills,3214,True,False
+half_cost,1000,CA2710851,Salinas Valley State Prison,2930,True,False
+half_cost,1000,CA2800526,Berryessa Estates (Lbrid),474,True,False
+half_cost,1000,CA3200134,Blairsden Water Users Assn,200,False,True
+half_cost,1000,CA3301491,Alpine Village,198,False,True
+half_cost,1000,CA3310028,Riverside Csa #122-Mesa Verde,766,True,False
+half_cost,1000,CA3600012,Apple Valley View Mwc,303,False,True
+half_cost,1000,CA3600071,Chamisal Mwc,84,False,True
+half_cost,1000,CA3600200,Rancheritos Mwc,487,True,False
+half_cost,1000,CA3600297,Gordon Acres Water Co,200,False,True
+half_cost,1000,CA3600385,Brookside Mhp,65,False,True
+half_cost,1000,CA3610120,Phelan Pinon Hills Csd,24509,True,False
+half_cost,1000,CA3700071,Heavenly Oaks,300,True,False
+half_cost,1000,CA3700963,Potrero Elementary School,300,False,True
+half_cost,1000,CA3702364,Clover Flat Elementary School,160,True,False
+half_cost,1000,CA3900755,Shady Rest Trailer Court,150,False,True
+half_cost,1000,CA3901085,Lodi Usd-Davis School,389,False,True
+half_cost,1000,CA4000653,Rancho Colina Mobile Home Park,252,False,True
+half_cost,1000,CA4010016,Los Osos Community Services District,7086,True,False
+half_cost,1000,CA4200879,Cuyama Elementary School,250,False,True
+half_cost,1000,CA4210009,Cuyama Community Services District,700,True,False
+half_cost,1000,CA4300912,Mecchi Water Company,104,False,True
+half_cost,1000,CA4400571,Davenport County Sanitation,350,True,False
+half_cost,1000,CA4400762,Rountree Facility(Prev. Sheriff'S Rehab),160,False,True
+half_cost,1000,CA4500015,"Shasta Csa - Castella, #3",333,True,False
+half_cost,1000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+half_cost,1000,CA4900568,Valley Ford Water Association,84,False,True
+half_cost,1000,CA4900913,Robin Way Water System,66,False,True
+half_cost,1000,CA4910011,"Sebastopol, City Of",7522,True,False
+half_cost,1000,CA5200534,Paskenta Comm. Services Dist.,237,False,True
+half_cost,1000,CA5200562,Sky View County Water,429,True,False
+half_cost,1000,CA5301002,Lewiston Community Services District,677,True,False
+half_cost,1000,CA5304109,Burnt Ranch Estates,115,False,True
+half_cost,1000,CA5400682,Plainview Mwc - Central Water,138,False,True
+half_cost,1000,CA5400964,Sierra Vista Association,43,False,True
+half_cost,1000,CA5410039,Plainview Mutual Water Company,617,True,False
+half_cost,1000,CA5410050,Alpaugh Community Services District,871,True,False
+half_cost,1000,CA5500148,Chinese Camp School,34,False,True
+half_cost,1000,CA5601134,Elkins Ranch,150,False,True
+half_cost,1000,CA5602110,Navalair Mobile Home Park,160,False,True
+half_cost,1000,CA5610068,Cloverdale Mutual Water Co.,455,True,False
+half_cost,2000,CA0500091,Rite Of Passage/Sierra Ridge,65,True,False
+half_cost,2000,CA0510004,Ccwd - Sheep Ranch,89,False,True
+half_cost,2000,CA1000267,Kings Canyon Mobile Home Park,80,True,False
+half_cost,2000,CA1000454,Viking Rv Park,44,False,True
+half_cost,2000,CA1000585,Murrieta/Hernandez Farms,25,False,True
+half_cost,2000,CA1000627,Zonneveld Dairy - Cerini,36,False,True
+half_cost,2000,CA1200715,Green Diamond Resource Company - Korbel,250,True,False
+half_cost,2000,CA1500152,Mirasol Company Water System,26,False,True
+half_cost,2000,CA1500405,"Aerial Acres Water Company, Inc.",87,False,True
+half_cost,2000,CA1500579,Life Water Co-Op,35,False,True
+half_cost,2000,CA1502465,Panama Road Property Owners Assoc,45,False,True
+half_cost,2000,CA1503509,The Anne Sippi Clinic-Riverside Ranch,51,False,True
+half_cost,2000,CA1503536,Glennville Mutual Water Company,100,True,False
+half_cost,2000,CA1900636,El Rancho Mobile Home Park,215,False,True
+half_cost,2000,CA1900817,Clear Skies Mobile Home Park,131,True,False
+half_cost,2000,CA1900903,Sleepy Valley Water Company,160,True,False
+half_cost,2000,CA2000524,Sky Acres Mutual Water Corp,175,True,False
+half_cost,2000,CA2000557,Md 43 Miami Creek Knolls,100,True,False
+half_cost,2000,CA2310011,Laytonville County Water District,1152,True,False
+half_cost,2000,CA2700612,Laguna Seca Wc,162,True,False
+half_cost,2000,CA2700702,Prunedale Mwc,277,True,False
+half_cost,2000,CA2700713,Rolling Hills Rancho Wa,185,True,False
+half_cost,2000,CA2700766,Strawberry Rd Ws #06,78,False,True
+half_cost,2000,CA2701904,San Jerardo Coop Ws,249,True,False
+half_cost,2000,CA2702405,Valley Creek Mhp Ws,129,False,True
+half_cost,2000,CA2800039,Calistoga Farm Worker Center,67,False,True
+half_cost,2000,CA2800543,Capell Valley Estates,208,True,False
+half_cost,2000,CA3301018,Anza Pines Mobile Home Park,90,False,True
+half_cost,2000,CA3301482,Ortega Oaks Rv Park&Campground,180,False,True
+half_cost,2000,CA3400169,Spindrift Marina,100,True,False
+half_cost,2000,CA3400248,Franklin Elementary School,81,False,True
+half_cost,2000,CA3400296,Sac City Mobile Home Community Lp,350,True,False
+half_cost,2000,CA3410047,Cal Am - Walnut Grove,667,True,False
+half_cost,2000,CA3900649,Glenwood Mobile Home Park,100,False,True
+half_cost,2000,CA3901217,Haynes Board & Care Home,25,False,True
+half_cost,2000,CA4000523,S & T Mutual Water Company,591,True,False
+half_cost,2000,CA4000631,Almira Water Association,40,True,False
+half_cost,2000,CA4100503,Butano Canyon Mutual,150,False,True
+half_cost,2000,CA4400850,The Willows Resort,57,False,True
+half_cost,2000,CA4500023,Hat Creek Highlands Mutual Water Co,88,False,True
+half_cost,2000,CA5101009,Wildewood East Mutual,350,True,False
+half_cost,2000,CA5200545,Modern Village Mwc,85,True,False
+half_cost,2000,CA5200551,Woodson Bridge Mhp,158,True,False
+half_cost,2000,CA5400537,Lindy'S Landing,30,False,True
+half_cost,2000,CA5400718,Williams Mutual  Water Company,165,True,False
+half_cost,2000,CA5400744,East Three Rivers Mutual Water Corp,40,False,True
+half_cost,2000,CA5403217,Okieville Highland Acres Mwc,300,True,False
+half_cost,2000,CA5500115,Sugar Pine Rv Resort,160,False,True
+half_cost,2000,CA5500124,Mono Vista Ranch Mhp,105,False,True
+half_cost,2000,CA5602104,Del Norte Mutual Water Co.,215,False,True
+half_cost,2000,CA5610702,"U.S.N., San Nicolas Island",187,True,False
+half_cost,2000,CA5700712,Cal Am - Dunnigan,602,True,False
+double_cost,500,CA1000221,Easton Authority Jpa,1000,True,False
+double_cost,500,CA3601182,High Desert Detention Center,1400,True,False
+double_cost,500,CA3610023,Green Valley Mwc,2993,True,False
+double_cost,500,CA3610125,Sbdno County Service Area 70J,12895,False,True
+double_cost,500,CA5304209,Junction City School,80,True,False
+double_cost,500,CA5400994,Hope Elementary School District,264,True,False
+double_cost,1000,CA0600008,Colusa Co. Wwd #1 - Grimes,512,False,True
+double_cost,1000,CA0706028,Knightsen Elementary School,350,False,True
+double_cost,1000,CA1000324,Manning Gardens Care Center Inc,170,False,True
+double_cost,1000,CA1010035,Del Rey Community Serv Dist,1491,False,True
+double_cost,1000,CA1510006,East Niles Csd,32517,True,False
+double_cost,1000,CA1510051,Lebec County Water District,1379,False,True
+double_cost,1000,CA1610004,"Corcoran, City Of",22808,True,False
+double_cost,1000,CA1910002,Amarillo Mutual Water Company,3134,True,False
+double_cost,1000,CA2000602,Ripperdan Community Day School,120,False,True
+double_cost,1000,CA2110005,Bolinas Community Pud,1937,False,True
+double_cost,1000,CA2400097,Cressey School,155,False,True
+double_cost,1000,CA2701221,Washington  School Ws,250,False,True
+double_cost,1000,CA4000732,Carrisa Plains Elementary,40,False,True
+double_cost,1000,CA4700569,Willow Creek School,100,False,True
+double_cost,1000,CA5401003,East Orosi Community Services District,423,False,True
+double_cost,1000,CA5410002,"Dinuba, City Of",27641,True,False
+double_cost,1000,CA5410017,London Community Serv Dist,1800,False,True
+double_cost,1000,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+double_cost,1000,CA5410020,"Woodlake, City Of",7918,True,False
+double_cost,1000,CA5410025,Woodville Public Utility Dist,1740,False,True
+double_cost,1000,CA5510008,Lake Don Pedro Csd,1700,False,True
+double_cost,1000,CA5602407,Rio Mesa High School/Oxnard Uhs,2600,True,False
+double_cost,1000,CA5610029,10/30/2026,1820,False,True
+double_cost,1000,CA5700571,Madison Service Dist,876,False,True
+double_cost,2000,CA0300037,Jackson Valley Irrigation District,1303,True,False
+double_cost,2000,CA0400067,Feather River School,34,False,True
+double_cost,2000,CA0706028,Knightsen Elementary School,350,False,True
+double_cost,2000,CA0707573,Delta Mutual Water Company,333,False,True
+double_cost,2000,CA1000546,Fcsa 49 - Five Points,440,False,True
+double_cost,2000,CA1010039,Caruthers Comm Serv Dist,2613,True,False
+double_cost,2000,CA1010042,Malaga County Water District,1200,False,True
+double_cost,2000,CA1210010,Scotia Csd,681,False,True
+double_cost,2000,CA1300553,Magnolia Union School,142,False,True
+double_cost,2000,CA1310003,Gswc - Calipatria,7475,True,False
+double_cost,2000,CA1500406,Tradewind Water Assoc.,632,False,True
+double_cost,2000,CA1500409,Brock Mutual Water Company,462,False,True
+double_cost,2000,CA1500475,Krista Mutual Water Company,504,False,True
+double_cost,2000,CA1503683,Peak To Peak Mountain Charter School Ws,100,False,True
+double_cost,2000,CA1510007,Frazier Park Pud,2592,True,False
+double_cost,2000,CA1800574,Johnstonville Elementary School,230,True,False
+double_cost,2000,CA1800576,Long Valley Charter School,196,False,True
+double_cost,2000,CA1810003,Lassen County Water Works District #1,450,False,True
+double_cost,2000,CA1910022,Calif State Polytechnical Univ - Pomona,2668,True,False
+double_cost,2000,CA1910191,"Norwalk - City, Water Dept.",20283,True,False
+double_cost,2000,CA2000690,Md 73 Quartz Mountain,375,False,True
+double_cost,2000,CA2410001,City Of Atwater,29479,True,False
+double_cost,2000,CA2410006,Delhi Cwd,7784,True,False
+double_cost,2000,CA2701241,Encinal Rd Ws #01,91,False,True
+double_cost,2000,CA2702322,Captain Cooper School Ws,82,False,True
+double_cost,2000,CA3301428,Blythe - Mesa Ranch,568,False,True
+double_cost,2000,CA3301630,Blythe - Hidden Beaches,399,False,True
+double_cost,2000,CA3310033,Santa Ana River Water Company,6475,True,False
+double_cost,2000,CA3310801,Bautista Cc No. 36,73,False,True
+double_cost,2000,CA3310802,Chuckawalla Valley State Prison,4331,True,False
+double_cost,2000,CA3600222,Juniper Riviera Cwd,858,False,True
+double_cost,2000,CA3600260,Smiley Park Country Club,370,False,True
+double_cost,2000,CA3600306,Thunderbird Cwd,1056,False,True
+double_cost,2000,CA3610117,Devore Wc,1574,False,True
+double_cost,2000,CA3700041,Barrett Lake Mh And Rv Llc,300,False,True
+double_cost,2000,CA3700924,Lake Morena Views Mwc,360,False,True
+double_cost,2000,CA3701793,Twin Lakes Resort,400,False,True
+double_cost,2000,CA3710009,Descanso Community Water District,870,False,True
+double_cost,2000,CA3910014,San Joaquin County-Raymus Village,1086,False,True
+double_cost,2000,CA3910022,Little Potato Slough Mutual,560,False,True
+double_cost,2000,CA4000506,Woodland Park Mutual Water Co,538,False,True
+double_cost,2000,CA4000554,Green River Mutual Water Co.,350,False,True
+double_cost,2000,CA4200879,Cuyama Elementary School,250,False,True
+double_cost,2000,CA4400751,Bonny Doon School,160,False,True
+double_cost,2000,CA4510002,Mountain Gate C.S.D.,2227,True,False
+double_cost,2000,CA4700591,Delphic Elementary School,50,False,True
+double_cost,2000,CA4710002,"Dunsmuir, City Of",1707,True,False
+double_cost,2000,CA4900508,"Cazadero Water Company, Inc. (Puc)",525,False,True
+double_cost,2000,CA4900562,Diamond A Mutual Water Company,640,False,True
+double_cost,2000,CA5000295,Shiloh School District,105,False,True
+double_cost,2000,CA5010009,Keyes Community Services Dist.,5672,True,False
+double_cost,2000,CA5010028,"Ceres, City Of",54513,True,False
+double_cost,2000,CA5110001,City Of Live Oak,9687,True,False
+double_cost,2000,CA5410007,Lsid - Tonyville,500,False,True
+double_cost,2000,CA5410019,Ivanhoe Public Utility Dist,4580,True,False
+double_cost,2000,CA5700623,Davis Jusd - Fairfield School,46,False,True
