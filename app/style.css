@@ -96,7 +96,7 @@ th.num, td.num { text-align: right; }
 .vt { position: absolute; top: 10px; left: 10px; z-index: 600; display: flex; border: 1px solid rgba(255,255,255,.35); border-radius: 8px; overflow: hidden; background: rgba(12,22,32,.78); backdrop-filter: blur(6px); }
 .vt button { padding: 6px 12px; border: 0; background: transparent; color: #e6edf2; font: inherit; font-size: 13px; cursor: pointer; }
 .vt button.on { background: var(--accent); color: var(--accent-ink); }
-#map3d { height: clamp(520px, 80vh, 820px); position: relative; background: #0b1622; overflow: hidden; }
+#map3d { height: clamp(560px, 88vh, 1000px); position: relative; background: #0b1622; overflow: hidden; }
 #map3d .gl3d { position: absolute; inset: 0; }
 .chip3d, .hud3d, .leg3d, .load3d { position: absolute; z-index: 5; font-size: 12.5px; background: rgba(12,22,32,.78); backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.2); border-radius: 10px; color: #eef3f7; }
 .tools3d { position: absolute; top: 52px; left: 10px; right: 52px; z-index: 5; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; max-height: calc(100% - 80px); overflow: auto; pointer-events: none; }
@@ -147,3 +147,9 @@ th.num, td.num { text-align: right; }
 th button { border: 0; background: none; color: inherit; font: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; padding: 0; }
 .system-link { border: 0; background: none; color: var(--accent); text-decoration: underline; cursor: pointer; font: inherit; padding: 2px 0; }
 .map-status { padding: 10px 12px; margin-bottom: 10px; border-left: 3px solid var(--risk); background: #fff3da; font-size: 13px; }
+.leg3d summary { cursor: pointer; font-weight: 600; } .leg3d div.legbody { display: block; }
+.hud3d .seg { display: flex; } .hud3d .seg button { flex: 1; padding: 5px 4px; background: transparent; border: 0; cursor: pointer; font: inherit; } .hud3d .seg button.on { background: rgba(25,211,162,.28); color: #fff; font-weight: 600; }
+.fs3d { position: absolute; z-index: 5; top: 118px; right: 10px; width: 29px; height: 29px; border-radius: 4px; border: 0; background: #fff; color: #222; font-size: 17px; line-height: 1; cursor: pointer; box-shadow: 0 0 0 2px rgba(0,0,0,.1); }
+.toast3d { position: absolute; left: 50%; bottom: 54px; transform: translateX(-50%); z-index: 6; max-width: min(520px, 90%); padding: 9px 14px; border-radius: 10px; background: rgba(12,22,32,.9); color: #eef3f7; font-size: 13px; text-align: center; border: 1px solid rgba(255,255,255,.2); }
+.toast3d[hidden] { display: none; }
+#map3d:fullscreen { height: 100vh; }

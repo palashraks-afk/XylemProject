@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "id": "efb5e6e0e986178bef4bb6c9d3810854623d0c8947d3ecb631c80accda6c7a1b",
+  "id": "61fd21c11d63086125ca66c784250b6ef9abd8777ab83140fdfe41b0ce428a34",
   "base_commit": "f0fa6006032f6b614276395c5628596a63b966fa",
   "snapshot_id": "806032f64da14561b81c55e72179ec22f299774fa97b9b5f08c4742909f9c0bd",
   "sha256": {
@@ -16,10 +16,11 @@
     "data/snapshot.json": "4121d2efe14c4649444c0676af3c4eb590a20b71ffbc6461b358e5c0dac4716b",
     "data/summary.json": "cc8d23b9ac0e579b6264f7fbfff9a54dfd9217fee7321b15dbee0adecbc73cc1",
     "data/systems.json": "e919b4c1be007506111bb93e5a282c84517ffbfef1dad9d940f430b483514562",
-    "index.html": "10d0d73de11d259e9dab6ebce8c60be8d2ecbe3362460bb2b92818d3057b02bd",
-    "map3d.js": "4d6f6542e8d2a9bd5771c68d54e5226a71a71939b963d565ebd56f12c9f74651",
+    "index.html": "01e55a1340d24195a056e25b86874b1a702b101484a026c066055e826dc22e3b",
+    "map3d.js": "ec9ef78cceed4893f89adeca239281b1f81c42c334188abe76c9db10fe638680",
     "optimizer.js": "249efcc3e564b7fbdc45180a6b69014c5dcf6260016e09e6259eb2ed7a7ae998",
-    "style.css": "8613c050e1c306291b57151f7020061cfe114980e19eaffda21337bf016b805f",
+    "quality.js": "541e2d9d81639cf8e73aa2a47092609361b3202f0ce7966c3ddc95a6c727db11",
+    "style.css": "2fcde26c78de7704f76b820df42ff9b43a542bbea96a428b4b2293a1069ef2e0",
     "vendor/LEAFLET-LICENSE": "53e8dc25862014e4324741ca18fbe3611e11d42ef69f59f86ea8c5389647d4cb",
     "vendor/leaflet.css": "b570abbda963c60b4de4b4ff4b26f9326f53fb2ccf1461fdf0955ca094fb2539",
     "vendor/leaflet.js": "5c9aecfc30e4564519dbdcddcc53a418227dcc7568e619e9762ddcec7609ed47",
