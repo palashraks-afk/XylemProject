@@ -60,7 +60,7 @@ for(const channel of ['chrome','msedge']) {
    }
   }return evidence;
  });
- await page.setViewportSize({width:1280,height:1024});await page.getByRole('tab',{name:'Funded plan',exact:true}).click();
+ await page.setViewportSize({width:1280,height:1024});await page.getByRole('tab',{name:'Systems in the plan',exact:true}).click();
  await check(channel+' card close restores invoking button after redraw',async()=>{
   const origin=page.locator('.system-link').first(), id=await origin.getAttribute('data-system');await origin.focus();await page.keyboard.press('Enter');
   assert.equal(await page.evaluate(()=>document.activeElement.id),'detailTitle');
@@ -79,11 +79,11 @@ for(const channel of ['chrome','msedge']) {
  });
  await check(channel+' search card returns to search after scenario refresh',async()=>{
   await ready(page);const id=await page.evaluate(()=>__xylem.systems.find(s=>s.lat&&s.lon).id);
-  await page.locator('#find').fill(id);await page.locator('#find').dispatchEvent('change');await control(page,'res',.3);
+  await page.locator('#find').fill(id);await page.locator('#find-form').evaluate(form=>form.requestSubmit());await control(page,'res',.3);
   await page.locator('#detailX').focus();await page.keyboard.press('Enter');assert.equal(await page.evaluate(()=>document.activeElement.id),'find');return {id,focus:'find'};
  });
  await check(channel+' plan updates coalesce and keep focus',async()=>{
-  await ready(page);await observe(page);await page.locator('#lam').focus();
+  await ready(page);await observe(page);await page.getByText('Funding priorities',{exact:true}).click();await page.locator('#lam').focus();
   for(let i=0;i<8;i++){await page.keyboard.press('ArrowRight');await sleep(80);}
   await settled(page);await page.waitForFunction(()=>a11yMessages.length>0);await sleep(400);
   const evidence=await page.evaluate(()=>({messages:a11yMessages,active:document.activeElement.id,status:document.querySelector('#resultStatus').outerHTML}));
@@ -91,13 +91,13 @@ for(const channel of ['chrome','msedge']) {
   assert.ok(evidence.messages[0].includes('systems funded'));assert.ok(evidence.messages[0].includes('modeled people'));return evidence;
  });
  await check(channel+' scenario completion announces once with no progress flooding',async()=>{
-  await ready(page,'#b=25');await observe(page);await page.locator('#runScen').focus();await page.keyboard.press('Enter');
+  await ready(page,'#b=25');await observe(page);await page.getByText('Advanced settings',{exact:true}).click();await page.getByText('Test cost uncertainty',{exact:true}).click();await page.locator('#runScen').focus();await page.keyboard.press('Enter');
   await page.waitForFunction(()=>document.querySelector('#runScen').getAttribute('aria-disabled') !== 'true');await page.waitForFunction(()=>a11yMessages.length>0);await sleep(400);
   const evidence=await page.evaluate(()=>({messages:a11yMessages,active:document.activeElement.id,visible:document.querySelector('#scenOut').textContent}));
   assert.equal(evidence.messages.length,1);assert.equal(evidence.active,'runScen');assert.ok(evidence.messages[0].startsWith('Cost scenarios complete.'));assert.ok(!evidence.messages[0].includes('Running'));return evidence;
  });
  await check(channel+' cancelled scenarios do not announce stale completion',async()=>{
-  await ready(page);await observe(page);await page.locator('#runScen').click();await control(page,'res',.3);
+  await ready(page);await observe(page);await page.getByText('Advanced settings',{exact:true}).click();await page.getByText('Test cost uncertainty',{exact:true}).click();await page.locator('#runScen').click();await control(page,'res',.3);
   await page.waitForFunction(()=>document.querySelector('#runScen').getAttribute('aria-disabled') !== 'true');await sleep(800);
   const evidence=await page.evaluate(()=>({messages:a11yMessages,visible:document.querySelector('#scenOut').textContent}));
   assert.equal(evidence.messages.length,1);assert.ok(evidence.messages[0].includes('Cost scenarios cancelled.'));assert.ok(!evidence.messages.some(m=>m.includes('complete')));return evidence;

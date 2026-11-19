@@ -1,0 +1,177 @@
+{
+  "reviewedOn": "2026-11-17",
+  "selection": "Three original case-study systems and nine additional system-ID matches chosen to exercise distinct funding stages in the June and November 2026 State Water Board reports. This is a purposive sample.",
+  "records": [
+    {
+      "systemId": "CA5401003",
+      "stage": "construction",
+      "scope": "Consolidation with Orosi Public Utility District",
+      "note": "The State Water Board approved construction funding, estimated at about $15 million. Tulare County reported the April 2026 start of construction.",
+      "sources": [
+        {
+          "date": "2026-02-27",
+          "label": "State Water Board consolidation announcement",
+          "url": "https://www.waterboards.ca.gov/press_room/press_releases/2026/pr20260227-east-orosi-consolidation-order.html"
+        },
+        {
+          "date": "2026-04-22",
+          "label": "Tulare County, April 22 groundbreaking",
+          "url": "https://tularecounty.ca.gov/rma/news/east-orosi-water-infrastructure-groundbreaking-initiative"
+        }
+      ]
+    },
+    {
+      "systemId": "CA3600086",
+      "stage": "interim",
+      "scope": "Operations support and bottled-water administration",
+      "note": "Agreement D2517009 provided $337,880 for three years of operations and maintenance assistance. Work plan 6923-C separately documents assistance with bottled-water grant administration.",
+      "sources": [
+        {
+          "date": "2026-06-02",
+          "label": "State Water Board Executive Director’s Report, p. 12",
+          "url": "https://www.waterboards.ca.gov/board_info/agendas/2026/jun/06022026-7edrpt.pdf"
+        },
+        {
+          "date": "2026-11-04",
+          "label": "State Water Board Executive Director’s Report, p. 10",
+          "url": "https://www.waterboards.ca.gov/board_info/agendas/2026/nov/11042026-5edrpt.pdf"
+        }
+      ]
+    },
+    {
+      "systemId": "CA2700728",
+      "stage": "unknown",
+      "scope": "Current project funding status unverified",
+      "note": "The public registry identifies this drinking-water system. A county service review documents previous flood damage and repairs. The scope and funding of a current drinking-water project remain unverified.",
+      "sources": [
+        {
+          "date": null,
+          "label": "California Drinking Water Watch",
+          "url": "https://sdwis.waterboards.ca.gov/PDWW/JSP/WaterSystemDetail.jsp?tinwsys_is_number=9091&tinwsys_st_code=CA"
+        },
+        {
+          "date": null,
+          "label": "2024 Monterey County LAFCO service review, p. 17",
+          "url": "https://www.countyofmonterey.gov/home/showpublisheddocument/137118/638688371005870000"
+        }
+      ]
+    },
+    {
+      "systemId": "CA5410017",
+      "stage": "construction",
+      "scope": "Construction agreement 5410017-003C",
+      "note": "The September amendment raised the documented agreement amount to $10,514,221 and revised the estimated construction completion to November 30, 2027.",
+      "sources": [
+        {
+          "date": "2026-11-04",
+          "label": "State Water Board Executive Director’s Report, p. 8",
+          "url": "https://www.waterboards.ca.gov/board_info/agendas/2026/nov/11042026-5edrpt.pdf"
+        }
+      ]
+    },
+    {
+      "systemId": "CA1100616",
+      "stage": "construction",
+      "scope": "Construction agreement EDWG-1100616-001C",
+      "note": "The September amendment extended the estimated construction completion to April 1, 2029.",
+      "sources": [
+        {
+          "date": "2026-11-04",
+          "label": "State Water Board Executive Director’s Report, p. 8",
+          "url": "https://www.waterboards.ca.gov/board_info/agendas/2026/nov/11042026-5edrpt.pdf"
+        }
+      ]
+    },
+    {
+      "systemId": "CA1500588",
+      "stage": "construction",
+      "scope": "Consolidation with Arvin Community Services District",
+      "note": "The April executed agreement EDWG-1510001-002C documents a $16 million consolidation project for this scope.",
+      "sources": [
+        {
+          "date": "2026-06-02",
+          "label": "State Water Board Executive Director’s Report, p. 8",
+          "url": "https://www.waterboards.ca.gov/board_info/agendas/2026/jun/06022026-7edrpt.pdf"
+        }
+      ]
+    },
+    {
+      "systemId": "CA1500296",
+      "stage": "construction",
+      "scope": "Joint consolidation with Lamont Public Utility District",
+      "note": "Agreement EDWG-1510012-010C covers both Fuller Acres and Athal. The reported $24,507,702 is the joint agreement amount.",
+      "sources": [
+        {
+          "date": "2026-06-02",
+          "label": "State Water Board Executive Director’s Report, p. 8",
+          "url": "https://www.waterboards.ca.gov/board_info/agendas/2026/jun/06022026-7edrpt.pdf"
+        }
+      ]
+    },
+    {
+      "systemId": "CA2000544",
+      "stage": "construction",
+      "scope": "New surface-water treatment facility",
+      "note": "The State Water Board documents a $9,563,510 executed construction agreement, EDWG-2000544-003C, for the treatment facility.",
+      "sources": [
+        {
+          "date": "2026-06-02",
+          "label": "State Water Board Executive Director’s Report, p. 8",
+          "url": "https://www.waterboards.ca.gov/board_info/agendas/2026/jun/06022026-7edrpt.pdf"
+        }
+      ]
+    },
+    {
+      "systemId": "CA3700924",
+      "stage": "interim",
+      "scope": "Bottled-water deliveries",
+      "note": "April agreement D2517016 provides $368,496 for the purchase and delivery of bottled drinking water.",
+      "sources": [
+        {
+          "date": "2026-06-02",
+          "label": "State Water Board Executive Director’s Report, p. 20",
+          "url": "https://www.waterboards.ca.gov/board_info/agendas/2026/jun/06022026-7edrpt.pdf"
+        }
+      ]
+    },
+    {
+      "systemId": "CA1010042",
+      "stage": "planning",
+      "scope": "Planning work plan 7049-C",
+      "note": "A September technical-assistance amendment covers planning to address system improvements. The $463,693 is the documented work-plan amount.",
+      "sources": [
+        {
+          "date": "2026-11-04",
+          "label": "State Water Board Executive Director’s Report, p. 10",
+          "url": "https://www.waterboards.ca.gov/board_info/agendas/2026/nov/11042026-5edrpt.pdf"
+        }
+      ]
+    },
+    {
+      "systemId": "CA3310003",
+      "stage": "planning",
+      "scope": "Full planning work plan 7275-B",
+      "note": "The September technical-assistance amendment documents a $332,595 approved work-plan amount.",
+      "sources": [
+        {
+          "date": "2026-11-04",
+          "label": "State Water Board Executive Director’s Report, p. 11",
+          "url": "https://www.waterboards.ca.gov/board_info/agendas/2026/nov/11042026-5edrpt.pdf"
+        }
+      ]
+    },
+    {
+      "systemId": "CA2702003",
+      "stage": "planning",
+      "scope": "Short- and long-term feasibility study",
+      "note": "The September amendment to work plan 7087-D documents the feasibility study and a $618,431 approved work-plan amount.",
+      "sources": [
+        {
+          "date": "2026-11-04",
+          "label": "State Water Board Executive Director’s Report, p. 11",
+          "url": "https://www.waterboards.ca.gov/board_info/agendas/2026/nov/11042026-5edrpt.pdf"
+        }
+      ]
+    }
+  ]
+}

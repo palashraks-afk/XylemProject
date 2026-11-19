@@ -1,0 +1,11 @@
+{
+  "has_pages": false,
+  "permissions": {
+    "admin": false,
+    "maintain": false,
+    "push": true,
+    "triage": true,
+    "pull": true
+  },
+  "checked_at": "2026-11-18T04:12:08.434Z"
+}

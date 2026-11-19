@@ -1,0 +1,330 @@
+......EE................................................................ [ 59%]
+.........EE....E..EEEEE......EEE.E..EEEEEE...E...                        [100%]
+=================================== ERRORS ====================================
+________ ERROR at setup of test_seal_rejects_mixed_artifacts[forecast] ________
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+______ ERROR at setup of test_seal_rejects_mixed_artifacts[calibration] _______
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_calibration_artifact_rejects_changed_inputs_and_wrong_transition _
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_policy_matching_selection_still_rejects_changed_content _
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+___ ERROR at setup of test_school_sample_is_unavailable_until_recorded_load ___
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_______ ERROR at setup of test_offline_transfer_preflight_and_roundtrip _______
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_______ ERROR at setup of test_transfer_rejects_path_escape[../escape] ________
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_______ ERROR at setup of test_transfer_rejects_path_escape[C:/escape] ________
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+___ ERROR at setup of test_transfer_rejects_path_escape[data/../../escape] ____
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+___ ERROR at setup of test_transfer_rejects_path_escape[data\\raw\\escape] ____
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_sizes_use_prior_year_archive_without_filling_from_future _
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+__________ ERROR at setup of test_missing_size_history_stays_missing __________
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+__________ ERROR at setup of test_invalid_archived_sizes_are_unknown __________
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_school_samples_on_cutoff_included_later_and_undated_excluded _
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_panel_rebuilds_legacy_cache_and_ignores_current_population[attrs0] _
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_panel_rebuilds_legacy_cache_and_ignores_current_population[attrs1] _
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_panel_rebuilds_legacy_cache_and_ignores_current_population[attrs2] _
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_old_model_selection_and_calibration_require_retraining[None] _
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_old_model_selection_and_calibration_require_retraining[old] _
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+___ ERROR at setup of test_ml_rejects_old_calibration_before_building_panel ___
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+_ ERROR at setup of test_selection_writes_policy_before_stage2_reads_artifact _
+
+self = WindowsPath('C:/Users/sai71/OneDrive/Documents/ChatGPT/Xylem Work/technical-release/audit/technical-release-2026-11-17/pytest-tmp')
+mode = 448, parents = False, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+>           os.mkdir(self, mode)
+E           FileNotFoundError: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\audit\\technical-release-2026-11-17\\pytest-tmp'
+
+C:\Users\sai71\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\pathlib.py:1311: FileNotFoundError
+============================== warnings summary ===============================
+..\..\..\..\..\XylemEvaluation\.venv\Lib\site-packages\_pytest\cacheprovider.py:487
+  C:\Users\sai71\XylemEvaluation\.venv\Lib\site-packages\_pytest\cacheprovider.py:487: PytestCacheWarning: could not create cache path C:\Users\sai71\OneDrive\Documents\ChatGPT\Xylem Work\technical-release\.pytest_cache\v\cache\nodeids: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\pytest-cache-files-d7m1_x2j'
+    config.cache.set("cache/nodeids", sorted(str(n) for n in self.cached_nodeids))
+
+..\..\..\..\..\XylemEvaluation\.venv\Lib\site-packages\_pytest\cacheprovider.py:439
+  C:\Users\sai71\XylemEvaluation\.venv\Lib\site-packages\_pytest\cacheprovider.py:439: PytestCacheWarning: could not create cache path C:\Users\sai71\OneDrive\Documents\ChatGPT\Xylem Work\technical-release\.pytest_cache\v\cache\lastfailed: [WinError 2] The system cannot find the file specified: 'C:\\Users\\sai71\\OneDrive\\Documents\\ChatGPT\\Xylem Work\\technical-release\\pytest-cache-files-ghi_ebbd'
+    config.cache.set("cache/lastfailed", current_lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+ERROR tests/test_app_snapshot.py::test_seal_rejects_mixed_artifacts[forecast]
+ERROR tests/test_app_snapshot.py::test_seal_rejects_mixed_artifacts[calibration]
+ERROR tests/test_probability_calibration.py::test_calibration_artifact_rejects_changed_inputs_and_wrong_transition
+ERROR tests/test_probability_calibration.py::test_policy_matching_selection_still_rejects_changed_content
+ERROR tests/test_probability_calibration.py::test_school_sample_is_unavailable_until_recorded_load
+ERROR tests/test_release_transfer.py::test_offline_transfer_preflight_and_roundtrip
+ERROR tests/test_release_transfer.py::test_transfer_rejects_path_escape[../escape]
+ERROR tests/test_release_transfer.py::test_transfer_rejects_path_escape[C:/escape]
+ERROR tests/test_release_transfer.py::test_transfer_rejects_path_escape[data/../../escape]
+ERROR tests/test_release_transfer.py::test_transfer_rejects_path_escape[data\\raw\\escape]
+ERROR tests/test_temporal_features.py::test_sizes_use_prior_year_archive_without_filling_from_future
+ERROR tests/test_temporal_features.py::test_missing_size_history_stays_missing
+ERROR tests/test_temporal_features.py::test_invalid_archived_sizes_are_unknown
+ERROR tests/test_temporal_features.py::test_school_samples_on_cutoff_included_later_and_undated_excluded
+ERROR tests/test_temporal_features.py::test_panel_rebuilds_legacy_cache_and_ignores_current_population[attrs0]
+ERROR tests/test_temporal_features.py::test_panel_rebuilds_legacy_cache_and_ignores_current_population[attrs1]
+ERROR tests/test_temporal_features.py::test_panel_rebuilds_legacy_cache_and_ignores_current_population[attrs2]
+ERROR tests/test_temporal_features.py::test_old_model_selection_and_calibration_require_retraining[None]
+ERROR tests/test_temporal_features.py::test_old_model_selection_and_calibration_require_retraining[old]
+ERROR tests/test_temporal_features.py::test_ml_rejects_old_calibration_before_building_panel
+ERROR tests/test_temporal_features.py::test_selection_writes_policy_before_stage2_reads_artifact
+100 passed, 2 warnings, 21 errors in 11.75s

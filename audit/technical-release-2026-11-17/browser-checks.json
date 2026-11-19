@@ -1,0 +1,57 @@
+{
+  "scope": "Agent-operated desktop browser; no physical-device or spoken screen-reader certification",
+  "checks": [
+    {
+      "check": "Corrected system name in funded table and detail card",
+      "status": "PASS",
+      "id": "CA5610029",
+      "display_name": "Vineyard Avenue Acres MWC",
+      "people": 1820
+    },
+    {
+      "check": "$100M default",
+      "status": "PASS",
+      "systems": 20,
+      "modeled_people": 171738
+    },
+    {
+      "check": "$500M default",
+      "status": "PASS",
+      "systems": 97,
+      "small_systems": 48,
+      "modeled_people": 476663,
+      "displayed_cost": "$488M"
+    },
+    {
+      "check": "$500M with 30% small-system priority",
+      "status": "PASS",
+      "systems": 112,
+      "small_systems": 70,
+      "modeled_people": 393742,
+      "stored_stability": "unavailable"
+    },
+    {
+      "check": "Real desktop CSV download and Python reconciliation",
+      "status": "PASS",
+      "file": "default-500M.csv"
+    },
+    {
+      "check": "Search by corrected system name",
+      "status": "PASS",
+      "id": "CA5610029"
+    },
+    {
+      "check": "Interactive current-cost sensitivity",
+      "status": "PASS",
+      "runs": 40,
+      "systems_selected_in_at_least_80pct": 81,
+      "default_systems": 97,
+      "corrected_system_selected_in_runs": 28
+    },
+    {
+      "check": "2D map control",
+      "status": "PASS",
+      "aria_pressed": "true"
+    }
+  ]
+}

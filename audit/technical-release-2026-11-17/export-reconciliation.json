@@ -1,0 +1,10 @@
+[
+  {
+    "file": "audit/technical-release-2026-11-17/default-500M.csv",
+    "systems": 97,
+    "people": 476663,
+    "cost": 487919470.0,
+    "sha256": "b90227d34141372a3ee0415626669e731a59d4714ddba0c4c5236a123ebe0e89",
+    "python_membership": "PASS"
+  }
+]

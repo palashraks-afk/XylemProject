@@ -12,7 +12,7 @@
   const CITIES = { "Los Angeles": [-118.25, 34.05], "San Francisco Bay": [-122.35, 37.78], "San Diego": [-117.16, 32.72], "Sacramento": [-121.49, 38.58],
     "Fresno": [-119.79, 36.74], "Bakersfield": [-119.02, 35.37], "San Jose": [-121.89, 37.34] };
   const EMPTY = { type: "FeatureCollection", features: [] };
-  const V = (window.Xylem3D = {});
+  const V = (window.Xylem3D = { planColors: [FUND, FAIL, RISK] });
   // Graphics tiers (quality.js). If that file is missing the map still works at full quality.
   const Q = window.XylemQuality || { pickTier: () => "high", lower: (t) => t, createGovernor: () => ({ push: () => false, reset() {} }),
     settings: () => ({ pixelRatio: Math.min(devicePixelRatio || 1, 2), terrain: true, hillshade: true, buildings: 13, unfundedTowers: true, antialias: true, maxPitch: 82 }) };
@@ -20,6 +20,7 @@
   const envNow = () => ({ pref, cores: navigator.hardwareConcurrency, memory: navigator.deviceMemory, dpr: devicePixelRatio, coarse: matchMedia("(pointer: coarse)").matches, saveData: !!(navigator.connection && navigator.connection.saveData) });
   const readPref = () => { try { return localStorage.getItem("xylem.quality") || "auto"; } catch (e) { return "auto"; } };
   let map = null, D = null, box = null, ready = false, infra = null, popup = null, hud = {};
+  let pendingSystem = null;
   const opt = { base: "sat", areas: true, infra: true, buildings: true, unfunded: true, exag: 1.8 };
 
   const circle = (lon, lat, r, n = 14) => { const dl = r / 111320, dx = r / (111320 * Math.cos(lat * Math.PI / 180)), c = [];
@@ -150,12 +151,17 @@
     map.flyTo({ center: [lon, lat], zoom: zoom || 12, pitch: 62, bearing: -20, elevation: e0, duration: 2600, essential: true });
     map.once("moveend", () => { const e1 = el(); if (Math.abs(e1 - e0) > 30) map.easeTo({ elevation: e1, duration: 700 }); });
   };
-  V.flyToSystem = (i) => { const s = D.systems[i]; if (!s || s.lat == null) return; select(i); V.flyToLonLat(s.lon, s.lat, 14.2); };
-  V.flyToCounty = (name) => { const p = D.systems.filter((s) => s.county === name && s.lat != null && s.lon).map((s) => [s.lon, s.lat]); if (!p.length) return;
+  V.flyToSystem = (i) => {
+    const s = D.systems[i];
+    if (!s || s.lat == null) return;
+    if (!ready) { pendingSystem = i; return; }
+    highlightSystem(i);
+    V.flyToLonLat(s.lon, s.lat, 14.2);
+  };
+  V.flyToCounty = (name) => { if (!ready) return; const p = D.systems.filter((s) => s.county === name && s.lat != null && s.lon).map((s) => [s.lon, s.lat]); if (!p.length) return;
     const b = p.reduce((a, c) => a.extend(c), new maplibregl.LngLatBounds(p[0], p[0])); map.fitBounds(b, { padding: 90, maxZoom: 11, pitch: 58, bearing: -15, duration: 2400 }); };
-  function select(i) {
+  function highlightSystem(i) {
     const s = D.systems[i]; map.getSource("sel").setData({ type: "FeatureCollection", features: [{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: [s.lon, s.lat] } }] });
-    D.onSelect && D.onSelect(i);
   }
 
   // ---------- mount ----------
@@ -181,8 +187,17 @@
       const at = box.querySelector(".maplibregl-ctrl-attrib"); if (at) at.classList.remove("maplibregl-compact-show");
       infra = D.infrastructure; refreshInfra();
       if (D.counties) map.getSource("counties").setData(D.counties);
+      const i = pendingSystem;
+      pendingSystem = null;
+      if (i !== null && !box.hidden) V.flyToSystem(i);
     });
-    map.on("click", (e) => { const f = map.queryRenderedFeatures([[e.point.x - 8, e.point.y - 8], [e.point.x + 8, e.point.y + 8]], { layers: ["sys", "sys-risk"] }); if (f.length) select(f[0].properties.i); });
+    map.on("click", (e) => {
+      const features = map.queryRenderedFeatures([[e.point.x - 8, e.point.y - 8], [e.point.x + 8, e.point.y + 8]], { layers: ["sys", "sys-risk"] });
+      if (!features.length) return;
+      const i = features[0].properties.i;
+      highlightSystem(i);
+      D.onSelect?.(i);
+    });
     map.on("mousemove", (e) => { const f = map.queryRenderedFeatures([[e.point.x - 6, e.point.y - 6], [e.point.x + 6, e.point.y + 6]], { layers: ["sys", "sys-risk"] }); map.getCanvas().style.cursor = f.length ? "pointer" : ""; });
     map.on("error", (e) => { load.remove(); D.onMapStatus("Some 3D map imagery or terrain could not load. Allocations and CSV remain available; try the 2D map."); console.warn("map3d:", e && e.error && e.error.message); });
   };

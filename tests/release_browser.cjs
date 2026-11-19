@@ -21,7 +21,7 @@ async function exportAndCheck(page,label,immediate) {
   if(immediate) await page.evaluate(immediate); else await page.locator('#export').click();
   const file=path.join(OUT,label+'.csv');await (await download).saveAs(file);
   const text=fs.readFileSync(file,'utf8'), [columns,...values]=readCsv(text), rows=values.map(v=>Object.fromEntries(columns.map((c,i)=>[c,v[i]])));
-  const state=await page.evaluate(()=>{const x=__xylem;return {st:x.st,chosen:x.plan.chosen.map(i=>x.systems[i].id).sort(),people:x.plan.people,spent:x.plan.spent,small:x.plan.small,stabOK:x.plan.stabOK,stabBudget:x.plan.stabBudget,systems:x.systems.filter((s,i)=>x.plan.inPlan[i]),snapshot:document.querySelector('#snap').textContent,kpis:document.querySelector('#kpis').innerText};});
+  const state=await page.evaluate(()=>{const x=__xylem;return {st:x.st,chosen:x.plan.chosen.map(i=>x.systems[i].id).sort(),people:x.plan.people,spent:x.plan.spent,small:x.plan.small,stabOK:x.plan.stabOK,stabBudget:x.plan.stabBudget,systems:x.systems.filter((s,i)=>x.plan.inPlan[i]),snapshot:document.querySelector('#snap').textContent,kpis:document.querySelector('#kpis').textContent};});
   assert.deepEqual(rows.map(r=>r.water_system_id).sort(),state.chosen);
   assert.equal(rows.reduce((n,r)=>n+ +r.people,0),state.people);
   assert.ok(Math.abs(rows.reduce((n,r)=>n+ +r.cost_usd,0)-state.spent)<0.0001);
@@ -37,7 +37,7 @@ async function exportAndCheck(page,label,immediate) {
   for(const r of rows){const s=byId.get(r.water_system_id);assert.equal(+r.cost_usd,s.cost);assert.ok(Math.abs(+r.allocation_weight-(s.failing?1:state.st.v==='fixed'?state.st.a:1-Math.pow(1-s.pf,state.st.h)))<1e-12, 'independent weight formula differs beyond floating-point tolerance');assert.equal(r.stability_pct,state.stabOK?String(Math.round(s.p[state.stabBudget===100?0:state.stabBudget===250?1:state.stabBudget===500?2:state.stabBudget===1000?3:4]*100)):'');}
   assert.ok(state.kpis.includes(state.people.toLocaleString('en-US')));
   assert.ok(state.kpis.includes(rows.length.toLocaleString('en-US')));
-  if(!state.stabOK) {assert.ok(state.kpis.includes('n/a'));assert.ok(state.kpis.includes('unavailable for these controls'));}
+  if(!state.stabOK) {assert.ok(state.kpis.includes('n/a'));assert.ok(state.kpis.includes('No saved test results for these settings'));}
   return {controls:state.st,systems:rows.length,people:state.people,cost:state.spent,small:state.small,stabilityAvailable:state.stabOK};
 }
 (async()=>{
@@ -62,6 +62,8 @@ async function exportAndCheck(page,label,immediate) {
   });
   await check(channel+' cost scenarios complete and cancel on changed controls',async()=>{
     await ready(page,'#b=25');
+    await page.getByText('Advanced settings',{exact:true}).click();
+    await page.getByText('Test cost uncertainty',{exact:true}).click();
     await page.locator('#runScen').click();
     await page.waitForFunction(()=>document.querySelector('#runScen').getAttribute('aria-disabled') !== 'true');
     const complete=await page.locator('#scenOut').innerText();assert.ok(complete.includes('80% of 40 scenarios'));
@@ -73,10 +75,10 @@ async function exportAndCheck(page,label,immediate) {
   await check(channel+' selected detail refresh and fixed-share popup',async()=>{
     await ready(page);await page.locator('[data-view="2d"]').click();
     const id=await page.evaluate(()=>__xylem.systems.find(s=>!s.failing&&s.lat).id);
-    await page.locator('#find').fill(id);await page.locator('#find').dispatchEvent('change');
+    await page.locator('#find').fill(id);await page.locator('#find-form').evaluate(form=>form.requestSubmit());
     const before=await page.locator('#detail').innerText();await control(page,'mul',2);const after=await page.locator('#detail').innerText();assert.notEqual(before,after);assert.ok(!after.includes('of stress tests'));const updatedPopup=await page.locator('.leaflet-popup-content').innerText();assert.ok(!updatedPopup.includes('of stress tests'));assert.ok(updatedPopup.includes('unavailable for these controls'));
     await page.locator('[data-val="fixed"]').evaluate(e=>e.click());await control(page,'arw',0.5);
-    await page.locator('#find').dispatchEvent('change');const popup=await page.locator('.leaflet-popup-content').innerText();assert.ok(popup.includes('Fixed At-Risk share'));assert.ok(popup.includes('50%'));
+    await page.locator('#find-form').evaluate(form=>form.requestSubmit());const popup=await page.locator('.leaflet-popup-content').innerText();assert.ok(popup.includes('Fixed At-Risk share'));assert.ok(popup.includes('50%'));
     return {id,before,after,updatedPopup,popup};
   });
   await check(channel+' keyboard controls tabs sort and inspect',async()=>{
@@ -86,6 +88,74 @@ async function exportAndCheck(page,label,immediate) {
     const system=page.locator('.system-link').first();await system.focus();await page.keyboard.press('Enter');assert.equal(await page.locator('#detail').isVisible(),true);
     const focus=await page.locator('.system-link').first().evaluate(e=>({outline:getComputedStyle(e).outlineStyle,width:getComputedStyle(e).outlineWidth}));
     return {rangeName:await budget.getAttribute('aria-label'),valueText:await budget.getAttribute('aria-valuetext'),focus};
+  });
+  await check(channel+' planner search and linked project evidence',async()=>{
+    const styleUrl='**/styles/liberty';
+    let releaseStyle;
+    const styleGate=new Promise(resolve=>{releaseStyle=resolve;});
+    await page.route(styleUrl,async route=>{
+      await styleGate;
+      await route.fulfill({status:503,body:'Deliberate map-loading regression test'});
+    });
+    try {
+      await ready(page,'#b=250');
+      assert.equal(await page.evaluate(()=>Xylem3D.map()),null);
+      const search=page.getByLabel('Water system',{exact:true}), find=page.getByRole('button',{name:'Find',exact:true});
+      await search.fill('unmatched-system-name');await find.click();
+      assert.match(await page.locator('#search-status').innerText(),/No matching/);
+      await search.fill('water');await find.click();
+      assert.equal(await page.locator('#search-matches button').count(),8);
+      await search.fill('east orosi');await search.press('Enter');
+      assert.match(await page.locator('#detailTitle').innerText(),/East Orosi/i);
+      releaseStyle();
+      await page.locator('#map').waitFor({state:'visible'});
+      await page.getByRole('link',{name:'Check for existing funding'}).click();
+      await page.locator('#requested-title').waitFor();
+      assert.match(await page.locator('#requested-title').innerText(),/East Orosi/i);
+      await page.getByRole('button',{name:'See the plan without East Orosi'}).click();
+      assert.match(await page.locator('#result-status').innerText(),/left out 1 water system/);
+      await page.locator('#show-removed').click();
+      assert.match(await page.locator('#removed').innerText(),/East Orosi/i);
+      await page.getByRole('button',{name:'Put East Orosi back'}).click();
+      assert.equal(await page.locator('#changes').isVisible(),false);
+      await page.locator('#planner-link').click();
+      await page.waitForFunction(()=>window.__xylem?.st.b===250);
+      return {budget:250,system:'East Orosi'};
+    } finally {
+      releaseStyle();
+      await page.unroute(styleUrl);
+    }
+  });
+  await check(channel+' walkthrough uses live planner and funding review', async () => {
+    await ready(page, '#b=500');
+    await page.getByRole('link', {name:'Start walkthrough'}).click();
+    const guide = page.locator('.walkthrough');
+    await guide.getByRole('button', {name:'Try a different budget'}).click();
+    await page.waitForFunction(() => __xylem.st.b === 250 && document.querySelector('.walkthrough-feedback').textContent.includes('$250M'));
+
+    await guide.getByRole('button', {name:'Next', exact:true}).click();
+    await guide.getByRole('button', {name:'Compare with another budget'}).click();
+    await page.waitForFunction(() => document.querySelector('#compare-budgets').textContent.includes('Current plan $500M'));
+
+    await guide.getByRole('button', {name:'Next', exact:true}).click();
+    await guide.getByRole('button', {name:'Find East Orosi'}).click();
+    await page.getByRole('link', {name:'Check for existing funding'}).click();
+    await guide.getByRole('button', {name:'Open the funding record'}).click();
+    assert.match(await guide.locator('.walkthrough-progress').innerText(), /Step 4 of 5/);
+    assert.equal(await page.locator('#example-source').getAttribute('open'), '');
+    assert.equal(await page.locator('#example-sources a').count(), 2);
+    assert.equal(await page.locator('#changes').isVisible(), false);
+
+    await guide.getByRole('button', {name:'Next', exact:true}).click();
+    await guide.getByRole('button', {name:'See the plan without East Orosi'}).click();
+    assert.match(await guide.locator('.walkthrough-progress').innerText(), /Step 5 of 5/);
+    assert.match(await guide.locator('.walkthrough-feedback').innerText(), /4 join and 3 leave/);
+    assert.equal(await page.locator('#before-count').innerText(), '112');
+    assert.equal(await page.locator('#after-count').innerText(), '113');
+    await guide.getByRole('button', {name:'Finish', exact:true}).click();
+    assert.equal(await guide.isVisible(), false);
+    assert.equal(new globalThis.URL(page.url()).searchParams.has('walkthrough'), false);
+    return {added:await page.locator('#added-count').innerText(), removed:await page.locator('#removed-count').innerText()};
   });
   await check(channel+' map colors synchronize and routes agree',async()=>{
     await ready(page,'#b=500&l=2&r=0.3&c=1');await page.locator('[data-color="status"]').evaluate(e=>e.click());assert.equal(await page.locator('#colorSel').inputValue(),'status');

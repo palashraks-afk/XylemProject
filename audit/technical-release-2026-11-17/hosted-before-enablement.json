@@ -1,0 +1,15 @@
+{
+  "recorded_at_utc": "2026-11-18T04:15:09.369838+00:00",
+  "base_url": "https://palashraks-afk.github.io/XylemProject/",
+  "ui_build": "340f94b2ae41f9ac9e9077fa581700c0708dec9427079717bf4ac91e83cd9cfa",
+  "snapshot_id": "806032f64da14561b81c55e72179ec22f299774fa97b9b5f08c4742909f9c0bd",
+  "files": [
+    {
+      "file": "build.json",
+      "status": "FAIL",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ],
+  "scope": "Exact HTTPS bytes only; browser, workflow source and physical-device checks are separate",
+  "status": "FAIL"
+}

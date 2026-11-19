@@ -16,6 +16,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Verify frozen app and allocation parity
+        run: |
+          python3 tools/verify_static.py
+          node --check app/app.js
+          node --check app/map3d.js
+          node --check app/optimizer.js
+          node --check app/system-labels.js
+          node --test tests/system-labels.test.cjs
+          node tests/snapshot_parity.js
+          node --check app/funding-review.js
+          node --test tests/funding-review.test.cjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

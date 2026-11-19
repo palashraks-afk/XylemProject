@@ -1,4 +1,4 @@
-/* Xylem app: scenario controls -> exact optimizer -> map, KPIs, tables. All data is real SAFER/State Water Board data;
+/* EquiFlow planner: scenario controls -> exact optimizer -> map, KPIs, tables. All data is real SAFER/State Water Board data;
  * costs are modelled (see Method tab). */
 (async function () {
   const $ = (s) => document.querySelector(s);
@@ -37,6 +37,9 @@
   const countyGeo = await loadData("counties.geojson");
   const infrastructure = await loadData("infrastructure.json");
   const AT_RISK_RATE = forecast.metrics.fallback_at_risk_probability;
+
+  // Correct a documented source-label defect only after frozen data passes its hashes.
+  XylemLabels.apply(systems);
 
   const N = systems.length;
   const baseCost = systems.map((s) => s.cost);
@@ -232,13 +235,7 @@
     map.eachLayer(layer => { if (layer.isPopupOpen && layer.isPopupOpen()) layer.getPopup().update(); });
     $("#colorSel").value = st.color;
     document.querySelectorAll("[data-color]").forEach(b => { b.classList.toggle("on", b.dataset.color === st.color); b.setAttribute("aria-pressed", String(b.dataset.color === st.color)); });
-    const leg = {
-      plan: [[css("--plan"), "Funded in this plan"], [css("--fail"), "Failing, not funded"], [css("--risk"), "At-Risk, not funded"]],
-      status: [[css("--fail"), "Failing"], [css("--risk"), "At-Risk"]],
-      stab: [["hsl(200,20%,82%)", "Rarely funded in stress tests"], ["hsl(200,90%,40%)", "Funded in nearly every scenario"]],
-    }[st.color];
-    $("#legend").innerHTML = leg.map(([c, t]) => `<div><span class="dot" style="background:${c}"></span>${t}</div>`).join("")
-      + (st.color === "stab" && !plan.stabOK ? `<div class="mute">Stored stability unavailable for these controls; run cost scenarios.</div>` : "") + `<div class="mute">Dot size = people served</div>`;
+    drawLegend();
     if (on3d && window.Xylem3D) Xylem3D.setData(data3d());
   }
 
@@ -247,10 +244,24 @@
   const data3d = () => ({ systems, infrastructure, drawRoutes: st.routes, inPlan: plan.inPlan, viaRoute, RT, routeLines, onMapStatus: mapStatus, onMapFailure: (message) => { mapStatus(message); setView("2d"); }, counties: countyGeo, polys, idx, popup, esc, fmtN, colorMode: () => st.color, colorCss: colorFor, onSelect: (i) => openDetail(i, $("#map3d canvas") || $("#find")),
     budget: { pos: () => budgetToPos(st.b), label: () => fmtM(st.b * 1e6), set: (p) => { st.b = posToBudget(p); $("#budget").value = p; update(); } },
     summary: () => ({ budget: fmtM(st.b * 1e6), systems: fmtN(plan.chosen.length), people: fmtN(plan.people) }) });
+  function drawLegend() {
+    const [selected, failed, atRisk] = on3d && window.Xylem3D ? Xylem3D.planColors : [css("--plan"), css("--fail"), css("--risk")];
+    const stability = plan.stabOK
+      ? [["hsl(200,20%,82%)", "Rarely selected in stress tests"], ["hsl(200,90%,40%)", "Selected in nearly every stress test"]]
+      : [[css("--off"), "Saved selection frequency is unavailable for this scenario"]];
+    const entries = {
+      plan: [[selected, "Selected in this plan"], [failed, "Failing, left out"], [atRisk, "At-Risk, left out"]],
+      status: [[failed, "Failing"], [atRisk, "At-Risk"]],
+      stab: stability,
+    }[st.color];
+    $("#legend").innerHTML = entries.map(([color, text]) =>
+      `<div><span class="dot" style="background:${color}" aria-hidden="true"></span>${text}</div>`).join("");
+  }
   function setView(v) {
     on3d = v === "3d";
     document.querySelectorAll("[data-view]").forEach((b) => { b.classList.toggle("on", b.dataset.view === v); b.setAttribute("aria-pressed", String(b.dataset.view === v)); });
-    $("#map").hidden = on3d; $("#map3d").hidden = !on3d; $("#legend").hidden = on3d;
+    $("#map").hidden = on3d; $("#map3d").hidden = !on3d;
+    drawLegend();
     if (on3d) { Xylem3D.setData(data3d()); Xylem3D.show(); } else map.invalidateSize();
   }
   document.querySelectorAll("[data-view]").forEach((b) => b.addEventListener("click", () => setView(b.dataset.view)));
@@ -312,22 +323,62 @@
       ${s.pv != null ? `<div><span class="l">Diagnostic violation estimate (unvalidated)</span><b>${pct(s.pv, 0)}</b></div>` : ""}
       <div><span class="l">Selected when costs vary</span><b>${fresh ? `${scen.hits[i]} of ${scen.K} scenarios` : plan.stabOK ? pct(s.p[plan.stabK]) + " of stress tests" : "run the scenarios"}</b></div></div>
       <div style="margin-top:10px">${routeLine(i)}</div>${s.analytes ? `<div class="mute">Issue: ${esc(s.analytes)}</div>` : ""}`;
+    const review = document.createElement("a");
+    review.id = "detail-review";
+    review.className = "detail-review";
+    const reviewParams = new URLSearchParams({system: s.id});
+    if (location.hash) reviewParams.set("scenario", location.hash.slice(1));
+    review.href = "funding-review.html?" + reviewParams;
+    review.textContent = "Check for existing funding";
+    d.appendChild(review);
     $("#detailX").onclick = closeDetail;
     if (focusedId) $("#" + focusedId)?.focus({preventScroll: true});
   }
 
   // ---------- KPIs ----------
-  function kpis() {
-    const gain = plan.basePeople ? plan.people / plan.basePeople : 0;
-    const k = [
-      `<div class="kpi hero"><div class="l">Modeled people reached</div><div class="v">${fmtN(plan.people)}</div><div class="s">${gain >= 1.005 || gain < 0.995 ? `<span class="up">${gain.toFixed(2)}×</span> status-first reach (${fmtN(plan.basePeople)})` : `about the same reach as status-first (${fmtN(plan.basePeople)})`}</div></div>`,
-      `<div class="kpi"><div class="l">Systems funded</div><div class="v">${fmtN(plan.chosen.length)}</div><div class="s">of ${fmtN(N)} · ${plan.small} with ≤500 connections</div></div>`,
-      `<div class="kpi"><div class="l">Spent of budget</div><div class="v">${fmtM(plan.spent)}</div><div class="s">budget ${fmtM(st.b * 1e6)} · $${fmtN(plan.spent / Math.max(1, plan.people))}/person</div></div>`,
-      `<div class="kpi"><div class="l">In disadvantaged areas</div><div class="v">${pct(plan.dac / Math.max(1, plan.people))}</div><div class="s">of people reached (DAC or SDAC)</div></div>`,
-      `<div class="kpi"><div class="l">Failing, left unfunded</div><div class="v">${fmtN(plan.leftFailing.length)}</div><div class="s">${fmtN(plan.leftPeople)} people</div></div>`,
-      `<div class="kpi"><div class="l">Plan robustness</div><div class="v">${plan.robust === null ? "n/a" : pct(plan.robust)}</div><div class="s">${plan.robust === null ? "stored stability unavailable for these controls; run cost scenarios" : `funded systems that win in ≥50% of ${summary.n_scenarios} stress tests`}</div></div>`,
+  let pinnedPlan = null;
+  const compareButton = $("#compare-pin");
+  const signed = new Intl.NumberFormat("en-US", {signDisplay: "exceptZero"});
+
+  function comparePlans() {
+    const panel = $("#scenario-compare");
+    panel.hidden = !pinnedPlan;
+    compareButton.setAttribute("aria-expanded", String(!!pinnedPlan));
+    compareButton.textContent = pinnedPlan ? "Clear comparison" : "Compare plans";
+    $("#compare-help").hidden = !!pinnedPlan;
+    if (!pinnedPlan) return;
+
+    $("#compare-budgets").textContent = `Saved plan ${fmtM(pinnedPlan.budget)} · Current plan ${fmtM(st.b * 1e6)}`;
+    const costDelta = plan.spent - pinnedPlan.spent;
+    const differences = [
+      ["People served", signed.format(plan.people - pinnedPlan.people)],
+      ["Systems selected", signed.format(plan.chosen.length - pinnedPlan.systems)],
+      ["Estimated cost", costDelta === 0 ? "$0" : (costDelta > 0 ? "+" : "−") + fmtM(Math.abs(costDelta))],
     ];
-    $("#kpis").innerHTML = k.join("");
+    $("#compare-metrics").innerHTML = differences.map(([label, value]) =>
+      `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("");
+  }
+
+  compareButton.addEventListener("click", () => {
+    if (timer !== null) commitUpdate();
+    pinnedPlan = pinnedPlan ? null : {
+      budget: st.b * 1e6, spent: plan.spent, people: plan.people, systems: plan.chosen.length,
+    };
+    comparePlans();
+  });
+
+  function kpis() {
+    $("#main-kpis").innerHTML = [
+      `<div class="kpi hero"><div class="l">People the plan could reach</div><div class="v">${fmtN(plan.people)}</div><div class="s">Based on the water systems in this plan</div></div>`,
+      `<div class="kpi"><div class="l">Water systems in the plan</div><div class="v">${fmtN(plan.chosen.length)}</div><div class="s">${fmtN(plan.small)} are small systems</div></div>`,
+      `<div class="kpi"><div class="l">Estimated cost</div><div class="v">${fmtM(plan.spent)}</div><div class="s">of your ${fmtM(st.b * 1e6)} budget</div></div>`,
+    ].join("");
+    $("#extra-kpis").innerHTML = [
+      `<div class="kpi"><div class="l">People in disadvantaged areas</div><div class="v">${pct(plan.dac / Math.max(1, plan.people))}</div><div class="s">Share of people the plan could reach</div></div>`,
+      `<div class="kpi"><div class="l">Failing systems left out</div><div class="v">${fmtN(plan.leftFailing.length)}</div><div class="s">${fmtN(plan.leftPeople)} people served by these systems</div></div>`,
+      `<div class="kpi"><div class="l">Systems that stayed in the plan</div><div class="v">${plan.robust === null ? "n/a" : pct(plan.robust)}</div><div class="s">${plan.robust === null ? "No saved test results for these settings" : `Stayed in at least half of ${summary.n_scenarios} tests`}</div></div>`,
+    ].join("");
+    comparePlans();
   }
 
   // ---------- tables ----------
@@ -350,11 +401,12 @@
   function tabPlan() {
     const rows = plan.chosen.map((i) => ({ ...systems[i], cpp: systems[i].cost / systems[i].pop, stab: plan.stabOK ? systems[i].p[plan.stabK] : -1 }));
     const el = document.createElement("div");
-    el.innerHTML = `<p class="mute" style="margin-bottom:8px">${fmtN(rows.length)} systems, ${fmtM(plan.spent)} of ${fmtM(st.b * 1e6)}. Stability is the share of ${summary.n_scenarios} stress-test scenarios (cost errors and weights varied) in which the system is still funded${plan.stabOK ? ` at about $${plan.stabBudget}M` : "; unavailable for these controls"}.</p>`;
+    el.innerHTML = `<p class="table-intro"><b>${fmtN(rows.length)} water systems in this plan</b>. Select a name to see its estimated cost and funding records.</p>
+      <p class="table-help">${plan.stabOK ? `“How often picked” shows how often the system stayed in the plan across ${summary.n_scenarios} tests at about $${plan.stabBudget}M.` : "No saved test results for these settings."}</p>`;
     el.appendChild(table([
       { k: "name", h: "System" }, { k: "county", h: "County" }, { k: "failing", h: "Status", f: tagS },
       { k: "pop", h: "People", num: 1, f: (r) => fmtN(r.pop) }, { k: "cost", h: "Cost", num: 1, f: (r) => fmtM(r.cost) },
-      { k: "cpp", h: "$/person", num: 1, f: (r) => "$" + fmtN(r.cpp) }, { k: "stab", h: "Stability", num: 1, f: stabCell }, { k: "dac", h: "Economic status" },
+      { k: "cpp", h: "$/person", num: 1, f: (r) => "$" + fmtN(r.cpp) }, { k: "stab", h: "How often picked", num: 1, f: stabCell }, { k: "dac", h: "Economic status" },
       { k: "how", h: "Solution", f: (r) => esc(r.how) },
     ], rows.map((r) => ({ ...r, how: viaRoute[idx.get(r.id)] ? `Consolidate into ${RT[r.id].receiver_name} (${RT[r.id].kind === "intersect" ? "adjacent" : RT[r.id].route_mi + " mi"})` : "Modelled average" })), "pop", true));
     return el;
@@ -363,7 +415,7 @@
     const rows = plan.leftFailing.map((i) => ({ ...systems[i], cpp: systems[i].cost / systems[i].pop }));
     const small = plan.leftFailing.filter((i) => conns[i] <= 500).length;
     const el = document.createElement("div");
-    el.innerHTML = `<div class="note"><b>Who the optimizer leaves out.</b> ${fmtN(rows.length)} Failing systems (${fmtN(plan.leftPeople)} people) are not funded in this plan; ${fmtN(small)} of them have 500 connections or fewer. They are skipped because each person costs more to reach, not because their need is smaller. Raise the equity weight or reserve budget for small systems to see the trade-off.</div>`;
+    el.innerHTML = `<div class="note"><b>Who the optimizer leaves out.</b> ${fmtN(rows.length)} Failing systems (${fmtN(plan.leftPeople)} people) are not funded in this plan; ${fmtN(small)} of them have 500 connections or fewer. The shortlist depends on the budget, estimated costs, and the priorities you set. Try reserving part of the budget for small systems to see how the list changes.</div>`;
     el.appendChild(table([
       { k: "name", h: "System" }, { k: "county", h: "County" }, { k: "pop", h: "People", num: 1, f: (r) => fmtN(r.pop) },
       { k: "conn", h: "Connections", num: 1, f: (r) => fmtN(r.conn) }, { k: "cost", h: "Cost", num: 1, f: (r) => fmtM(r.cost) },
@@ -479,7 +531,7 @@
         <li><a href="https://pacinst.org/publication/drinking-water-cost-assessment-gap-analysis/">Pacific Institute et al., Cost Assessment and Gap Analysis</a>: background on costs and funding gaps.</li>
         <li><a href="https://phys.org/news/2022-07-framework-prioritizing-investment.amp">Wayne State and University of Michigan prioritization framework (2022)</a>: an inherited reference lead, not a verified current comparison.</li>
       </ul>
-      <div class="note good"><b>What Xylem adds:</b> a budget allocation prototype using rounded modeled costs and explicit priority rules, sensitivity checks, and a view of systems left out. These references are not an exhaustive current review; no unique or first-of-kind claim is established.</div>`;
+      <div class="note good"><b>What EquiFlow adds:</b> a budget allocation prototype using rounded modeled costs and explicit priority rules, sensitivity checks, and a view of systems left out. These references are not an exhaustive current review; no unique or first-of-kind claim is established.</div>`;
     return el;
   }
 
@@ -534,17 +586,39 @@
     }
   }
 
-  $(".skip-results").addEventListener("click", e => { e.preventDefault(); $("#tabbody").focus(); $("#tabbody").scrollIntoView({block: "start"}); });
+  function focusSection(selector) {
+    const element = $(selector);
+    element.focus({preventScroll: true});
+    element.scrollIntoView({block: "start"});
+  }
+  $(".skip-results").addEventListener("click", event => {
+    event.preventDefault();
+    focusSection("#tabbody");
+  });
+  $("#view-results").addEventListener("click", () => {
+    if (timer !== null) commitUpdate();
+    focusSection("#results-title");
+  });
+  $("#edit-budget").addEventListener("click", () => focusSection("#controls-title"));
+  $("#view-systems").addEventListener("click", () => {
+    if (timer !== null) commitUpdate();
+    showTab("plan");
+    focusSection("#tab-plan");
+  });
 
   // ---------- wiring ----------
   function syncLabels() {
     document.querySelectorAll("[data-val]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.val === st.v)));
     for (const [id, text] of Object.entries({budget: fmtM(st.b * 1e6), lam: st.l.toFixed(1), res: pct(st.r), mul: st.m.toFixed(2) + " times", hor: st.h + " years (exploratory)", arw: pct(st.a)})) $("#" + id).setAttribute("aria-valuetext", text);
     $("#budgetLabel").textContent = fmtM(st.b * 1e6);
-    $("#budgetHint").textContent = `Range $${BMIN}M to ${fmtM(totalCost)} (maximum preset)`;
+    $("#budgetHint").textContent = `Choose a preset or drag the slider from $${BMIN}M to ${fmtM(BMAX * 1e6)}.`;
+    document.querySelectorAll("[data-preset]").forEach(button => {
+      const budget = Math.min(BMAX, Number(button.dataset.preset) || BMAX);
+      button.setAttribute("aria-pressed", String(budget === st.b));
+    });
     $("#lamLabel").textContent = st.l.toFixed(1); $("#horLabel").textContent = st.h + " yr"; $("#arwLabel").textContent = pct(st.a);
     $("#horWrap").hidden = st.v !== "fc"; $("#arwWrap").hidden = st.v === "fc";
-    document.querySelectorAll("[data-val]").forEach((x) => x.classList.toggle("on", x.dataset.val === st.v)); $("#resLabel").textContent = (st.r ? "+" : "") + pct(st.r); $("#mulLabel").textContent = st.m.toFixed(2) + "×";
+    document.querySelectorAll("[data-val]").forEach((x) => x.classList.toggle("on", x.dataset.val === st.v)); $("#resLabel").textContent = pct(st.r); $("#mulLabel").textContent = st.m.toFixed(2) + "×";
   }
   function writeHash() {
     const p = new URLSearchParams({ b: st.b, l: st.l, h: st.h, v: st.v, a: st.a, r: st.r, c: st.c, m: st.m });
@@ -614,8 +688,8 @@
       return [s.id, s.name, s.county, s.failing ? "Failing" : "At-Risk", s.pop, s.conn, s.cost, Math.round(s.cost / s.pop),
         viaRoute[i] ? `Consolidate into ${RT[s.id].receiver_name}` : "Modelled average",
         s.pf == null ? "" : s.pf, s.failing ? 1 : st.v === "fc" ? 1 - Math.pow(1 - s.pf, st.h) : st.a, s.forecast_source, plan.stabOK ? Math.round(s.p[plan.stabK] * 100) : "", s.dac, gis && gis.z[s.id] !== undefined ? gis.z[s.id] : ""].map(q).join(","); });
-    const blob = new Blob([`# Budget_USD ${st.b * 1e6}; selected_systems ${plan.chosen.length}; modeled_people ${plan.people}; modeled_cost_usd ${plan.spent}; scenario ${new URLSearchParams({b:st.b,l:st.l,h:st.h,v:st.v,a:st.a,r:st.r,c:st.c,m:st.m})}; stability_budget_musd ${plan.stabOK ? plan.stabBudget : "unavailable"}\n# Snapshot ${snapshot.id}; UI_build ${build.id}; diagnostic snapshot estimates; annual failure probabilities and constant-annual-risk horizon conversion unvalidated.\n# Xylem placement plan: budget ${fmtM(st.b * 1e6)}, equity ${st.l}, ${st.v === "fc" ? "forecast horizon " + st.h + " yr" : "fixed At-Risk share " + pct(st.a)}, small-system reserve ${pct(st.r)}, routes ${st.c}, cost multiplier ${st.m}; stability ${plan.stabOK ? "stored at " + plan.stabBudget + "M, no reserve/routes, multiplier 1" : "unavailable for these controls"}; reach is modeled population, not measured intervention benefit; costs modeled; routes approximate\n`, head.join(",") + "\n" + rows.join("\n")], { type: "text/csv" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "xylem-placement-plan.csv"; a.click(); URL.revokeObjectURL(a.href);
+    const blob = new Blob([`# Budget_USD ${st.b * 1e6}; selected_systems ${plan.chosen.length}; modeled_people ${plan.people}; modeled_cost_usd ${plan.spent}; scenario ${new URLSearchParams({b:st.b,l:st.l,h:st.h,v:st.v,a:st.a,r:st.r,c:st.c,m:st.m})}; stability_budget_musd ${plan.stabOK ? plan.stabBudget : "unavailable"}\n# Snapshot ${snapshot.id}; UI_build ${build.id}; diagnostic snapshot estimates; annual failure probabilities and constant-annual-risk horizon conversion unvalidated.\n# EquiFlow funding plan: budget ${fmtM(st.b * 1e6)}, equity ${st.l}, ${st.v === "fc" ? "forecast horizon " + st.h + " yr" : "fixed At-Risk share " + pct(st.a)}, small-system reserve ${pct(st.r)}, routes ${st.c}, cost multiplier ${st.m}; stability ${plan.stabOK ? "stored at " + plan.stabBudget + "M, no reserve/routes, multiplier 1" : "unavailable for these controls"}; reach is modeled population, not measured intervention benefit; costs modeled; routes approximate\n`, head.join(",") + "\n" + rows.join("\n")], { type: "text/csv" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "equiflow-funding-plan.csv"; a.click(); URL.revokeObjectURL(a.href);
   });
   $("#cons").checked = !!st.c;
   $("#cons").addEventListener("change", (e) => { st.c = e.target.checked ? 1 : 0; update(); });
@@ -629,8 +703,11 @@
 
   // find-your-system search and county spotlight
   const label = (s) => `${s.name} · ${s.county}`;
-  const byLabel = new Map(systems.map((s, i) => [label(s), i]));
-  $("#syslist").innerHTML = systems.map((s) => `<option value="${esc(label(s))}">`).join("");
+  const normalize = (value) => value.toLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const searchable = systems.map(s => ({
+    name: normalize(s.name), label: normalize(label(s)), id: normalize(s.id),
+  }));
+  $("#syslist").innerHTML = systems.map(s => `<option value="${esc(label(s))}">${esc(s.id)}</option>`).join("");
   [...new Set(systems.map((s) => s.county))].sort().forEach((c) => $("#spot").insertAdjacentHTML("beforeend", `<option>${esc(c)}</option>`));
   function showTab(t) { st.tab = t; document.querySelectorAll("[data-tab]").forEach((x) => x.classList.toggle("on", x.dataset.tab === t)); drawTab(); }
   function spotlight(county) {
@@ -642,12 +719,56 @@
     } else { map.setView([36.9, -119.5], 6); drawTab(); if (on3d && window.Xylem3D) Xylem3D.home(); }
   }
   $("#spot").addEventListener("change", (e) => spotlight(e.target.value));
-  $("#find").addEventListener("change", (e) => {
-    const v = e.target.value.trim(), i = byLabel.has(v) ? byLabel.get(v) : idx.get(v.toUpperCase()); if (i === undefined || !dots[i]) return;
-    openDetail(i, e.target);
-    st.spot = systems[i].county; $("#spot").value = st.spot; showTab("spot");
-    if (on3d && window.Xylem3D) { Xylem3D.flyToSystem(i); return; }
-    map.flyTo(dots[i].getLatLng(), 11); dots[i].openPopup();
+  const search = $("#find"), results = $("#search-results"), matches = $("#search-matches");
+  function lookup(i, origin = search) {
+    results.hidden = true;
+    search.value = label(systems[i]);
+    if (timer !== null) commitUpdate();
+    st.spot = systems[i].county;
+    $("#spot").value = st.spot;
+    showTab("spot");
+    openDetail(i, origin);
+    if (!dots[i]) return;
+    if (on3d && window.Xylem3D) Xylem3D.flyToSystem(i);
+    else { map.flyTo(dots[i].getLatLng(), 11); dots[i].openPopup(); }
+  }
+  const exampleButton = $("#find-example");
+  const exampleSystem = idx.get("CA5401003");
+  exampleButton.hidden = exampleSystem === undefined;
+  exampleButton.addEventListener("click", () => lookup(exampleSystem, exampleButton));
+
+  function exactMatches(query) {
+    return searchable.flatMap((system, i) => [system.id, system.label, system.name].includes(query) ? [i] : []);
+  }
+  search.addEventListener("input", () => { results.hidden = true; });
+  search.addEventListener("change", () => {
+    const query = normalize(search.value);
+    const choice = searchable.findIndex(system => system.label === query);
+    if (choice >= 0) lookup(choice);
+  });
+  $("#find-form").addEventListener("submit", event => {
+    event.preventDefault();
+    const query = normalize(search.value);
+    const exact = exactMatches(query);
+    const terms = query.split(" ");
+    const found = exact.length || !query ? exact : searchable.flatMap((system, i) =>
+      terms.every(term => system.label.includes(term) || system.id.includes(term)) ? [i] : []);
+    if (found.length === 1) { lookup(found[0]); return; }
+    $("#search-status").textContent = !query ? "Enter a water system name or ID." : found.length === 0
+      ? "No matching Failing or At-Risk systems in this snapshot. Try a shorter name or a state water system ID."
+      : `${fmtN(found.length)} matches. ${found.length > 8 ? "Showing the first eight. Add a county or system ID to narrow your search." : "Choose a system to view its plan details."}`;
+    matches.replaceChildren(...found.slice(0, 8).map(i => {
+      const item = document.createElement("li");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "text-button";
+      button.textContent = `${label(systems[i])} · ${systems[i].id}`;
+      button.addEventListener("click", () => lookup(i));
+      item.appendChild(button);
+      return item;
+    }));
+    matches.hidden = found.length === 0;
+    results.hidden = false;
   });
 
   polyGroup.addTo(map);
@@ -656,7 +777,9 @@
   Xylem3D.mount($("#map3d"), data3d()).catch(error => { mapStatus("3D map unavailable. Switched to the 2D map; allocations and CSV remain available."); setView("2d"); console.warn(error); });
   window.__xylem = { st, map, routeGroup, viaRoute, get plan() { return plan; }, systems, summary };
 })().catch(error => {
-  document.querySelector("#snap").textContent = "Snapshot could not be loaded: " + error.message;
+  const message = "Snapshot could not be loaded: " + error.message;
+  document.querySelector("#snap").textContent = message;
+  document.querySelector("#kpis").textContent = message;
   document.querySelector("#export").disabled = true;
   console.error(error);
 });

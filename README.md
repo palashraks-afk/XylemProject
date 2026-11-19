@@ -1,10 +1,24 @@
-# Xylem
+# EquiFlow
 
 **A California water-funding planning prototype. Choose a budget and equity rules to explore which Failing and At-Risk systems an allocation model selects.** Reach and costs are modeled; selected systems' populations are not measured intervention benefit.
 
+New to EquiFlow? Start with the [Instructions page](app/instructions.html).
+
+## Current technical release
+
+The November 17 technical pass corrects one display-only system identity, preserves every numerical input/result, and verifies the real desktop demonstration and CSV. The existing 121 Python tests, 110 allocation cases and two new label tests pass. Public Pages publication is blocked until a repository admin enables GitHub Actions as its publishing source. See [current release status](audit/technical-release-2026-11-17/RELEASE_STATUS.md) for exact checks, build identity and deployment steps.
+
 ## Release candidate review
 
-Start with [SETUP.md](SETUP.md) for the verified static preview and independent environment procedure, [release review](audit/RELEASE_REVIEW.md) for QA evidence and blockers, and [demonstration](audit/DEMO_REVIEW.md) for the walkthrough and practitioner checklist. The user subsequently authorized committing and pushing this reviewed candidate; see [push handoff](audit/PUSH_HANDOFF.md). Deployment remains manual and requires separate authorization.
+Start with [SETUP.md](SETUP.md) for the verified static preview and independent environment procedure, [release review](audit/RELEASE_REVIEW.md) for QA evidence and blockers, and [demonstration](audit/DEMO_REVIEW.md) for the walkthrough and practitioner checklist. The user subsequently authorized committing and pushing this reviewed candidate; see [push handoff](audit/PUSH_HANDOFF.md). Deployment remains manual; current status and the administration blocker are recorded above.
+
+## Funding review
+
+Open **Review project funding evidence** in the allocation planner to compare a public-record screening scenario with the original allocation and a benefit-per-dollar ranking. The demo includes 12 linked records and a downloadable audit CSV. See the [workflow and benchmark](audit/funding-review/README.md).
+
+## Three-system funding case study
+
+A public-record case study follows East Orosi, Daggett and San Ardo through a $500M allocation scenario and a reproducible check of existing construction funding. See [the case study](audit/three-system-case-study/Xylem_Three_System_Case_Study.md).
 
 ## Local preview and reproduction
 
