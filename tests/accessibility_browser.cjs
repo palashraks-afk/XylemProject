@@ -60,7 +60,7 @@ for(const channel of ['chrome','msedge']) {
    }
   }return evidence;
  });
- await page.setViewportSize({width:1280,height:1024});await page.getByRole('tab',{name:'Funded plan',exact:true}).click();
+ await page.setViewportSize({width:1280,height:1024});await page.getByRole('tab',{name:'Systems in the plan',exact:true}).click();
  await check(channel+' card close restores invoking button after redraw',async()=>{
   const origin=page.locator('.system-link').first(), id=await origin.getAttribute('data-system');await origin.focus();await page.keyboard.press('Enter');
   assert.equal(await page.evaluate(()=>document.activeElement.id),'detailTitle');

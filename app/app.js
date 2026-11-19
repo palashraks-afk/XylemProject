@@ -329,7 +329,7 @@
     const reviewParams = new URLSearchParams({system: s.id});
     if (location.hash) reviewParams.set("scenario", location.hash.slice(1));
     review.href = "funding-review.html?" + reviewParams;
-    review.textContent = "Check project funding evidence";
+    review.textContent = "Check for existing funding";
     d.appendChild(review);
     $("#detailX").onclick = closeDetail;
     if (focusedId) $("#" + focusedId)?.focus({preventScroll: true});
@@ -344,11 +344,11 @@
     const panel = $("#scenario-compare");
     panel.hidden = !pinnedPlan;
     compareButton.setAttribute("aria-expanded", String(!!pinnedPlan));
-    compareButton.textContent = pinnedPlan ? "Clear comparison" : "Pin for comparison";
+    compareButton.textContent = pinnedPlan ? "Clear comparison" : "Compare plans";
     $("#compare-help").hidden = !!pinnedPlan;
     if (!pinnedPlan) return;
 
-    $("#compare-budgets").textContent = `Pinned ${fmtM(pinnedPlan.budget)} · Current ${fmtM(st.b * 1e6)}`;
+    $("#compare-budgets").textContent = `Saved plan ${fmtM(pinnedPlan.budget)} · Current plan ${fmtM(st.b * 1e6)}`;
     const costDelta = plan.spent - pinnedPlan.spent;
     const differences = [
       ["People served", signed.format(plan.people - pinnedPlan.people)],
@@ -368,16 +368,16 @@
   });
 
   function kpis() {
-    const gain = plan.basePeople ? plan.people / plan.basePeople : 0;
-    const k = [
-      `<div class="kpi hero"><div class="l">People served by selected systems</div><div class="v">${fmtN(plan.people)}</div><div class="s">${gain >= 1.005 || gain < 0.995 ? `<span class="up">${gain.toFixed(2)}×</span> the reach of a Failing-first plan (${fmtN(plan.basePeople)})` : `About the same as a Failing-first plan (${fmtN(plan.basePeople)})`}</div></div>`,
-      `<div class="kpi"><div class="l">Systems selected</div><div class="v">${fmtN(plan.chosen.length)}</div><div class="s">of ${fmtN(N)} · ${plan.small} with ≤500 connections</div></div>`,
-      `<div class="kpi"><div class="l">Estimated plan cost</div><div class="v">${fmtM(plan.spent)}</div><div class="s">budget ${fmtM(st.b * 1e6)} · $${fmtN(plan.spent / Math.max(1, plan.people))}/person</div></div>`,
-      `<div class="kpi"><div class="l">People in disadvantaged areas</div><div class="v">${pct(plan.dac / Math.max(1, plan.people))}</div><div class="s">of people served by selected systems</div></div>`,
-      `<div class="kpi"><div class="l">Failing systems left out</div><div class="v">${fmtN(plan.leftFailing.length)}</div><div class="s">${fmtN(plan.leftPeople)} people</div></div>`,
-      `<div class="kpi"><div class="l">Selection in stress tests</div><div class="v">${plan.robust === null ? "n/a" : pct(plan.robust)}</div><div class="s">${plan.robust === null ? "stored stability unavailable for these controls; run cost scenarios" : `of selected systems appeared in at least half of ${summary.n_scenarios} stress tests`}</div></div>`,
-    ];
-    $("#kpis").innerHTML = k.join("");
+    $("#main-kpis").innerHTML = [
+      `<div class="kpi hero"><div class="l">People the plan could reach</div><div class="v">${fmtN(plan.people)}</div><div class="s">Based on the water systems in this plan</div></div>`,
+      `<div class="kpi"><div class="l">Water systems in the plan</div><div class="v">${fmtN(plan.chosen.length)}</div><div class="s">${fmtN(plan.small)} are small systems</div></div>`,
+      `<div class="kpi"><div class="l">Estimated cost</div><div class="v">${fmtM(plan.spent)}</div><div class="s">of your ${fmtM(st.b * 1e6)} budget</div></div>`,
+    ].join("");
+    $("#extra-kpis").innerHTML = [
+      `<div class="kpi"><div class="l">People in disadvantaged areas</div><div class="v">${pct(plan.dac / Math.max(1, plan.people))}</div><div class="s">Share of people the plan could reach</div></div>`,
+      `<div class="kpi"><div class="l">Failing systems left out</div><div class="v">${fmtN(plan.leftFailing.length)}</div><div class="s">${fmtN(plan.leftPeople)} people served by these systems</div></div>`,
+      `<div class="kpi"><div class="l">Systems that stayed in the plan</div><div class="v">${plan.robust === null ? "n/a" : pct(plan.robust)}</div><div class="s">${plan.robust === null ? "No saved test results for these settings" : `Stayed in at least half of ${summary.n_scenarios} tests`}</div></div>`,
+    ].join("");
     comparePlans();
   }
 
@@ -401,12 +401,12 @@
   function tabPlan() {
     const rows = plan.chosen.map((i) => ({ ...systems[i], cpp: systems[i].cost / systems[i].pop, stab: plan.stabOK ? systems[i].p[plan.stabK] : -1 }));
     const el = document.createElement("div");
-    el.innerHTML = `<p class="table-intro"><b>${fmtN(rows.length)} systems selected</b> at an estimated ${fmtM(plan.spent)} of ${fmtM(st.b * 1e6)}. Select a system name for costs and project evidence.</p>
-      <p class="table-help">${plan.stabOK ? `Selection frequency is how often a system was chosen in ${summary.n_scenarios} saved stress tests at about $${plan.stabBudget}M.` : "Saved selection frequency is unavailable for this scenario."}</p>`;
+    el.innerHTML = `<p class="table-intro"><b>${fmtN(rows.length)} water systems in this plan</b>. Select a name to see its estimated cost and funding records.</p>
+      <p class="table-help">${plan.stabOK ? `“How often picked” shows how often the system stayed in the plan across ${summary.n_scenarios} tests at about $${plan.stabBudget}M.` : "No saved test results for these settings."}</p>`;
     el.appendChild(table([
       { k: "name", h: "System" }, { k: "county", h: "County" }, { k: "failing", h: "Status", f: tagS },
       { k: "pop", h: "People", num: 1, f: (r) => fmtN(r.pop) }, { k: "cost", h: "Cost", num: 1, f: (r) => fmtM(r.cost) },
-      { k: "cpp", h: "$/person", num: 1, f: (r) => "$" + fmtN(r.cpp) }, { k: "stab", h: "Selection frequency", num: 1, f: stabCell }, { k: "dac", h: "Economic status" },
+      { k: "cpp", h: "$/person", num: 1, f: (r) => "$" + fmtN(r.cpp) }, { k: "stab", h: "How often picked", num: 1, f: stabCell }, { k: "dac", h: "Economic status" },
       { k: "how", h: "Solution", f: (r) => esc(r.how) },
     ], rows.map((r) => ({ ...r, how: viaRoute[idx.get(r.id)] ? `Consolidate into ${RT[r.id].receiver_name} (${RT[r.id].kind === "intersect" ? "adjacent" : RT[r.id].route_mi + " mi"})` : "Modelled average" })), "pop", true));
     return el;

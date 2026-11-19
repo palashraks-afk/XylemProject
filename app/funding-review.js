@@ -8,6 +8,13 @@
   const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
   const storageKey = "xylem-funding-review-records";
   const tracking = new Set();
+  const exampleId = "CA5401003";
+  const fundingLabels = {
+    construction: "Construction funded",
+    interim: "Short-term help funded",
+    planning: "Planning funded",
+    unknown: "Funding unknown",
+  };
   const params = new URLSearchParams(location.search);
   const requestedId = params.get("system")?.toUpperCase();
   const plannerScenario = new URLSearchParams(params.get("scenario") ?? "");
@@ -51,7 +58,7 @@
       load("data/forecast.json", manifest.sha256["forecast.json"]),
     ]);
   } catch {
-    $("load-status").textContent = "Funding review could not load its verified data. Reload the page or return to the allocation planner.";
+    $("load-status").textContent = "Could not load the funding records. Reload the page to try again.";
     return;
   }
 
@@ -75,6 +82,13 @@
   const records = () => [...builtIn.values(), ...local.values()];
   const recordFor = (id) => builtIn.get(id) ?? local.get(id);
 
+  const exampleRecord = builtIn.get(exampleId);
+  $("example-sources").replaceChildren(...(exampleRecord?.sources ?? []).map((source) => {
+    const item = element("li");
+    item.append(sourceLink(source));
+    return item;
+  }));
+
   function renderRequestedSystem() {
     const system = byId.get(requestedId);
     if (!system) return;
@@ -82,11 +96,11 @@
     $("requested-system").hidden = false;
     $("requested-title").textContent = system.name;
     $("requested-status").textContent = record
-      ? model.stageInfo[record.stage][0] + ". " + record.scope
-      : "Funding is unverified for this system in the current review.";
+      ? fundingLabels[record.stage] + ". " + record.scope
+      : "There is no funding record for this system in EquiFlow.";
     const link = $("requested-link");
     link.href = record ? "#record-" + system.id : "#add-project-record";
-    link.textContent = record ? "Read the evidence and sources" : "Add a local project record";
+    link.textContent = record ? "See the funding record" : "Add your own record";
     link.onclick = record ? revealEvidence : () => {
       $("add-project-record").open = true;
       $("record-form").elements.systemId.value = system.id;
@@ -123,15 +137,18 @@
     }
     $("evidence-matches").textContent = shown
       ? `Showing ${format.format(shown)} of ${format.format(cards.length)} records`
-      : "No records match. Try another name or funding stage.";
+      : "No records match. Try a different name or choose All records.";
   }
 
   function revealEvidence() {
     const card = document.getElementById(this.hash.slice(1));
-    if (!card?.hidden) return;
-    $("evidence-query").value = "";
-    $("evidence-stage").value = "";
-    filterEvidence();
+    if (!card) return;
+    if (card.hidden) {
+      $("evidence-query").value = "";
+      $("evidence-stage").value = "";
+      filterEvidence();
+    }
+    card.querySelector("details").open = true;
   }
 
   $("evidence-query").addEventListener("input", filterEvidence);
@@ -139,36 +156,35 @@
 
   function renderCards() {
     renderRequestedSystem();
-    $("coverage").textContent = "Public records for " + dataset.records.length + " of " + format.format(systems.length) +
-      " systems, reviewed " + dataset.reviewedOn + ". The sample covers different types of projects. " +
-      "Systems without funding evidence remain unverified." +
-      (local.size ? " Local records: " + local.size + "." : "");
+    $("coverage").textContent = `EquiFlow has public records for ${dataset.records.length} of ${format.format(systems.length)} systems. A missing record means we don’t know if the system has funding.`;
     $("records").replaceChildren(...records().map((record) => {
       const card = element("article", undefined, "record");
       card.id = "record-" + record.systemId;
       card.dataset.systemId = record.systemId;
       card.dataset.stage = record.stage;
       const system = byId.get(record.systemId);
-      const [stage, action] = model.stageInfo[record.stage];
+      const stage = fundingLabels[record.stage];
+      const action = model.stageInfo[record.stage][1];
       const ref = element("p", system.id + " · " + system.county + " County" +
         (local.has(system.id) ? " · Local record" : ""), "id");
-      card.append(element("h3", system.name), ref, element("p", stage, "stage"),
-        element("p", record.scope, "scope"), element("p", record.note),
-        element("p", action, "action"));
+      card.append(element("h3", system.name), ref, element("p", stage, "stage"), element("p", record.scope, "scope"));
+      const details = element("details", undefined, "record-sources");
+      details.append(element("summary", "Read sources and details"), element("p", record.note), element("p", action, "action"));
       const sources = element("ul");
       for (const source of record.sources) {
         const item = element("li");
         item.append(sourceLink(source));
         sources.append(item);
       }
-      card.append(sources);
+      details.append(sources);
+      card.append(details);
       if (record.stage === "construction") {
         const label = element("label");
         const checkbox = element("input");
         checkbox.type = "checkbox";
         checkbox.dataset.track = system.id;
-        checkbox.setAttribute("aria-label", "Track " + system.name + " separately");
-        label.append(checkbox, document.createTextNode("Set this project aside for the scenario"));
+        checkbox.setAttribute("aria-label", "Set " + system.name + " aside");
+        label.append(checkbox, document.createTextNode("Set aside in this plan"));
         checkbox.addEventListener("change", () => {
           if (checkbox.checked) tracking.add(system.id);
           else tracking.delete(system.id);
@@ -200,13 +216,13 @@
   function list(id, selected, detail) {
     const target = $(id);
     if (!selected.length) {
-      target.replaceChildren(element("li", "None"));
+      target.replaceChildren(element("li", id === "removed" ? "No systems leave the plan." : "No systems join the plan."));
       return;
     }
     target.replaceChildren(...selected.map((system) => {
       const record = recordFor(system.id);
       const stage = record?.stage ?? "unknown";
-      const label = system.name + " (" + system.id + ")";
+      const label = system.name;
       const item = element("li");
       if (record) {
         const link = element("a", label);
@@ -217,8 +233,8 @@
         item.append(document.createTextNode(label));
       }
       const explanation = detail === "removed"
-        ? result.excluded.has(system.id) ? "Tracked separately" : "Changed by reallocation"
-        : model.stageInfo[stage].join(". ");
+        ? result.excluded.has(system.id) ? "Left out because this project has money" : "Left when EquiFlow picked again"
+        : fundingLabels[stage];
       item.append(element("span", explanation, "item-detail"));
       return item;
     }));
@@ -235,9 +251,9 @@
     }
 
     const methods = [
-      ["Allocation before tracking", result.original],
-      ["Allocation after tracking", result.screened],
-      ["Benefit-per-dollar ranking after tracking", result.baseline],
+      ["Original plan", result.original],
+      ["Updated plan", result.screened],
+      ["Cost-based ranking", result.baseline],
     ];
     $("comparison").tBodies[0].replaceChildren(...methods.map(([name, set]) => {
       const values = model.summarize(set, evidence);
@@ -253,34 +269,63 @@
     const tracked = result.excluded.size;
     $("before-count").textContent = format.format(result.original.length);
     $("after-count").textContent = format.format(result.screened.length);
-    $("tracked-count").textContent = format.format(tracked);
-    $("reset").disabled = tracked === 0;
-    const projectCount = tracked === 1 ? "1 project set aside" : format.format(tracked) + " projects set aside";
+    $("after-plan").hidden = tracked === 0;
+    $("reset").hidden = tracked === 0;
+    const budgetLabel = $("budget").selectedOptions[0].textContent;
+    $("review-budget").textContent = `${budgetLabel} example budget · ${format.format(reserve * 100)}% for small systems`;
+    const systemCount = tracked === 1 ? "1 water system" : `${format.format(tracked)} water systems`;
     $("result-status").textContent = tracked
-      ? projectCount + ". " + result.added.length + " entered and " + result.removed.length + " left the modeled shortlist."
-      : format.format(result.original.length) + " systems on the modeled shortlist. Try East Orosi or choose another documented construction project below.";
+      ? `EquiFlow used the same ${budgetLabel} budget and left out ${systemCount} before picking again.`
+      : "Try leaving East Orosi out to see how the same budget could be used.";
     $("changes").hidden = tracked === 0;
+    $("added-count").textContent = format.format(result.added.length);
+    $("removed-count").textContent = format.format(result.removed.length);
+    const exampleIncluded = result.excluded.has(exampleId);
+    $("example-card").classList.toggle("is-set-aside", exampleIncluded);
+    $("example-state").textContent = exampleIncluded ? "Left out of this example" : "Construction funded";
+    $("east").textContent = exampleIncluded ? "Put East Orosi back" : "See the plan without East Orosi";
+    if (!tracked) showChangeList("added");
     list("added", result.added);
     list("removed", result.removed, "removed");
     list("shortlist-items", result.screened);
   }
 
-  function trackOnly(ids) {
-    tracking.clear();
-    for (const id of ids) tracking.add(id);
-    renderResults();
+  function showChangeList(active) {
+    for (const view of ["added", "removed"]) {
+      const selected = view === active;
+      $("show-" + view).setAttribute("aria-pressed", String(selected));
+      $(view + "-panel").hidden = !selected;
+    }
   }
 
-  function tryExample(ids) {
-    trackOnly(ids);
+  function showOutcome() {
+    showChangeList("added");
     const heading = $("result-title");
     heading.focus({preventScroll: true});
-    heading.scrollIntoView({block: "start"});
+    const top = heading.getBoundingClientRect().top;
+    if (top < 0 || top > innerHeight - 170) heading.scrollIntoView({block: "start"});
   }
-  $("east").addEventListener("click", () => tryExample(["CA5401003"]));
-  $("all").addEventListener("click", () => tryExample(dataset.records
-    .filter((record) => record.stage === "construction").map((record) => record.systemId)));
-  $("reset").addEventListener("click", () => trackOnly([]));
+
+  $("show-added").addEventListener("click", () => showChangeList("added"));
+  $("show-removed").addEventListener("click", () => showChangeList("removed"));
+  $("east").addEventListener("click", () => {
+    const added = !tracking.delete(exampleId);
+    if (added) tracking.add(exampleId);
+    renderResults();
+    if (added) showOutcome();
+  });
+  $("all").addEventListener("click", () => {
+    for (const record of dataset.records) {
+      if (record.stage === "construction") tracking.add(record.systemId);
+    }
+    renderResults();
+    showOutcome();
+  });
+  $("reset").addEventListener("click", () => {
+    tracking.clear();
+    renderResults();
+    $("east").focus();
+  });
   $("budget").addEventListener("change", renderResults);
   $("reserve").addEventListener("change", renderResults);
 

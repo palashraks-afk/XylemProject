@@ -20,7 +20,7 @@
   </a>
   <nav class="top-nav" aria-label="EquiFlow pages">
     <a href="index.html" aria-current="page">Funding planner</a>
-    <a href="funding-review.html">Project funding review</a>
+    <a href="funding-review.html">Check project funding</a>
     <a href="instructions.html">Instructions</a>
   </nav>
 </div></header>
@@ -28,7 +28,8 @@
 <main class="layout">
   <div class="planner-intro workspace-hero">
     <h1>California water funding planner</h1>
-    <p>Explore how a funding budget could reach California drinking water systems that are failing or at risk.</p>
+    <p>EquiFlow uses state data to suggest which California drinking water systems a budget could help.</p>
+    <a class="guide-start" id="start-walkthrough" href="index.html?walkthrough=1">Start walkthrough <span aria-hidden="true">→</span></a>
   </div>
   <aside class="panel controls" aria-labelledby="controls-title" id="scenario-controls">
     <h2 id="controls-title" tabindex="-1">Set your budget</h2>
@@ -115,7 +116,7 @@
     </details>
 
     <div class="row-btns">
-      <button id="reset" class="ghost" type="button">Reset scenario</button>
+      <button id="reset" class="ghost" type="button">Reset plan</button>
     </div>
   </aside>
 
@@ -125,8 +126,14 @@
         <h2 id="results-title" tabindex="-1">Your funding plan</h2>
         <button type="button" class="text-button jump" id="edit-budget">Adjust budget</button>
       </div>
-      <p class="section-hint">Population and costs are estimates. Selection is a recommendation for review.</p>
-      <div class="kpis" id="kpis"><p role="status">Loading the California snapshot…</p></div>
+      <p class="section-hint">See who could get help and what it might cost.</p>
+      <div id="kpis">
+        <div class="kpis" id="main-kpis"><p role="status">Loading the plan…</p></div>
+        <details class="plan-extra">
+          <summary>More about this plan</summary>
+          <div class="kpis" id="extra-kpis"></div>
+        </details>
+      </div>
       <section class="scenario-compare" id="scenario-compare" aria-labelledby="compare-title" hidden>
         <div class="section-head">
           <h3 id="compare-title">Change from pinned plan</h3>
@@ -135,20 +142,20 @@
         <dl id="compare-metrics"></dl>
       </section>
       <div class="result-actions">
-        <button id="view-systems" class="primary workspace-action" type="button">View selected systems <span aria-hidden="true">↓</span></button>
-        <button id="compare-pin" class="ghost" type="button" aria-controls="scenario-compare" aria-expanded="false" aria-describedby="compare-help">Pin for comparison</button>
+        <button id="view-systems" class="primary workspace-action" type="button">See systems in the plan <span aria-hidden="true">↓</span></button>
+        <button id="compare-pin" class="ghost" type="button" aria-controls="scenario-compare" aria-expanded="false" aria-describedby="compare-help">Compare plans</button>
         <button id="export" class="ghost" type="button">Download plan CSV</button>
-        <button id="copy" class="ghost" type="button">Copy scenario link</button>
+        <button id="copy" class="ghost" type="button">Copy plan link</button>
       </div>
-      <p class="action-help" id="compare-help">Pin this plan, then change the budget or priorities to see the difference.</p>
+      <p class="action-help" id="compare-help">Save this plan to compare it with a different budget.</p>
       <p class="fine" id="copyMsg" aria-live="polite"></p>
     </section>
     <section class="map-section" aria-labelledby="map-title">
       <div class="section-head">
         <h2 id="map-title">Explore the map</h2>
-        <button class="text-button" id="find-example" type="button">Find East Orosi <span aria-hidden="true">↗</span></button>
+        <button class="text-button" id="find-example" type="button">See East Orosi on the map <span aria-hidden="true">↗</span></button>
       </div>
-      <p class="section-hint">Select a dot to see its cost and plan status, or look up a water system by name or ID.</p>
+      <p class="section-hint">Pick a dot or search for a water system to see what the plan says.</p>
       <div class="finder">
         <form id="find-form" class="search-form" role="search" aria-label="Water systems">
           <label for="find">Water system</label>
@@ -177,15 +184,15 @@
     <div class="plan-section">
     <h2 class="plan-detail-heading" id="plan-details">Plan details</h2>
     <div class="tabs" role="tablist" aria-labelledby="plan-details">
-      <button role="tab" data-tab="plan" class="on">Funded plan</button>
+      <button role="tab" data-tab="plan" class="on">Systems in the plan</button>
       <button role="tab" data-tab="spot">Local view</button>
       <button role="tab" data-tab="hubs">Connection options</button>
-      <button role="tab" data-tab="left">Unfunded systems</button>
+      <button role="tab" data-tab="left">Systems left out</button>
       <button role="tab" data-tab="county">Counties</button>
       <button role="tab" data-tab="method">Method and tests</button>
       <button role="tab" data-tab="gaps">Limits and sources</button>
     </div>
-    <div id="tabbody" class="tabbody" role="tabpanel" tabindex="0" aria-label="Funded plan"></div>
+    <div id="tabbody" class="tabbody" role="tabpanel" tabindex="0" aria-label="Systems in the plan"></div>
     </div>
   </div>
 </main>
@@ -197,5 +204,6 @@
 <script src="map3d.js"></script>
 <script src="system-labels.js"></script>
 <script src="app.js"></script>
+<script src="walkthrough.js"></script>
 </body>
 </html>

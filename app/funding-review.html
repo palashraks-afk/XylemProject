@@ -4,14 +4,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Funding review | EquiFlow</title>
-<meta name="description" content="Review the project scopes behind a modeled California drinking-water funding shortlist.">
+<title>Check project funding | EquiFlow</title>
+<meta name="description" content="See which California water projects already have funding and explore how that changes the plan.">
 <link rel="stylesheet" href="funding-review.css">
 <link rel="stylesheet" href="workspace.css">
 <script defer src="optimizer.js"></script>
 <script defer src="system-labels.js"></script>
 <script defer src="funding-review-model.js"></script>
 <script defer src="funding-review.js"></script>
+<script defer src="walkthrough.js"></script>
 </head>
 <body class="review-page">
 <a class="skip" href="#main">Skip to funding review</a>
@@ -22,16 +23,27 @@
   </a>
   <nav class="top-nav" aria-label="EquiFlow pages">
     <a id="planner-link" href="index.html">Funding planner</a>
-    <a href="funding-review.html" aria-current="page">Project funding review</a>
+    <a href="funding-review.html" aria-current="page">Check project funding</a>
     <a href="instructions.html">Instructions</a>
   </nav>
 </div></header>
 <main class="wrap" id="main">
   <div class="intro workspace-hero">
-    <h1>Project funding review</h1>
-    <p>Review documented project funding and see how setting those projects aside changes a modeled shortlist.</p>
+    <h1>Check project funding</h1>
+    <p>See what work already has money and where new money could help.</p>
+    <a class="guide-start" id="start-walkthrough" href="index.html?walkthrough=1">Start walkthrough <span aria-hidden="true">→</span></a>
   </div>
-  <p id="load-status" role="status">Loading the California snapshot and project records…</p>
+  <section class="panel review-explainer" aria-labelledby="review-explainer-title">
+    <h2 id="review-explainer-title">Why check funding first?</h2>
+    <p>A water system brings drinking water to homes, schools, or businesses. It can have more than one project to fix or improve it.</p>
+    <ol class="review-flow" role="list">
+      <li><h3>Make a plan</h3><p>EquiFlow looks at costs, how many people a system serves, and how much help it needs.</p></li>
+      <li><h3>Check what already has money</h3><p>A funding record tells you what work has money approved.</p></li>
+      <li><h3>See who else could get help</h3><p>Leave a water system out of the example and let EquiFlow pick again with the same budget.</p></li>
+    </ol>
+    <p class="review-note">Systems with construction funding can be left out of this practice plan. Real funding decisions happen separately.</p>
+  </section>
+  <p id="load-status" role="status">Loading funding records…</p>
   <div id="review" hidden>
     <section class="panel requested-system" id="requested-system" aria-labelledby="requested-title" hidden>
       <h2 id="requested-title"></h2>
@@ -39,74 +51,109 @@
       <a id="requested-link" href="#records-title"></a>
     </section>
     <div class="review-workspace">
-    <section class="panel" aria-labelledby="scenario-title">
-      <h2 id="scenario-title">Build a shortlist</h2>
-      <p>Start with East Orosi to see what changes when its documented construction project is set aside in this scenario.</p>
-      <div class="controls">
-        <label>Budget <select id="budget"><option value="100">$100M</option><option value="250">$250M</option><option value="500" selected>$500M</option><option value="1000">$1B</option><option value="2000">$2B</option></select></label>
-        <label>Budget reserved for small systems <select id="reserve"><option value="0">0%</option><option value="0.15">15%</option><option value="0.3" selected>30%</option><option value="0.45">45%</option><option value="0.6">60%</option></select></label>
-      </div>
-      <div class="actions">
-        <button class="primary" type="button" id="east">Try East Orosi</button>
-        <button type="button" id="all">Set aside all sample construction projects</button>
-        <button type="button" id="reset">Clear tracking</button>
-      </div>
-      <p class="subtle">Tracking sets the system aside for this scenario. Check that any real funding proposal covers the same work. Systems with interim, planning, or unverified records remain eligible.</p>
-      <details><summary>Scenario assumptions</summary><p class="subtle">This page uses its own budget and reserve. It applies equity weight 1, an exploratory five-year At-Risk weight, and estimated costs with route adjustments off. Small systems have up to 500 connections.</p></details>
-    </section>
-
-    <section class="panel" aria-labelledby="result-title">
-      <h2 id="result-title" tabindex="-1">How the shortlist changes</h2>
-      <dl class="review-stats">
-        <div><dt>Before review</dt><dd id="before-count"></dd></div>
-        <div><dt>After review</dt><dd id="after-count"></dd></div>
-        <div><dt>Projects set aside</dt><dd id="tracked-count"></dd></div>
-      </dl>
-      <p class="result" id="result-status" role="status" aria-atomic="true"></p>
-      <details class="comparison-details">
-        <summary>Compare allocation methods</summary>
-        <div class="table-scroll" role="region" aria-label="Scenario comparison" tabindex="0">
-          <table id="comparison">
-            <thead><tr><th scope="col">Method</th><th scope="col">Systems</th><th scope="col">Small systems</th><th scope="col">Reported population sum</th><th scope="col">Modeled cost</th><th scope="col">Weighted score</th><th scope="col">Construction documented</th><th scope="col">Funding unverified</th></tr></thead>
-            <tbody></tbody>
-          </table>
+      <section class="panel review-example" aria-labelledby="scenario-title">
+        <h2 id="scenario-title">Try it with a real project</h2>
+        <div class="example-card" id="example-card">
+          <div class="example-heading">
+            <h3>East Orosi</h3>
+            <span class="example-badge" id="example-state">Construction funded</span>
+          </div>
+          <p>East Orosi's project will connect it to a nearby system that can supply its drinking water. The State Water Board approved money for that work.</p>
+          <details class="example-source" id="example-source">
+            <summary>See the funding record</summary>
+            <p>The State Water Board announced the funding. Tulare County reported that construction started.</p>
+            <ul id="example-sources"></ul>
+          </details>
+          <p>Try leaving the whole East Orosi water system out of this example to see who else the budget could help.</p>
+          <button class="primary" type="button" id="east" aria-controls="review-outcome">See the plan without East Orosi</button>
         </div>
-        <p class="subtle">The ranking fills the same screened pool in order of weighted benefit per rounded dollar. Both screened methods use the same budget, weights and two-pass small-system rule. Population sums may overlap. Statewide funding coverage and practitioner validation are pending.</p>
-      </details>
-      <div class="changes" id="changes" hidden>
-        <div><h3>Entered the shortlist</h3><ul id="added"></ul></div>
-        <div><h3>Left the shortlist</h3><ul id="removed"></ul></div>
-      </div>
-      <button type="button" id="export">Download scenario and sources (CSV)</button>
-      <details id="shortlist"><summary>Inspect the screened shortlist</summary><ul id="shortlist-items"></ul></details>
-    </section>
+        <details class="review-settings">
+          <summary>Change the budget or try more projects</summary>
+          <div class="controls">
+            <label>Budget <select id="budget"><option value="100">$100M</option><option value="250">$250M</option><option value="500" selected>$500M</option><option value="1000">$1B</option><option value="2000">$2B</option></select></label>
+            <label>Share for small systems <select id="reserve"><option value="0">0%</option><option value="0.15">15%</option><option value="0.3" selected>30%</option><option value="0.45">45%</option><option value="0.6">60%</option></select></label>
+          </div>
+          <p class="subtle">Small systems have 500 or fewer water connections.</p>
+          <button type="button" id="all">Set aside all funded examples</button>
+          <details><summary>How the model works</summary><p class="subtle">This example uses an equity weight of 1, a five-year estimate for systems at risk, and costs without route adjustments. A water system can have other needs even when one of its projects already has money.</p></details>
+        </details>
+      </section>
 
+      <section class="panel review-outcome" id="review-outcome" aria-labelledby="result-title">
+        <h2 id="result-title" tabindex="-1">What changes in the plan?</h2>
+        <p id="review-budget" class="subtle"></p>
+        <p class="review-setting-note">This example has its own settings, separate from the Funding planner.</p>
+        <dl class="review-stats review-plan-counts">
+          <div><dt>Systems in the starting plan</dt><dd id="before-count"></dd></div>
+          <div id="after-plan" hidden><dt>Systems in the new plan</dt><dd id="after-count"></dd></div>
+        </dl>
+        <p class="result" id="result-status" role="status" aria-atomic="true"></p>
+        <div class="review-change-controls" id="changes" hidden>
+          <p class="review-setting-note">EquiFlow picks the whole list again, so other systems can move in or out.</p>
+          <div class="change-switch" role="group" aria-label="Changes to the plan">
+            <button type="button" id="show-added" aria-controls="added-panel" aria-pressed="true">
+              <strong id="added-count"></strong><span>Join the plan</span>
+            </button>
+            <button type="button" id="show-removed" aria-controls="removed-panel" aria-pressed="false">
+              <strong id="removed-count"></strong><span>Leave the plan</span>
+            </button>
+          </div>
+          <div class="change-panel" id="added-panel">
+            <ul id="added" tabindex="0" aria-label="Water systems that join the plan"></ul>
+          </div>
+          <div class="change-panel" id="removed-panel" hidden>
+            <ul id="removed" tabindex="0" aria-label="Water systems that leave the plan"></ul>
+          </div>
+        </div>
+        <div class="review-result-actions">
+          <button type="button" id="reset" hidden>Put all projects back</button>
+          <a href="#records-title">Find another project ↓</a>
+        </div>
+        <details class="review-details">
+          <summary>See numbers and download the plan</summary>
+          <details class="comparison-details">
+            <summary>Compare how the plans are picked</summary>
+            <div class="table-scroll" role="region" aria-label="Plan comparison" tabindex="0">
+              <table id="comparison">
+                <thead><tr><th scope="col">Plan</th><th scope="col">Systems</th><th scope="col">Small systems</th><th scope="col">People served</th><th scope="col">Estimated cost</th><th scope="col">Weighted score</th><th scope="col">Construction funded</th><th scope="col">Funding unknown</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <p class="subtle">The cost ranking starts with the most benefit per dollar. It uses the same budget, priorities and eligible systems as the updated plan. Population counts can overlap.</p>
+          </details>
+          <details id="shortlist"><summary>See all systems in the updated plan</summary><ul id="shortlist-items"></ul></details>
+          <button type="button" id="export">Download plan and sources (CSV)</button>
+        </details>
+      </section>
     </div>
 
     <section class="panel evidence-panel" aria-labelledby="records-title">
-      <h2 id="records-title">Project evidence</h2>
+      <div class="evidence-heading">
+        <h2 id="records-title" tabindex="-1">Find a funding record</h2>
+        <a href="#result-title">See plan changes ↑</a>
+      </div>
       <p id="coverage" class="subtle"></p>
       <div class="evidence-filters">
-        <label for="evidence-query">Find a project<input id="evidence-query" type="search" placeholder="System, ID, or county"></label>
-        <label for="evidence-stage">Filter by funding stage<select id="evidence-stage">
-          <option value="">All stages</option><option value="construction">Construction funded</option>
-          <option value="planning">Planning support</option><option value="interim">Interim support</option>
-          <option value="unknown">Unverified</option>
+        <label for="evidence-query">Search by name, county, or ID<input id="evidence-query" type="search" placeholder="For example, Tulare"></label>
+        <label for="evidence-stage">Funding status<select id="evidence-stage">
+          <option value="">All records</option><option value="construction">Construction funded</option>
+          <option value="planning">Planning funded</option><option value="interim">Short-term help funded</option>
+          <option value="unknown">Funding unknown</option>
         </select></label>
       </div>
       <p id="evidence-matches" class="subtle" role="status"></p>
       <div id="records" class="records"></div>
       <details class="local-form" id="add-project-record">
-        <summary>Add or update a local project record</summary>
-        <p class="subtle">Record one scope per system. Your browser stores these notes locally and labels them separately from the public evidence included in the demo.</p>
+        <summary>Add your own record</summary>
+        <p class="subtle">Add one project per system. Your notes stay in this browser.</p>
         <form id="record-form">
           <div class="record-fields">
             <label>Water system ID <input name="systemId" list="system-ids" required maxlength="9" placeholder="CA0000000"></label>
             <datalist id="system-ids"></datalist>
-            <label>Funding stage <select name="stage"><option value="unknown">Unverified</option><option value="planning">Planning support</option><option value="interim">Interim support</option><option value="construction">Construction funding documented</option></select></label>
+            <label>Funding stage <select name="stage"><option value="unknown">Funding unknown</option><option value="planning">Planning funded</option><option value="interim">Short-term help funded</option><option value="construction">Construction funding documented</option></select></label>
             <label>Source date <input name="date" type="date" required></label>
             <label>HTTPS source URL <input name="url" type="url" required maxlength="1000" placeholder="https://"></label>
-            <label class="full">Project scope <input name="scope" required maxlength="140"></label>
+            <label class="full">What work is the project for? <input name="scope" required maxlength="140"></label>
             <label class="full">Notes <textarea name="note" maxlength="500" rows="3"></textarea></label>
           </div>
           <button type="submit">Save local record</button>
