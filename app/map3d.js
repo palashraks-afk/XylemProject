@@ -147,7 +147,7 @@
     highlightSystem(i);
     V.flyToLonLat(s.lon, s.lat, 14.2);
   };
-  V.flyToCounty = (name) => { const p = D.systems.filter((s) => s.county === name && s.lat != null && s.lon).map((s) => [s.lon, s.lat]); if (!p.length) return;
+  V.flyToCounty = (name) => { if (!ready) return; const p = D.systems.filter((s) => s.county === name && s.lat != null && s.lon).map((s) => [s.lon, s.lat]); if (!p.length) return;
     const b = p.reduce((a, c) => a.extend(c), new maplibregl.LngLatBounds(p[0], p[0])); map.fitBounds(b, { padding: 90, maxZoom: 11, pitch: 58, bearing: -15, duration: 2400 }); };
   function highlightSystem(i) {
     const s = D.systems[i]; map.getSource("sel").setData({ type: "FeatureCollection", features: [{ type: "Feature", properties: {}, geometry: { type: "Point", coordinates: [s.lon, s.lat] } }] });

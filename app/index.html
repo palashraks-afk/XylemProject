@@ -3,35 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Water funding planner | Xylem</title>
+<title>Water funding planner | EquiFlow</title>
 <meta name="description" content="A placement map for water funding. Set a budget and an equity rule; explore modeled California allocations under weighted population and equity priorities, with uncertainty shown.">
 <link rel="stylesheet" href="vendor/leaflet.css">
 <link rel="stylesheet" href="vendor/maplibre-gl.css">
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="workspace.css">
 </head>
 <body>
 <a class="skip-results" href="#tabbody">Skip to plan results</a>
 <p id="resultStatus" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
-<header class="top">
-  <div class="brand">
-    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 2.5c3.6 4.3 6 7.4 6 10.6A6 6 0 0 1 6 13.1C6 9.9 8.4 6.8 12 2.5z" fill="currentColor"/></svg>
-    <span>Xylem</span>
-  </div>
-  <nav class="top-nav" aria-label="Xylem pages">
+<header class="top workspace-header"><div class="workspace-nav">
+  <a class="brand workspace-brand" href="index.html" aria-label="EquiFlow funding planner">
+    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 2.5c3.6 4.3 6 7.4 6 10.6A6 6 0 0 1 6 13.1c0-3.2 2.4-6.3 6-10.6Z" fill="currentColor"/></svg>
+    <span>EquiFlow</span>
+  </a>
+  <nav class="top-nav" aria-label="EquiFlow pages">
     <a href="index.html" aria-current="page">Funding planner</a>
     <a href="funding-review.html">Project funding review</a>
+    <a href="instructions.html">Instructions</a>
   </nav>
-</header>
+</div></header>
 
 <main class="layout">
-  <div class="planner-intro">
+  <div class="planner-intro workspace-hero">
     <h1>California water funding planner</h1>
-    <p>Choose a budget to see which Failing or At-Risk drinking water systems the model would prioritize. Start with the $500M example or try a different budget.</p>
+    <p>Explore how a funding budget could reach California drinking water systems that are failing or at risk.</p>
   </div>
   <aside class="panel controls" aria-labelledby="controls-title" id="scenario-controls">
     <h2 id="controls-title" tabindex="-1">Set your budget</h2>
     <div class="ctl">
-      <span class="ctl-h">Funding budget <b id="budgetLabel"></b></span>
+      <label class="ctl-h budget-readout" for="budget"><span>Funding budget</span><b id="budgetLabel"></b></label>
       <input aria-label="Funding budget" aria-describedby="budgetHint" type="range" id="budget" min="0" max="100" step="1">
       <span class="hint" id="budgetHint"></span>
       <div class="chips" role="group" aria-label="Budget presets">
@@ -125,15 +127,27 @@
       </div>
       <p class="section-hint">Population and costs are estimates. Selection is a recommendation for review.</p>
       <div class="kpis" id="kpis"><p role="status">Loading the California snapshot…</p></div>
+      <section class="scenario-compare" id="scenario-compare" aria-labelledby="compare-title" hidden>
+        <div class="section-head">
+          <h3 id="compare-title">Change from pinned plan</h3>
+          <p id="compare-budgets"></p>
+        </div>
+        <dl id="compare-metrics"></dl>
+      </section>
       <div class="result-actions">
-        <button id="view-systems" class="text-button" type="button">View selected systems</button>
+        <button id="view-systems" class="primary workspace-action" type="button">View selected systems <span aria-hidden="true">↓</span></button>
+        <button id="compare-pin" class="ghost" type="button" aria-controls="scenario-compare" aria-expanded="false" aria-describedby="compare-help">Pin for comparison</button>
         <button id="export" class="ghost" type="button">Download plan CSV</button>
         <button id="copy" class="ghost" type="button">Copy scenario link</button>
       </div>
+      <p class="action-help" id="compare-help">Pin this plan, then change the budget or priorities to see the difference.</p>
       <p class="fine" id="copyMsg" aria-live="polite"></p>
     </section>
     <section class="map-section" aria-labelledby="map-title">
-      <h2 id="map-title">Explore the map</h2>
+      <div class="section-head">
+        <h2 id="map-title">Explore the map</h2>
+        <button class="text-button" id="find-example" type="button">Find East Orosi <span aria-hidden="true">↗</span></button>
+      </div>
       <p class="section-hint">Select a dot to see its cost and plan status, or look up a water system by name or ID.</p>
       <div class="finder">
         <form id="find-form" class="search-form" role="search" aria-label="Water systems">
@@ -151,6 +165,7 @@
         <p id="search-status" role="status"></p>
         <ul id="search-matches" aria-label="Matching water systems" hidden></ul>
       </div>
+      <div id="detail" class="detail" role="region" aria-labelledby="detailTitle" hidden></div>
       <p id="mapStatus" class="map-status" role="status" hidden></p>
       <div class="mapwrap">
         <div class="vt" role="group" aria-label="Map view"><button type="button" data-view="3d" class="on">3D terrain</button><button type="button" data-view="2d">2D map</button></div>
@@ -159,7 +174,7 @@
       </div>
       <div class="legend" id="legend" aria-label="Map legend"></div>
     </section>
-    <div id="detail" class="detail" role="region" aria-labelledby="detailTitle" hidden></div>
+    <div class="plan-section">
     <h2 class="plan-detail-heading" id="plan-details">Plan details</h2>
     <div class="tabs" role="tablist" aria-labelledby="plan-details">
       <button role="tab" data-tab="plan" class="on">Funded plan</button>
@@ -171,6 +186,7 @@
       <button role="tab" data-tab="gaps">Limits and sources</button>
     </div>
     <div id="tabbody" class="tabbody" role="tabpanel" tabindex="0" aria-label="Funded plan"></div>
+    </div>
   </div>
 </main>
 <footer class="foot"><p class="snap" id="snap" role="status"></p>Data: California State Water Resources Control Board (SAFER Risk Assessment 2024 to 2026, Affordability Assessment, 2024 Cost Assessment, service-area boundaries). Costs are modelled estimates, not quotes. <a href="https://github.com/palashraks-afk/XylemProject">Source</a></footer>

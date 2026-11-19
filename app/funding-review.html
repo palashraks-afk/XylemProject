@@ -4,27 +4,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Funding review | Xylem</title>
+<title>Funding review | EquiFlow</title>
 <meta name="description" content="Review the project scopes behind a modeled California drinking-water funding shortlist.">
 <link rel="stylesheet" href="funding-review.css">
+<link rel="stylesheet" href="workspace.css">
 <script defer src="optimizer.js"></script>
 <script defer src="system-labels.js"></script>
 <script defer src="funding-review-model.js"></script>
 <script defer src="funding-review.js"></script>
 </head>
-<body>
+<body class="review-page">
 <a class="skip" href="#main">Skip to funding review</a>
-<header class="masthead"><div class="wrap">
-  <a class="brand" href="index.html">Xylem</a>
-  <nav class="top-nav" aria-label="Xylem pages">
+<header class="masthead workspace-header"><div class="workspace-nav">
+  <a class="brand workspace-brand" href="index.html" aria-label="EquiFlow funding planner">
+    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M12 2.5c3.6 4.3 6 7.4 6 10.6A6 6 0 0 1 6 13.1c0-3.2 2.4-6.3 6-10.6Z" fill="currentColor"/></svg>
+    <span>EquiFlow</span>
+  </a>
+  <nav class="top-nav" aria-label="EquiFlow pages">
     <a id="planner-link" href="index.html">Funding planner</a>
     <a href="funding-review.html" aria-current="page">Project funding review</a>
+    <a href="instructions.html">Instructions</a>
   </nav>
 </div></header>
 <main class="wrap" id="main">
-  <div class="intro">
+  <div class="intro workspace-hero">
     <h1>Project funding review</h1>
-    <p>Check whether a water system already has funding for a specific project. Then see which systems the model would pick for new funding if you set that project aside.</p>
+    <p>Review documented project funding and see how setting those projects aside changes a modeled shortlist.</p>
   </div>
   <p id="load-status" role="status">Loading the California snapshot and project records…</p>
   <div id="review" hidden>
@@ -33,8 +38,9 @@
       <p id="requested-status"></p>
       <a id="requested-link" href="#records-title"></a>
     </section>
+    <div class="review-workspace">
     <section class="panel" aria-labelledby="scenario-title">
-      <h2 id="scenario-title">Try a funding review</h2>
+      <h2 id="scenario-title">Build a shortlist</h2>
       <p>Start with East Orosi to see what changes when its documented construction project is set aside in this scenario.</p>
       <div class="controls">
         <label>Budget <select id="budget"><option value="100">$100M</option><option value="250">$250M</option><option value="500" selected>$500M</option><option value="1000">$1B</option><option value="2000">$2B</option></select></label>
@@ -42,7 +48,7 @@
       </div>
       <div class="actions">
         <button class="primary" type="button" id="east">Try East Orosi</button>
-        <button type="button" id="all">Track all sample construction projects</button>
+        <button type="button" id="all">Set aside all sample construction projects</button>
         <button type="button" id="reset">Clear tracking</button>
       </div>
       <p class="subtle">Tracking sets the system aside for this scenario. Check that any real funding proposal covers the same work. Systems with interim, planning, or unverified records remain eligible.</p>
@@ -51,6 +57,11 @@
 
     <section class="panel" aria-labelledby="result-title">
       <h2 id="result-title" tabindex="-1">How the shortlist changes</h2>
+      <dl class="review-stats">
+        <div><dt>Before review</dt><dd id="before-count"></dd></div>
+        <div><dt>After review</dt><dd id="after-count"></dd></div>
+        <div><dt>Projects set aside</dt><dd id="tracked-count"></dd></div>
+      </dl>
       <p class="result" id="result-status" role="status" aria-atomic="true"></p>
       <details class="comparison-details">
         <summary>Compare allocation methods</summary>
@@ -70,9 +81,20 @@
       <details id="shortlist"><summary>Inspect the screened shortlist</summary><ul id="shortlist-items"></ul></details>
     </section>
 
-    <section class="panel" aria-labelledby="records-title">
+    </div>
+
+    <section class="panel evidence-panel" aria-labelledby="records-title">
       <h2 id="records-title">Project evidence</h2>
       <p id="coverage" class="subtle"></p>
+      <div class="evidence-filters">
+        <label for="evidence-query">Find a project<input id="evidence-query" type="search" placeholder="System, ID, or county"></label>
+        <label for="evidence-stage">Filter by funding stage<select id="evidence-stage">
+          <option value="">All stages</option><option value="construction">Construction funded</option>
+          <option value="planning">Planning support</option><option value="interim">Interim support</option>
+          <option value="unknown">Unverified</option>
+        </select></label>
+      </div>
+      <p id="evidence-matches" class="subtle" role="status"></p>
       <div id="records" class="records"></div>
       <details class="local-form" id="add-project-record">
         <summary>Add or update a local project record</summary>

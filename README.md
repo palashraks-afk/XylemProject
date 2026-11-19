@@ -1,6 +1,8 @@
-# Xylem
+# EquiFlow
 
 **A California water-funding planning prototype. Choose a budget and equity rules to explore which Failing and At-Risk systems an allocation model selects.** Reach and costs are modeled; selected systems' populations are not measured intervention benefit.
+
+New to EquiFlow? Start with the [Instructions page](app/instructions.html).
 
 ## Current technical release
 

@@ -1,8 +1,8 @@
 {
-  "reason": "Presentation-only release fixes. Frozen diagnostic results and every model/scoring input retain their original bytes. The original evaluated app source remains hash-checked; the active UI is additionally checked below. No diagnostic result was fitted or selected again. California v1 accessibility repairs supersede the f0fa600 presentation only; original diagnostic and release evidence are preserved. See audit/ACCESSIBILITY_REPAIRS.md. A guarded presentation-only name correction for CA5610029 is documented in audit/technical-release-2026-11-17/RELEASE_STATUS.md; frozen input and model bytes remain unchanged. The usability update revises the planner and project funding review.",
+  "reason": "Presentation-only release fixes. Frozen diagnostic results and every model/scoring input retain their original bytes. The original evaluated app source remains hash-checked; the active UI is additionally checked below. No diagnostic result was fitted or selected again. California v1 accessibility repairs supersede the f0fa600 presentation only; original diagnostic and release evidence are preserved. See audit/ACCESSIBILITY_REPAIRS.md. A guarded presentation-only name correction for CA5610029 is documented in audit/technical-release-2026-11-17/RELEASE_STATUS.md; frozen input and model bytes remain unchanged. EquiFlow adds scenario comparison, project evidence filters, and an instructions page.",
   "path": "app/app.js",
   "archived_path": "audit/release-baseline/app.js",
   "archived_sha256": "f8fd829fc3bb4d057ccb39ca0d4c8a167133e6e60a2b4d7f43717ff52753c4ca",
-  "current_sha256": "e44045cbd878ece83cdf443a386ad5df85e88911aa4d3f2023601ef4ab7cdbf0",
-  "previous_current_sha256": "af2874c3ba2de1bc2dccaef7c5c04c60442bfe8f2e0925e97603900836523477"
+  "current_sha256": "c33d43f13e91fa001d76ad993f217e7a972a9f869399b0b2a3764fc06340d8e7",
+  "previous_current_sha256": "e44045cbd878ece83cdf443a386ad5df85e88911aa4d3f2023601ef4ab7cdbf0"
 }

@@ -1,4 +1,4 @@
-/* Xylem app: scenario controls -> exact optimizer -> map, KPIs, tables. All data is real SAFER/State Water Board data;
+/* EquiFlow planner: scenario controls -> exact optimizer -> map, KPIs, tables. All data is real SAFER/State Water Board data;
  * costs are modelled (see Method tab). */
 (async function () {
   const $ = (s) => document.querySelector(s);
@@ -336,6 +336,37 @@
   }
 
   // ---------- KPIs ----------
+  let pinnedPlan = null;
+  const compareButton = $("#compare-pin");
+  const signed = new Intl.NumberFormat("en-US", {signDisplay: "exceptZero"});
+
+  function comparePlans() {
+    const panel = $("#scenario-compare");
+    panel.hidden = !pinnedPlan;
+    compareButton.setAttribute("aria-expanded", String(!!pinnedPlan));
+    compareButton.textContent = pinnedPlan ? "Clear comparison" : "Pin for comparison";
+    $("#compare-help").hidden = !!pinnedPlan;
+    if (!pinnedPlan) return;
+
+    $("#compare-budgets").textContent = `Pinned ${fmtM(pinnedPlan.budget)} · Current ${fmtM(st.b * 1e6)}`;
+    const costDelta = plan.spent - pinnedPlan.spent;
+    const differences = [
+      ["People served", signed.format(plan.people - pinnedPlan.people)],
+      ["Systems selected", signed.format(plan.chosen.length - pinnedPlan.systems)],
+      ["Estimated cost", costDelta === 0 ? "$0" : (costDelta > 0 ? "+" : "−") + fmtM(Math.abs(costDelta))],
+    ];
+    $("#compare-metrics").innerHTML = differences.map(([label, value]) =>
+      `<div><dt>${label}</dt><dd>${value}</dd></div>`).join("");
+  }
+
+  compareButton.addEventListener("click", () => {
+    if (timer !== null) commitUpdate();
+    pinnedPlan = pinnedPlan ? null : {
+      budget: st.b * 1e6, spent: plan.spent, people: plan.people, systems: plan.chosen.length,
+    };
+    comparePlans();
+  });
+
   function kpis() {
     const gain = plan.basePeople ? plan.people / plan.basePeople : 0;
     const k = [
@@ -347,6 +378,7 @@
       `<div class="kpi"><div class="l">Selection in stress tests</div><div class="v">${plan.robust === null ? "n/a" : pct(plan.robust)}</div><div class="s">${plan.robust === null ? "stored stability unavailable for these controls; run cost scenarios" : `of selected systems appeared in at least half of ${summary.n_scenarios} stress tests`}</div></div>`,
     ];
     $("#kpis").innerHTML = k.join("");
+    comparePlans();
   }
 
   // ---------- tables ----------
@@ -499,7 +531,7 @@
         <li><a href="https://pacinst.org/publication/drinking-water-cost-assessment-gap-analysis/">Pacific Institute et al., Cost Assessment and Gap Analysis</a>: background on costs and funding gaps.</li>
         <li><a href="https://phys.org/news/2022-07-framework-prioritizing-investment.amp">Wayne State and University of Michigan prioritization framework (2022)</a>: an inherited reference lead, not a verified current comparison.</li>
       </ul>
-      <div class="note good"><b>What Xylem adds:</b> a budget allocation prototype using rounded modeled costs and explicit priority rules, sensitivity checks, and a view of systems left out. These references are not an exhaustive current review; no unique or first-of-kind claim is established.</div>`;
+      <div class="note good"><b>What EquiFlow adds:</b> a budget allocation prototype using rounded modeled costs and explicit priority rules, sensitivity checks, and a view of systems left out. These references are not an exhaustive current review; no unique or first-of-kind claim is established.</div>`;
     return el;
   }
 
@@ -656,8 +688,8 @@
       return [s.id, s.name, s.county, s.failing ? "Failing" : "At-Risk", s.pop, s.conn, s.cost, Math.round(s.cost / s.pop),
         viaRoute[i] ? `Consolidate into ${RT[s.id].receiver_name}` : "Modelled average",
         s.pf == null ? "" : s.pf, s.failing ? 1 : st.v === "fc" ? 1 - Math.pow(1 - s.pf, st.h) : st.a, s.forecast_source, plan.stabOK ? Math.round(s.p[plan.stabK] * 100) : "", s.dac, gis && gis.z[s.id] !== undefined ? gis.z[s.id] : ""].map(q).join(","); });
-    const blob = new Blob([`# Budget_USD ${st.b * 1e6}; selected_systems ${plan.chosen.length}; modeled_people ${plan.people}; modeled_cost_usd ${plan.spent}; scenario ${new URLSearchParams({b:st.b,l:st.l,h:st.h,v:st.v,a:st.a,r:st.r,c:st.c,m:st.m})}; stability_budget_musd ${plan.stabOK ? plan.stabBudget : "unavailable"}\n# Snapshot ${snapshot.id}; UI_build ${build.id}; diagnostic snapshot estimates; annual failure probabilities and constant-annual-risk horizon conversion unvalidated.\n# Xylem placement plan: budget ${fmtM(st.b * 1e6)}, equity ${st.l}, ${st.v === "fc" ? "forecast horizon " + st.h + " yr" : "fixed At-Risk share " + pct(st.a)}, small-system reserve ${pct(st.r)}, routes ${st.c}, cost multiplier ${st.m}; stability ${plan.stabOK ? "stored at " + plan.stabBudget + "M, no reserve/routes, multiplier 1" : "unavailable for these controls"}; reach is modeled population, not measured intervention benefit; costs modeled; routes approximate\n`, head.join(",") + "\n" + rows.join("\n")], { type: "text/csv" });
-    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "xylem-placement-plan.csv"; a.click(); URL.revokeObjectURL(a.href);
+    const blob = new Blob([`# Budget_USD ${st.b * 1e6}; selected_systems ${plan.chosen.length}; modeled_people ${plan.people}; modeled_cost_usd ${plan.spent}; scenario ${new URLSearchParams({b:st.b,l:st.l,h:st.h,v:st.v,a:st.a,r:st.r,c:st.c,m:st.m})}; stability_budget_musd ${plan.stabOK ? plan.stabBudget : "unavailable"}\n# Snapshot ${snapshot.id}; UI_build ${build.id}; diagnostic snapshot estimates; annual failure probabilities and constant-annual-risk horizon conversion unvalidated.\n# EquiFlow funding plan: budget ${fmtM(st.b * 1e6)}, equity ${st.l}, ${st.v === "fc" ? "forecast horizon " + st.h + " yr" : "fixed At-Risk share " + pct(st.a)}, small-system reserve ${pct(st.r)}, routes ${st.c}, cost multiplier ${st.m}; stability ${plan.stabOK ? "stored at " + plan.stabBudget + "M, no reserve/routes, multiplier 1" : "unavailable for these controls"}; reach is modeled population, not measured intervention benefit; costs modeled; routes approximate\n`, head.join(",") + "\n" + rows.join("\n")], { type: "text/csv" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "equiflow-funding-plan.csv"; a.click(); URL.revokeObjectURL(a.href);
   });
   $("#cons").checked = !!st.c;
   $("#cons").addEventListener("change", (e) => { st.c = e.target.checked ? 1 : 0; update(); });
@@ -688,18 +720,23 @@
   }
   $("#spot").addEventListener("change", (e) => spotlight(e.target.value));
   const search = $("#find"), results = $("#search-results"), matches = $("#search-matches");
-  function lookup(i) {
+  function lookup(i, origin = search) {
     results.hidden = true;
     search.value = label(systems[i]);
     if (timer !== null) commitUpdate();
     st.spot = systems[i].county;
     $("#spot").value = st.spot;
     showTab("spot");
-    openDetail(i, search);
+    openDetail(i, origin);
     if (!dots[i]) return;
     if (on3d && window.Xylem3D) Xylem3D.flyToSystem(i);
     else { map.flyTo(dots[i].getLatLng(), 11); dots[i].openPopup(); }
   }
+  const exampleButton = $("#find-example");
+  const exampleSystem = idx.get("CA5401003");
+  exampleButton.hidden = exampleSystem === undefined;
+  exampleButton.addEventListener("click", () => lookup(exampleSystem, exampleButton));
+
   function exactMatches(query) {
     return searchable.flatMap((system, i) => [system.id, system.label, system.name].includes(query) ? [i] : []);
   }

@@ -87,7 +87,7 @@
     const link = $("requested-link");
     link.href = record ? "#record-" + system.id : "#add-project-record";
     link.textContent = record ? "Read the evidence and sources" : "Add a local project record";
-    link.onclick = record ? null : () => {
+    link.onclick = record ? revealEvidence : () => {
       $("add-project-record").open = true;
       $("record-form").elements.systemId.value = system.id;
     };
@@ -109,6 +109,34 @@
   }
   $("system-ids").append(idOptions);
 
+  function filterEvidence() {
+    const query = $("evidence-query").value.trim().toLowerCase();
+    const stage = $("evidence-stage").value;
+    const cards = [...$("records").children];
+    let shown = 0;
+    for (const card of cards) {
+      const id = card.dataset.systemId;
+      const system = byId.get(id);
+      const label = `${system.name} ${id} ${system.county}`.toLowerCase();
+      card.hidden = !label.includes(query) || (stage !== "" && recordFor(id).stage !== stage);
+      if (!card.hidden) shown++;
+    }
+    $("evidence-matches").textContent = shown
+      ? `Showing ${format.format(shown)} of ${format.format(cards.length)} records`
+      : "No records match. Try another name or funding stage.";
+  }
+
+  function revealEvidence() {
+    const card = document.getElementById(this.hash.slice(1));
+    if (!card?.hidden) return;
+    $("evidence-query").value = "";
+    $("evidence-stage").value = "";
+    filterEvidence();
+  }
+
+  $("evidence-query").addEventListener("input", filterEvidence);
+  $("evidence-stage").addEventListener("change", filterEvidence);
+
   function renderCards() {
     renderRequestedSystem();
     $("coverage").textContent = "Public records for " + dataset.records.length + " of " + format.format(systems.length) +
@@ -118,6 +146,8 @@
     $("records").replaceChildren(...records().map((record) => {
       const card = element("article", undefined, "record");
       card.id = "record-" + record.systemId;
+      card.dataset.systemId = record.systemId;
+      card.dataset.stage = record.stage;
       const system = byId.get(record.systemId);
       const [stage, action] = model.stageInfo[record.stage];
       const ref = element("p", system.id + " · " + system.county + " County" +
@@ -164,6 +194,7 @@
       }
       return card;
     }));
+    filterEvidence();
   }
 
   function list(id, selected, detail) {
@@ -180,6 +211,7 @@
       if (record) {
         const link = element("a", label);
         link.href = "#record-" + system.id;
+        link.addEventListener("click", revealEvidence);
         item.append(link);
       } else {
         item.append(document.createTextNode(label));
@@ -219,6 +251,10 @@
       return row;
     }));
     const tracked = result.excluded.size;
+    $("before-count").textContent = format.format(result.original.length);
+    $("after-count").textContent = format.format(result.screened.length);
+    $("tracked-count").textContent = format.format(tracked);
+    $("reset").disabled = tracked === 0;
     const projectCount = tracked === 1 ? "1 project set aside" : format.format(tracked) + " projects set aside";
     $("result-status").textContent = tracked
       ? projectCount + ". " + result.added.length + " entered and " + result.removed.length + " left the modeled shortlist."
@@ -301,7 +337,7 @@
     const url = URL.createObjectURL(file);
     const link = element("a");
     link.href = url;
-    link.download = "xylem-funding-review.csv";
+    link.download = "equiflow-funding-review.csv";
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
