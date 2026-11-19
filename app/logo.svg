@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="EquiFlow">
+  <rect width="64" height="64" rx="15" fill="#153c41"/>
+  <path d="M32 9c9.6 11.4 16 19.7 16 28.2a16 16 0 0 1-32 0C16 28.7 22.4 20.4 32 9Z" fill="#8fe2ca"/>
+  <path d="M22 36c3.2-2.9 6.4-2.9 9.6 0s6.4 2.9 9.6 0" fill="none" stroke="#153c41" stroke-width="3.4" stroke-linecap="round"/>
+  <path d="M24.5 43.4c2.6-2.3 5.2-2.3 7.8 0s5.2 2.3 7.2 0" fill="none" stroke="#153c41" stroke-width="3.4" stroke-linecap="round"/>
+</svg>

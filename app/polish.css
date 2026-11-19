@@ -1,0 +1,31 @@
+/* Small interface refinements. Loaded last. Motion is opacity/transform only, under 250 ms, and switched off for reduced-motion users. */
+html { scroll-behavior: smooth; }
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+::selection { background: #bfe8d9; color: #0f2a22; }
+h1, h2, h3 { text-wrap: balance; }
+a { text-underline-offset: 3px; }
+* { scrollbar-width: thin; scrollbar-color: #b4c2ba transparent; }
+
+main.layout { animation: eq-fade 240ms ease-out both; }
+@keyframes eq-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.kpi { transition: box-shadow 160ms ease, transform 160ms ease, border-color 160ms ease; }
+.kpi:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(20, 40, 30, .06), 0 8px 20px rgba(20, 40, 30, .08); }
+.controls button:active:not(:disabled) { transform: translateY(1px); }
+tbody tr { transition: background-color 120ms ease; }
+tbody tr:hover td { background: #f2f7f4; }
+
+.workspace-brand svg { transition: transform 160ms ease; }
+.workspace-brand:hover svg { transform: rotate(-6deg); }
+
+/* Plain-language limits, visible at the top of the page. */
+.trust-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+.trust-row li { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; font-size: 12.5px; color: #d3ebe8; border: 1px solid rgba(255, 255, 255, .28); border-radius: 999px; background: rgba(255, 255, 255, .07); }
+.trust-row li::before { content: "\2713"; color: #8fe2ca; font-weight: 700; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  main.layout { animation: none; }
+  .kpi, .workspace-brand svg, tbody tr { transition: none; }
+  .kpi:hover, .workspace-brand:hover svg { transform: none; }
+}
